@@ -5,9 +5,12 @@
     <title>JSP - Hello World</title>
 </head>
 <body>
-<h1><%= "Hello World!" %>
+<h1><%= "Hello Guys, This is Neo-Hub!" %>
 </h1>
-<br/>
+<br>
+<b>Grab the components and start build IoT projects</b>
+<br>
+<br>
 <a href="hello-servlet">Hello Servlet</a>
 </body>
 </html>
