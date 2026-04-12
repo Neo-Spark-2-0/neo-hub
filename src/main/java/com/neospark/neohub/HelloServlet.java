@@ -9,7 +9,7 @@ import jakarta.servlet.annotation.*;
 @WebServlet(name = "helloServlet", value = "/hello-servlet")
 public class HelloServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        request.getRequestDispatcher("/WEB-INF/views/common/header.jsp").forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/common/import.jsp").forward(request, response);
     }
 
 }
