@@ -2,8 +2,15 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>JSP - Hello World</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="NEO-HUB - Modern IOT E-Commerce Platform" />
+    <meta name="author" content="NEO-HUB IOT Component Selling Platform" />
+    <title>NEO-HUB</title>
   </head>
   <body>
+  <%
+    response.sendRedirect("home");
+  %>
   </body>
 </html>
