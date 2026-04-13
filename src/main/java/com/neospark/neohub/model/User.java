@@ -10,7 +10,7 @@ public class User {
     private String    password;
     private String    phone;
 
-    // User Address
+    // User Address Details
     private String    province;
     private String    district;
     private String    city;
@@ -28,7 +28,7 @@ public class User {
     private Timestamp updatedAt;
 
 
-    // Constructor for New User Registration
+    // Constructor for New User Registration 
     public User(String fullName, String email, String password) {
         this.fullName = fullName;
         this.email    = email;
