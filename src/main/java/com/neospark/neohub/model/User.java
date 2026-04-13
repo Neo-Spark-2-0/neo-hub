@@ -29,7 +29,7 @@ public class User {
 
 
     // Constructor for New User Registration 
-    public User(String fullName, String email, String password) {
+    public User(String fullName, String email, String password, String phone) {
         this.fullName = fullName;
         this.email    = email;
         this.phone    = phone;
