@@ -1,4 +1,5 @@
 package com.neospark.neohub.dao;
 
-public class UserDao {
+public interface UserDao {
+
 }

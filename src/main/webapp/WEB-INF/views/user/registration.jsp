@@ -1,5 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
   <head>
     <meta charset="UTF-8" />
@@ -9,9 +8,10 @@
       content="NEO-HUB - Modern IOT E-Commerce Platform"
     />
     <meta name="author" content="NEO-HUB IOT Component Selling Platform" />
-    <title>NEO-HUB</title>
+    <title>Register - NEO-HUB</title>
+    <jsp:include page="/WEB-INF/views/common/import.jsp" />
   </head>
   <body>
-    <% response.sendRedirect("register"); %>
+    <h1>Register Page</h1>
   </body>
 </html>

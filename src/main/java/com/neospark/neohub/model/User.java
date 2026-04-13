@@ -32,6 +32,7 @@ public class User {
     public User(String fullName, String email, String password) {
         this.fullName = fullName;
         this.email    = email;
+        this.phone    = phone;
         this.password = password;
     }
 
