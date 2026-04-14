@@ -25,4 +25,10 @@ public class SessionUtil {
             session.invalidate();
         }
     }
+    public static void removeAttribute(HttpServletRequest request, String key) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.removeAttribute(key);
+        }
+      }
 }
