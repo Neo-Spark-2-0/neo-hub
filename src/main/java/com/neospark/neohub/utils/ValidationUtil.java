@@ -24,4 +24,12 @@ public class ValidationUtil {
     public static boolean doPasswordsMatch(String password, String retypePassword) {
         return password != null && password.equals(retypePassword);
     }
+        public static boolean isValidPhone(String phone) {
+        if (isNullOrEmpty(phone)) return false;
+        return phone.matches("^(98|97|96)[0-9]{8}$");
+    }
+        public static boolean isValidName(String name) {
+        if (isNullOrEmpty(name)) return false;
+        return name.trim().length() >= 2 && name.matches("^[a-zA-Z ]+$");
+    }
 }

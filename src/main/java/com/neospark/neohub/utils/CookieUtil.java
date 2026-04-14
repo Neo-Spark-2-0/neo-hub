@@ -26,7 +26,7 @@ public class CookieUtil {
     public static void deleteCookie(HttpServletResponse response, String name) {
         Cookie cookie = new Cookie(name, "");
         cookie.setMaxAge(0);
-        cookie.setPath("/");
+        cookie.setPath("/projects");
         response.addCookie(cookie);
     }
 }

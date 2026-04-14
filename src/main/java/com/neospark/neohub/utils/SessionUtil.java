@@ -1,5 +1,6 @@
 package com.neospark.neohub.utils;
 
+import com.neospark.neohub.model.User;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -31,4 +32,16 @@ public class SessionUtil {
             session.removeAttribute(key);
         }
       }
+
+    public static boolean isLoggedIn(HttpServletRequest req) {
+        return getAttribute(req, "user") != null;
+    }
+
+    public static String getUserRole(HttpServletRequest req) {
+        User user = (User) getAttribute(req, "user");
+        if (user != null) {
+            return user.getRole();
+        }
+        return null;
+    }
 }
