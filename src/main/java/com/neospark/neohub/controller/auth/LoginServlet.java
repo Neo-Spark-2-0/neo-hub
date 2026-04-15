@@ -51,6 +51,11 @@ public class LoginServlet extends HttpServlet {
             req.getRequestDispatcher("/WEB-INF/views/common/login.jsp").forward(req, resp);
             return;
         }
+        if (!userDao.isEmailVerified(email)) {
+            req.setAttribute("error", "Please verify your email before logging in.");
+            req.getRequestDispatcher("/WEB-INF/views/common/login.jsp").forward(req, resp);
+            return;
+        }
         SessionUtil.setAttribute(req, "user", user);
         CookieUtil.addCookie(resp, "email", user.getEmail(), 7 * 24 * 60 * 60);
         resp.sendRedirect(req.getContextPath() + "/");

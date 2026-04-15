@@ -1,10 +1,15 @@
 package com.neospark.neohub.utils;
 
 
-import jakarta.mail.*;
+import java.util.Properties;
+
+import jakarta.mail.Authenticator;
+import jakarta.mail.Message;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import java.util.Properties;
 
 // Reference
 // https://www.geeksforgeeks.org/java/send-email-using-java-program/
@@ -12,7 +17,7 @@ public class EmailService {
     private static final String HOST     = "smtp.gmail.com";
     private static final int    PORT     = 587;
     private static final String FROM     = "neosparknepal@gmail.com";
-    private static final String PASSWORD = "your_app_password";
+    private static final String PASSWORD = "ewwa vewq xwyo swyt";
 
     private static Session getSession() {
         Properties props = new Properties();
@@ -38,6 +43,7 @@ public class EmailService {
             message.setSubject(subject);
             message.setContent(htmlBody, "text/html; charset=utf-8");
             Transport.send(message);
+            System.out.println("Email sent successfully! to " +  toEmail);
             return true;
         }catch (Exception e){
             System.err.println("Email send failed: " + e.getMessage());
@@ -59,6 +65,3 @@ public class EmailService {
     }
 
 }
-
-
-

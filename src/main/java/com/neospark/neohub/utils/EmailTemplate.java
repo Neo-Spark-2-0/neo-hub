@@ -10,40 +10,46 @@ public class EmailTemplate {
             <head>
                 <meta charset="UTF-8"/>
                 <style>
-                    body        { font-family: 'Segoe UI', sans-serif; background: #f3f4f6; margin:0; padding:0; }
-                    .container  { max-width: 600px; margin: 40px auto; background: #fff;
-                                  border-radius: 12px; overflow: hidden;
-                                  box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
-                    .header     { background: #3B82F6; padding: 30px; text-align: center; }
-                    .header h1  { color: #fff; margin: 0; font-size: 28px; letter-spacing: 1px; }
-                    .header p   { color: #bfdbfe; margin: 5px 0 0; font-size: 13px; }
-                    .body       { padding: 40px 30px; color: #374151; }
-                    .body h2    { font-size: 20px; margin-bottom: 10px; }
-                    .body p     { font-size: 14px; line-height: 1.6; color: #6b7280; }
-                    .btn        { display: inline-block; margin: 20px 0; padding: 12px 32px;
-                                  background: #3B82F6; color: #fff; text-decoration: none;
-                                  border-radius: 8px; font-weight: 600; font-size: 14px; }
-                    .btn:hover  { background: #2563eb; }
-                    .footer     { background: #f9fafb; padding: 20px; text-align: center;
-                                  font-size: 12px; color: #9ca3af; border-top: 1px solid #e5e7eb; }
-                    .divider    { border: none; border-top: 1px solid #e5e7eb; margin: 20px 0; }
-                    .badge      { display: inline-block; background: #ecfdf5; color: #10b981;
-                                  padding: 4px 12px; border-radius: 999px; font-size: 12px;
-                                  font-weight: 600; }
+                    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f5f5; margin: 0; padding: 0; }
+                    .wrap { max-width: 580px; margin: 40px auto; background: #ffffff; border: 1px solid #e0e0e0; border-radius: 6px; overflow: hidden; }
+                    .header { padding: 24px 32px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; }
+                    .logo-box { width: 32px; height: 32px; background: #1a1a1a; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; }
+                    .logo-box span { color: #ffffff; font-size: 13px; font-weight: 600; }
+                    .brand { margin-left: 10px; }
+                    .brand-name { font-size: 14px; font-weight: 600; color: #1a1a1a; margin: 0; }
+                    .brand-sub { font-size: 11px; color: #888888; margin: 0; letter-spacing: 0.3px; }
+                    .body { padding: 36px 32px; }
+                    .label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; color: #888888; margin: 0 0 14px; }
+                    .body h2 { font-size: 19px; font-weight: 600; color: #1a1a1a; margin: 0 0 12px; }
+                    .body p { font-size: 14px; line-height: 1.7; color: #555555; margin: 0 0 16px; }
+                    .info-box { background: #f9f9f9; border: 1px solid #e8e8e8; border-radius: 4px; padding: 16px 20px; margin: 20px 0; }
+                    .info-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; }
+                    .info-row:last-child { margin-bottom: 0; }
+                    .info-label { color: #888888; }
+                    .info-value { color: #1a1a1a; font-weight: 500; }
+                    .badge { display: inline-block; background: #f0fdf4; color: #15803d; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px; letter-spacing: 0.3px; }
+                    .btn { display: inline-block; margin-top: 24px; padding: 11px 24px; background: #1a1a1a; color: #ffffff; text-decoration: none; border-radius: 4px; font-size: 13px; font-weight: 500; }
+                    .divider { border: none; border-top: 1px solid #e8e8e8; margin: 24px 0; }
+                    .note { font-size: 12px; color: #aaaaaa; line-height: 1.6; }
+                    .footer { padding: 18px 32px; border-top: 1px solid #e0e0e0; display: flex; justify-content: space-between; }
+                    .footer p { font-size: 11px; color: #aaaaaa; margin: 0; }
                 </style>
             </head>
             <body>
-                <div class="container">
+                <div class="wrap">
                     <div class="header">
-                        <h1>NEO-HUB</h1>
-                        <p>IoT Equipment & Project Marketplace</p>
+                        <div class="logo-box"><span>N</span></div>
+                        <div class="brand">
+                            <p class="brand-name">NEO-HUB</p>
+                            <p class="brand-sub">IoT Equipment &amp; Project Marketplace</p>
+                        </div>
                     </div>
                     <div class="body">
                         %s
                     </div>
                     <div class="footer">
-                        &copy; 2025 NEO-HUB. All rights reserved.<br/>
-                        This is an automated email — please do not reply.
+                        <p>&copy; 2025 NEO-HUB. All rights reserved.</p>
+                        <p>Automated email — do not reply</p>
                     </div>
                 </div>
             </body>
@@ -54,29 +60,28 @@ public class EmailTemplate {
 
     public static String verificationEmail(String name, String verifyLink) {
         String content = """
-            <h2>Hello, %s! 👋</h2>
-            <p>Thank you for registering at <strong>NEO-HUB</strong>.</p>
-            <p>Please verify your email address by clicking the button below.
-               This link expires in <strong>24 hours</strong>.</p>
-            <a href="%s" class="btn">✅ Verify Email</a>
+            <p class="label">Email Verification</p>
+            <h2>Verify your email address</h2>
+            <p>Hi %s, thank you for creating a NEO-HUB account. Please confirm your email address by clicking the button below.</p>
+            <p>This link will expire in <strong>24 hours</strong>.</p>
+            <a href="%s" class="btn">Verify Email</a>
             <hr class="divider"/>
-            <p>If you didn't create an account, you can safely ignore this email.</p>
+            <p class="note">If you did not create an account, you can safely ignore this email.</p>
         """.formatted(name, verifyLink);
         return baseTemplate(content);
     }
 
     public static String orderConfirmationEmail(String name, String orderId, String total) {
         String content = """
-            <h2>Order Confirmed! 🎉</h2>
-            <p>Hi <strong>%s</strong>, your order has been placed successfully.</p>
-            <p>
-                <strong>Order ID:</strong> #%s<br/>
-                <strong>Total Amount:</strong> Rs. %s
-            </p>
-            <span class="badge">✅ Payment Received</span>
-            <hr class="divider"/>
-            <p>We'll notify you once your order is shipped. 
-               You can track your order in the <strong>Order History</strong> section.</p>
+            <p class="label">Order Confirmed</p>
+            <h2>Your order has been placed</h2>
+            <p>Hi %s, we've received your order and it's being processed. You'll get another email once it's shipped.</p>
+            <div class="info-box">
+                <div class="info-row"><span class="info-label">Order ID</span><span class="info-value">#%s</span></div>
+                <div class="info-row"><span class="info-label">Total Amount</span><span class="info-value">Rs. %s</span></div>
+                <div class="info-row"><span class="info-label">Payment Status</span><span class="badge">Received</span></div>
+            </div>
+            <p>You can view and track your order from the Order History section of your account.</p>
             <a href="http://localhost:8080/NEO-HUB/orders" class="btn">Track Order</a>
         """.formatted(name, orderId, total);
         return baseTemplate(content);
@@ -84,12 +89,13 @@ public class EmailTemplate {
 
     public static String passwordResetEmail(String name, String resetLink) {
         String content = """
-            <h2>Password Reset Request 🔐</h2>
-            <p>Hi <strong>%s</strong>, we received a request to reset your password.</p>
-            <p>Click the button below to reset it. This link expires in <strong>1 hour</strong>.</p>
+            <p class="label">Password Reset</p>
+            <h2>Reset your password</h2>
+            <p>Hi %s, we received a request to reset your NEO-HUB account password. Click the button below to proceed.</p>
+            <p>This link will expire in <strong>1 hour</strong>.</p>
             <a href="%s" class="btn">Reset Password</a>
             <hr class="divider"/>
-            <p>If you didn't request a password reset, ignore this email.</p>
+            <p class="note">If you did not request a password reset, you can safely ignore this email. Your password will not change.</p>
         """.formatted(name, resetLink);
         return baseTemplate(content);
     }

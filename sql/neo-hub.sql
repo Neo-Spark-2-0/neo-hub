@@ -1,8 +1,8 @@
 
 -- Turning off strict mode
 SET sql_mode = '';
-
-CREATE DATABASE IF NOT EXISTS neohub;
+DROP DATABASE IF EXISTS neohub;
+CREATE DATABASE neohub;
 USE neohub;
 
 CREATE TABLE users (
@@ -10,6 +10,8 @@ CREATE TABLE users (
     -- Personal Information
                         full_name     VARCHAR(100)          NOT NULL,
                         email         VARCHAR(150)          NOT NULL UNIQUE,
+                        is_email_verified BOOLEAN      DEFAULT FALSE,
+                        email_token       VARCHAR(255) DEFAULT NULL,
                         password      VARCHAR(255)          NOT NULL,
                         phone         VARCHAR(20),
 

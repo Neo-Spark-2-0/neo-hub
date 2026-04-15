@@ -75,7 +75,7 @@ public class UserDaoImpl implements UserDao {
         Connection connection = null;
         try {
             connection = DatabaseConnection.getConnection();
-            String sql = "SELECT id FROM users WHERE email = ?";
+            String sql = "SELECT id FROM users WHERE TRIM(LOWER(email)) = TRIM(LOWER(?))";
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setString(1, email);
             ResultSet rs = preparedStatement.executeQuery();
@@ -268,4 +268,62 @@ public class UserDaoImpl implements UserDao {
             DatabaseConnection.closeConnection(connection);
         }    
     }
+
+    @Override
+    public boolean saveEmailToken(String email, String token) {
+    String sql = "UPDATE users SET email_token = ? WHERE email = ?";
+    Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, token);
+            ps.setString(2, email);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+    } catch (SQLException e) {
+        System.out.println("Error saving email token: " + e.getMessage());
+        return false;
+    } finally {
+        DatabaseConnection.closeConnection(connection);
+    }
+}
+
+@Override
+public boolean verifyEmailToken(String token) {
+    String sql = "UPDATE users SET is_email_verified = TRUE, email_token = NULL " + "WHERE email_token = ? AND is_email_verified = FALSE";
+    Connection connection = null;
+    try {
+        connection = DatabaseConnection.getConnection();
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, token);
+        int rowsAffected = ps.executeUpdate();
+        return rowsAffected > 0;
+    } catch (SQLException e) {
+        System.out.println("Error verifying email token: " + e.getMessage());
+        return false;
+    } finally {
+        DatabaseConnection.closeConnection(connection);
+    }
+}
+
+@Override
+public boolean isEmailVerified(String email) {
+    String sql = "SELECT is_email_verified FROM users WHERE email = ?";
+    Connection connection = null;
+    try {
+        connection = DatabaseConnection.getConnection();
+        PreparedStatement ps = connection.prepareStatement(sql);
+        ps.setString(1, email);
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()){
+            return rs.getBoolean("is_email_verified");
+        }
+    } catch (SQLException e) {
+        System.out.println("Error checking email verification: " + e.getMessage());
+    } finally {
+        DatabaseConnection.closeConnection(connection);
+    }
+    return false;
+}
+
 }

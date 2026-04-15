@@ -2,6 +2,13 @@ package com.neospark.neohub.utils;
 import java.util.regex.Pattern;
 
 public class ValidationUtil {
+    public static boolean isAnyEmpty(String... values) {
+        for (String value : values) {
+            if (isNullOrEmpty(value)) return true;
+        }
+        return false;
+    }
+
       public static boolean isNullOrEmpty(String value) {
         return value == null || value.trim().isEmpty();
     }
@@ -21,7 +28,7 @@ public class ValidationUtil {
         return password != null && password.matches(passwordRegex);
     }
 
-    public static boolean doPasswordsMatch(String password, String retypePassword) {
+    public static boolean isPasswordsMatch(String password, String retypePassword) {
         return password != null && password.equals(retypePassword);
     }
         public static boolean isValidPhone(String phone) {

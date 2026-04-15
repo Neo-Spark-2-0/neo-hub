@@ -1,6 +1,7 @@
 package com.neospark.neohub.dao;
 
 import java.util.List;
+
 import com.neospark.neohub.model.User;
 
 public interface UserDao {
@@ -8,6 +9,9 @@ public interface UserDao {
     boolean registerUser(User user);
     User findUserByEmail(String email);
     boolean isEmailRegistered(String email);
+    boolean saveEmailToken(String email, String token);
+    boolean verifyEmailToken(String token);
+    boolean isEmailVerified(String email);
     
     // crud operations methods
     User getUserById(int userId);
