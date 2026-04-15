@@ -22,6 +22,8 @@ public class User {
     private String    profileImage;
     private String    role;
     private boolean   isActive;
+    private boolean isEmailVerified;
+
 
     // Other Details
     private Timestamp createdAt;
@@ -157,6 +159,13 @@ public class User {
     }
     public void setActive(boolean active) { 
         isActive = active; 
+    }
+
+    public boolean isEmailVerified() {
+        return isEmailVerified;
+    }
+    public void setEmailVerified(boolean emailVerified) {
+        isEmailVerified = emailVerified;
     }
 
     public Timestamp getCreatedAt() { 
