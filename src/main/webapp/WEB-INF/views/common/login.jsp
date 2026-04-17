@@ -10,26 +10,25 @@
     <meta name="author" content="NEO-HUB Team">
     <jsp:include page="/WEB-INF/views/common/import.jsp" />
 </head>
-<body class="font-poppins bg-gray-100 min-h-screen flex items-center justify-center">
+<body class="font-poppins bg-secondary min-h-screen flex items-center justify-center">
 
-<div class="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
+<div class="w-full max-w-md bg-primary rounded-2xl border border-gray-200 p-8 mx-4">
 
-    <%-- Logo --%>
-    <div class="text-center mb-6">
-        <h1 class="text-3xl font-bold text-primary">NEO-HUB</h1>
-        <p class="text-gray-500 text-sm mt-1">Login to your account</p>
+    <div class="mb-6">
+        <h1 class="text-2xl font-semibold text-accent">NEO-HUB</h1>
+        <p class="text-gray-400 text-sm mt-1">Sign in to your account</p>
     </div>
 
     <%-- Success Messages --%>
     <c:if test="${param.registered eq 'true'}">
-        <div class="bg-green-100 text-green-600 text-sm px-4 py-3 rounded-lg mb-4">
+        <div class="bg-green-50 border border-green-200 text-green-700 text-xs px-4 py-3 rounded-lg mb-4">
             <i class="fa fa-circle-check mr-2"></i>
             Registration successful! Please login.
         </div>
     </c:if>
 
     <c:if test="${param.logout eq 'true'}">
-        <div class="bg-green-100 text-green-600 text-sm px-4 py-3 rounded-lg mb-4">
+        <div class="bg-green-50 border border-green-200 text-green-700 text-xs px-4 py-3 rounded-lg mb-4">
             <i class="fa fa-circle-check mr-2"></i>
             You have been logged out successfully.
         </div>
@@ -37,57 +36,42 @@
 
     <%-- Error Message --%>
     <c:if test="${not empty requestScope.error}">
-        <div class="bg-red-100 text-red-600 text-sm px-4 py-3 rounded-lg mb-4">
+        <div class="bg-red-50 border border-red-200 text-red-600 text-xs px-4 py-3 rounded-lg mb-4">
             <i class="fa fa-circle-exclamation mr-2"></i>
             <c:out value="${requestScope.error}"/>
         </div>
     </c:if>
 
-    <%-- Login Form --%>
-    <form action="${pageContext.request.contextPath}/login" method="post">
+    <form action="${pageContext.request.contextPath}/login" method="post" class="flex flex-col gap-4">
 
         <%-- Email --%>
-        <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                Email <span class="text-red-500">*</span>
-            </label>
-            <div class="relative">
-                <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
-                    <i class="fa fa-envelope"></i>
-                </span>
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="john@example.com"
-                    value="<c:out value='${param.email}'/>"
-                    required
-                    class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm
-                           focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-                />
-            </div>
+        <div>
+            <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Email address</label>
+            <input
+                type="email"
+                name="email"
+                placeholder="john@example.com"
+                value="<c:out value='${param.email}'/>"
+                required
+                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 transition"
+            />
         </div>
 
         <%-- Password --%>
-        <div class="mb-6">
-            <label class="block text-sm font-medium text-gray-700 mb-1">
-                Password <span class="text-red-500">*</span>
-            </label>
+        <div>
+            <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Password</label>
             <div class="relative">
-                <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
-                    <i class="fa fa-lock"></i>
-                </span>
                 <input
                     type="password"
                     name="password"
                     id="password"
                     placeholder="Enter your password"
                     required
-                    class="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg text-sm
-                           focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+                    class="w-full px-3 py-2 pr-10 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 transition"
                 />
                 <span class="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-400"
                       onclick="togglePassword()">
-                    <i id="eyeIcon" class="fa fa-eye"></i>
+                    <i id="eyeIcon" class="fa fa-eye text-xs"></i>
                 </span>
             </div>
         </div>
@@ -95,19 +79,19 @@
         <%-- Submit --%>
         <button
             type="submit"
-            class="w-full bg-primary hover:bg-blue-600 text-white font-semibold
-                   py-2.5 rounded-lg transition duration-200 text-sm">
-            <i class="fa fa-right-to-bracket mr-2"></i> Login
+            class="w-full bg-gray-900 text-white text-sm font-medium py-2.5 rounded-lg hover:opacity-80 transition mt-2">
+            Sign in
         </button>
 
     </form>
 
-    <%-- Register Link --%>
-    <p class="text-center text-sm text-gray-500 mt-6">
+    <div class="w-full h-[0.5px] bg-gray-200 my-5"></div>
+
+    <p class="text-center text-xs text-gray-500">
         Don't have an account?
         <a href="${pageContext.request.contextPath}/register"
-           class="text-primary font-medium hover:underline">
-            Register here
+           class="text-gray-800 font-medium hover:underline">
+            Create one →
         </a>
     </p>
 
