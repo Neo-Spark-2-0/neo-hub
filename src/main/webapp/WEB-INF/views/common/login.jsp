@@ -10,57 +10,33 @@
     <meta name="author" content="NEO-HUB Team">
     <jsp:include page="/WEB-INF/views/common/import.jsp" />
 </head>
-<body class="font-poppins bg-secondary min-h-screen flex items-center justify-center">
+<body class="font-poppins bg-secondary min-h-[100vh] flex items-center justify-center">
 
 <div class="w-full max-w-md bg-primary rounded-2xl border border-gray-200 p-8 mx-4">
 
     <div class="mb-6">
-        <h1 class="text-2xl font-semibold text-accent">NEO-HUB</h1>
+        <h2 class="text-2xl font-bold text-gray-800">Welcome back!</h2>
         <p class="text-gray-400 text-sm mt-1">Sign in to your account</p>
     </div>
 
-    <%-- Success Messages --%>
-    <c:if test="${param.registered eq 'true'}">
-        <div class="bg-green-50 border border-green-200 text-green-700 text-xs px-4 py-3 rounded-lg mb-4">
-            <i class="fa fa-circle-check mr-2"></i>
-            Registration successful! Please login.
-        </div>
-    </c:if>
-
-    <c:if test="${param.logout eq 'true'}">
-        <div class="bg-green-50 border border-green-200 text-green-700 text-xs px-4 py-3 rounded-lg mb-4">
-            <i class="fa fa-circle-check mr-2"></i>
-            You have been logged out successfully.
-        </div>
-    </c:if>
-
-    <%-- Error Message --%>
-    <c:if test="${not empty requestScope.error}">
-        <div class="bg-red-50 border border-red-200 text-red-600 text-xs px-4 py-3 rounded-lg mb-4">
-            <i class="fa fa-circle-exclamation mr-2"></i>
-            <c:out value="${requestScope.error}"/>
-        </div>
-    </c:if>
 
     <form action="${pageContext.request.contextPath}/login" method="post" class="flex flex-col gap-4">
-
-        <%-- Email --%>
+ <!-- email input  -->
         <div>
             <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Email address</label>
             <input
                 type="email"
                 name="email"
-                placeholder="john@example.com"
+                placeholder="neohub@neospark.com"
                 value="<c:out value='${param.email}'/>"
                 required
-                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 transition"
+                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg transition focus:ring-2 focus:ring-gray-300 focus:outline-none"
             />
         </div>
 
-        <%-- Password --%>
+        <%-- password input --%>
         <div>
             <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Password</label>
-            <div class="relative">
                 <input
                     type="password"
                     name="password"
@@ -69,17 +45,12 @@
                     required
                     class="w-full px-3 py-2 pr-10 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 transition"
                 />
-                <span class="absolute inset-y-0 right-3 flex items-center cursor-pointer text-gray-400"
-                      onclick="togglePassword()">
-                    <i id="eyeIcon" class="fa fa-eye text-xs"></i>
-                </span>
-            </div>
         </div>
 
-        <%-- Submit --%>
+        <%-- button which type is submit so form auto submits on clicking button --%>
         <button
             type="submit"
-            class="w-full bg-gray-900 text-white text-sm font-medium py-2.5 rounded-lg hover:opacity-80 transition mt-2">
+            class="w-full bg-accent text-white text-sm font-medium py-2.5 rounded-lg hover:opacity-80 transition mt-2">
             Sign in
         </button>
 
@@ -96,16 +67,5 @@
     </p>
 
 </div>
-
-<script>
-    function togglePassword() {
-        const field   = document.getElementById('password');
-        const eyeIcon = document.getElementById('eyeIcon');
-        const isPassword = field.type === 'password';
-        field.type        = isPassword ? 'text' : 'password';
-        eyeIcon.className = isPassword ? 'fa fa-eye-slash' : 'fa fa-eye';
-    }
-</script>
-
 </body>
 </html>

@@ -7,7 +7,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Dashboard | NEO-HUB</title>
-
     <!-- Include your imports -->
     <jsp:include page="../common/import.jsp"/>
 </head>
