@@ -12,7 +12,7 @@ import com.neospark.neohub.model.Product;
 
 public class ProductDaoImpl implements ProductDao {
 
-    // ✅ Helper - Map ResultSet to Product
+    // Helper - Map ResultSet to Product
     private Product mapProduct(ResultSet rs) throws SQLException {
         Product product = new Product();
         product.setId(rs.getInt("id"));
@@ -33,7 +33,7 @@ public class ProductDaoImpl implements ProductDao {
         return product;
     }
 
-    // ✅ Add Product
+    // Add Product
     @Override
     public boolean addProduct(Product product) {
         String sql = "INSERT INTO products (name, description, price, discount_price, stock, " +
@@ -63,7 +63,7 @@ public class ProductDaoImpl implements ProductDao {
         return false;
     }
 
-    // ✅ Update Product
+    // Update Product
     @Override
     public boolean updateProduct(Product product) {
         String sql = "UPDATE products SET name=?, description=?, price=?, discount_price=?, " +
@@ -94,7 +94,7 @@ public class ProductDaoImpl implements ProductDao {
         return false;
     }
 
-    // ✅ Delete Product
+    // Delete Product
     @Override
     public boolean deleteProduct(int id) {
         String sql = "DELETE FROM products WHERE id=?";
@@ -111,7 +111,7 @@ public class ProductDaoImpl implements ProductDao {
         return false;
     }
 
-    // ✅ Get Product By Id
+    // Get Product By Id
     @Override
     public Product getProductById(int id) {
         String sql = "SELECT p.*, c.name AS category_name " +
@@ -135,7 +135,7 @@ public class ProductDaoImpl implements ProductDao {
         return null;
     }
 
-    // ✅ Get All Products
+    // Get All Products
     @Override
     public List<Product> getAllProducts() {
         String sql = "SELECT p.*, c.name AS category_name " +
@@ -158,7 +158,7 @@ public class ProductDaoImpl implements ProductDao {
         return products;
     }
 
-    // ✅ Get Products By Category
+    // Get Products By Category
     @Override
     public List<Product> getProductsByCategory(int categoryId) {
         String sql = "SELECT p.*, c.name AS category_name " +
@@ -184,7 +184,7 @@ public class ProductDaoImpl implements ProductDao {
         return products;
     }
 
-    // ✅ Get Featured Products
+    // Get Featured Products
     @Override
     public List<Product> getFeaturedProducts() {
         String sql = "SELECT p.*, c.name AS category_name " +
@@ -208,7 +208,7 @@ public class ProductDaoImpl implements ProductDao {
         return products;
     }
 
-    // ✅ Search Products
+    // Search Products
     @Override
     public List<Product> searchProducts(String keyword) {
         String sql = "SELECT p.*, c.name AS category_name " +
@@ -238,7 +238,7 @@ public class ProductDaoImpl implements ProductDao {
         return products;
     }
 
-    // ✅ Get Total Product Count
+    // Get Total Product Count
     @Override
     public int getTotalProductCount() {
         String sql = "SELECT COUNT(*) FROM products";
@@ -257,7 +257,7 @@ public class ProductDaoImpl implements ProductDao {
         return 0;
     }
 
-    // ✅ Get Low Stock Products
+    // Get Low Stock Products
     @Override
     public List<Product> getLowStockProducts(int limit) {
         String sql = "SELECT p.*, c.name AS category_name " +
@@ -283,7 +283,7 @@ public class ProductDaoImpl implements ProductDao {
         return products;
     }
 
-    // ✅ Update Stock
+    // Update Stock
     @Override
     public boolean updateStock(int productId, int quantity) {
         String sql = "UPDATE products SET stock = stock - ?, updated_at=NOW() WHERE id=? AND stock >= ?";
@@ -303,7 +303,7 @@ public class ProductDaoImpl implements ProductDao {
         return false;
     }
 
-    // ✅ Toggle Product Status
+    // Toggle Product Status
     @Override
     public boolean toggleProductStatus(int id) {
         String sql = "UPDATE products SET is_active = NOT is_active, updated_at=NOW() WHERE id=?";
@@ -319,4 +319,99 @@ public class ProductDaoImpl implements ProductDao {
         }
         return false;
     }
+
+    // Get Products with Pagination & Filtering
+    @Override
+public List<Product> getProductsPaginated(int offset, int limit, String keyword, int categoryId) {
+    List<Product> products = new ArrayList<>();
+
+    String sql = "SELECT p.*, c.name AS category_name FROM products p " +
+                 "LEFT JOIN categories c ON p.category_id = c.id " +
+                 "WHERE 1=1 ";
+
+    if (keyword != null && !keyword.isEmpty()) {
+        sql += "AND (p.name LIKE ? OR p.brand LIKE ?) ";
+    }
+
+    if (categoryId > 0) {
+        sql += "AND p.category_id = ? ";
+    }
+
+    sql += "ORDER BY p.created_at DESC LIMIT ? OFFSET ?";
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        int index = 1;
+
+        if (keyword != null && !keyword.isEmpty()) {
+            stmt.setString(index++, "%" + keyword + "%");
+            stmt.setString(index++, "%" + keyword + "%");
+        }
+
+        if (categoryId > 0) {
+            stmt.setInt(index++, categoryId);
+        }
+
+        stmt.setInt(index++, limit);
+        stmt.setInt(index, offset);
+
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            products.add(mapProduct(rs));
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return products;
+}
+
+// Get Product Count with Filtering
+@Override
+public int getProductCount(String keyword, int categoryId) {
+    String sql = "SELECT COUNT(*) FROM products WHERE 1=1 ";
+
+    // Dynamic conditions
+    if (keyword != null && !keyword.trim().isEmpty()) {
+        sql += "AND (name LIKE ? OR brand LIKE ?) ";
+    }
+
+    if (categoryId > 0) {
+        sql += "AND category_id = ? ";
+    }
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        int index = 1;
+
+        // Set keyword parameters
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            String searchTerm = "%" + keyword.trim() + "%";
+            stmt.setString(index++, searchTerm);
+            stmt.setString(index++, searchTerm);
+        }
+
+        // Set category filter
+        if (categoryId > 0) {
+            stmt.setInt(index++, categoryId);
+        }
+
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+
+    } catch (SQLException e) {
+        System.out.println("Error getting product count: " + e.getMessage());
+        e.printStackTrace();
+    }
+
+    return 0;
+}
+
 }

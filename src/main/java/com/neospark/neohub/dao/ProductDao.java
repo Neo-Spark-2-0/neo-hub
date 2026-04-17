@@ -25,4 +25,8 @@ public interface ProductDao {
     
     // Status
     boolean toggleProductStatus(int id);
+
+    // Pagination & Filtering
+    List<Product> getProductsPaginated(int offset, int limit, String keyword, int categoryId);
+    int getProductCount(String keyword, int categoryId);
 }

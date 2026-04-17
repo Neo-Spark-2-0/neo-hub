@@ -1,5 +1,6 @@
 package com.neospark.neohub.controller.admin;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -8,158 +9,333 @@ import com.neospark.neohub.dao.ProductDaoImpl;
 import com.neospark.neohub.dao.CategoryDao;
 import com.neospark.neohub.dao.CategoryDaoImpl;
 import com.neospark.neohub.model.Product;
-import com.neospark.neohub.model.Category;
-import com.neospark.neohub.model.User;
-import com.neospark.neohub.utils.SessionUtil;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 @WebServlet("/admin/products")
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024,          // 1 MB threshold before temp file
+    maxFileSize = 1024 * 1024 * 5,            // 5 MB max file size
+    maxRequestSize = 1024 * 1024 * 10         // 10 MB max request size
+)
 public class AdminProductServlet extends HttpServlet {
 
     private final ProductDao productDao = new ProductDaoImpl();
     private final CategoryDao categoryDao = new CategoryDaoImpl();
 
+    private static final int PAGE_SIZE = 5;
+
+    // GET
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        // Admin check(AdminFilter has this)
-        User admin = (User) SessionUtil.getAttribute(req, "user");
-        if (admin == null || !admin.isAdmin()) {
-            resp.sendRedirect(req.getContextPath() + "/login");
-            return;
+        String action = req.getParameter("action");
+
+        // FLASH MESSAGES - Read from session and move to request scope
+        HttpSession session = req.getSession();
+        String successMsg = (String) session.getAttribute("success");
+        String errorMsg = (String) session.getAttribute("error");
+        
+        if (successMsg != null) {
+            req.setAttribute("success", successMsg);
+            session.removeAttribute("success");
+        }
+        
+        if (errorMsg != null) {
+            req.setAttribute("error", errorMsg);
+            session.removeAttribute("error");
         }
 
-        String action = req.getParameter("action");
+        // Handle old-style URL flash messages (backwards compatibility)
+        if ("added".equals(req.getParameter("success"))) {
+            req.setAttribute("success", "Product added successfully!");
+        } else if ("updated".equals(req.getParameter("success"))) {
+            req.setAttribute("success", "Product updated successfully!");
+        } else if ("deleted".equals(req.getParameter("success"))) {
+            req.setAttribute("success", "Product deleted successfully!");
+        } else if ("true".equals(req.getParameter("error"))) {
+            req.setAttribute("error", "An error occurred while processing.");
+        }
 
         if (action == null) {
             listProducts(req, resp);
-        } else {
-            switch (action) {
-                case "add":
-                    showAddForm(req, resp);
-                    break;
-                case "edit":
-                    showEditForm(req, resp);
-                    break;
-                case "delete":
-                    deleteProduct(req, resp);
-                    break;
-                default:
-                    listProducts(req, resp);
-                    break;
-            }
-        }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-
-        // Admin check (AdminFilter has this)
-        User admin = (User) SessionUtil.getAttribute(req, "user");
-        if (admin == null || !admin.isAdmin()) {
-            resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
-        String action = req.getParameter("action");
-
         switch (action) {
-            case "insert":
-                insertProduct(req, resp);
+            case "add":
+                showAddForm(req, resp);
                 break;
-            case "update":
-                updateProduct(req, resp);
+            case "edit":
+                try {
+                    showEditForm(req, resp);
+                } catch (Exception e) {
+                    throw new ServletException(e);
+                }
+                break;
+            case "delete":
+                try {
+                    deleteProduct(req, resp);
+                } catch (Exception e) {
+                    throw new ServletException(e);
+                }
                 break;
             default:
-                resp.sendRedirect(req.getContextPath() + "/admin/products");
-                break;
+                listProducts(req, resp);
         }
     }
 
-    // 📋 List all products
+    // LIST (Pagination + Search)
     private void listProducts(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        List<Product> products = productDao.getAllProducts();
+        int page = 1;
+
+        try {
+            page = Integer.parseInt(req.getParameter("page"));
+        } catch (Exception ignored) {}
+
+        String keyword = req.getParameter("search");
+        int categoryId = 0;
+
+        try {
+            categoryId = Integer.parseInt(req.getParameter("categoryId"));
+        } catch (Exception ignored) {}
+
+        int offset = (page - 1) * PAGE_SIZE;
+
+        List<Product> products = productDao.getProductsPaginated(offset, PAGE_SIZE, keyword, categoryId);
+        int totalProducts = productDao.getProductCount(keyword, categoryId);
+
+        int totalPages = (int) Math.ceil((double) totalProducts / PAGE_SIZE);
+
         req.setAttribute("productList", products);
+        req.setAttribute("currentPage", page);
+        req.setAttribute("totalPages", totalPages);
+        req.setAttribute("search", keyword);
+        req.setAttribute("categoryId", categoryId);
+        req.setAttribute("categories", categoryDao.getAllCategories());
 
         req.getRequestDispatcher("/WEB-INF/views/admin/products.jsp").forward(req, resp);
     }
 
-    // ➕ Show Add Form
+    // SHOW FORMS
     private void showAddForm(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        List<Category> categories = categoryDao.getAllCategories();
-        req.setAttribute("categories", categories);
-
+        req.setAttribute("categories", categoryDao.getAllCategories());
         req.getRequestDispatcher("/WEB-INF/views/admin/add-product.jsp").forward(req, resp);
     }
 
-    // ✏️ Show Edit Form
     private void showEditForm(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        int id = Integer.parseInt(req.getParameter("id"));
+        int id = parseInt(req.getParameter("id"));
+        
+        if (id <= 0) {
+            getSessionFlash(req).setAttribute("error", "Invalid product ID.");
+            resp.sendRedirect(req.getContextPath() + "/admin/products");
+            return;
+        }
+
         Product product = productDao.getProductById(id);
 
-        List<Category> categories = categoryDao.getAllCategories();
+        if (product == null) {
+            getSessionFlash(req).setAttribute("error", "Product not found.");
+            resp.sendRedirect(req.getContextPath() + "/admin/products");
+            return;
+        }
 
         req.setAttribute("product", product);
-        req.setAttribute("categories", categories);
-
+        req.setAttribute("categories", categoryDao.getAllCategories());
         req.getRequestDispatcher("/WEB-INF/views/admin/edit-product.jsp").forward(req, resp);
     }
 
-    // ➕ Insert Product
+    // POST
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
+        String action = req.getParameter("action");
+
+        try {
+            if ("insert".equals(action)) {
+                insertProduct(req, resp);
+            } else if ("update".equals(action)) {
+                updateProduct(req, resp);
+            } else if ("delete".equals(action)) {  // 🔥 MOVE DELETE TO POST!
+                deleteProduct(req, resp);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            getSessionFlash(req).setAttribute("error", "An error occurred: " + e.getMessage());
+            resp.sendRedirect(req.getContextPath() + "/admin/products");
+        }
+    }
+
+    // INSERT
     private void insertProduct(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
+            throws Exception {
 
-        Product product = new Product();
+        Product product = extractProduct(req, null);
 
-        product.setName(req.getParameter("name"));
-        product.setDescription(req.getParameter("description"));
-        product.setPrice(Double.parseDouble(req.getParameter("price")));
-        product.setCategoryId(Integer.parseInt(req.getParameter("categoryId")));
-        product.setStock(Integer.parseInt(req.getParameter("stock")));
-        product.setImage(req.getParameter("image")); // or handle upload later
+        // INPUT VALIDATION
+        if (product.getName() == null || product.getName().trim().isEmpty()) {
+            req.setAttribute("error", "Product name is required.");
+            showAddForm(req, resp);
+            return;
+        }
+
+        if (product.getPrice() <= 0) {
+            req.setAttribute("error", "Price must be greater than zero.");
+            showAddForm(req, resp);
+            return;
+        }
+
+        if (product.getStock() < 0) {
+            req.setAttribute("error", "Stock cannot be negative.");
+            showAddForm(req, resp);
+            return;
+        }
 
         productDao.addProduct(product);
-
+        getSessionFlash(req).setAttribute("success", "Product added successfully!");
         resp.sendRedirect(req.getContextPath() + "/admin/products");
     }
 
-    //Update Product
+    // UPDATE
     private void updateProduct(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
+            throws Exception {
+
+        int id = parseInt(req.getParameter("id"));
+
+        if (id <= 0) {
+            getSessionFlash(req).setAttribute("error", "Invalid product ID.");
+            resp.sendRedirect(req.getContextPath() + "/admin/products");
+            return;
+        }
+
+        Product existing = productDao.getProductById(id);
+
+        if (existing == null) {
+            getSessionFlash(req).setAttribute("error", "Product not found.");
+            resp.sendRedirect(req.getContextPath() + "/admin/products");
+            return;
+        }
+
+        Product product = extractProduct(req, existing);
+        product.setId(id);
+
+        productDao.updateProduct(product);
+        getSessionFlash(req).setAttribute("success", "Product updated successfully!");
+        resp.sendRedirect(req.getContextPath() + "/admin/products");
+    }
+
+    // DELETE (MOVED TO POST!)
+    private void deleteProduct(HttpServletRequest req, HttpServletResponse resp)
+            throws Exception {
+
+        int id = parseInt(req.getParameter("id"));
+
+        if (id <= 0) {
+            getSessionFlash(req).setAttribute("error", "Invalid product ID.");
+            resp.sendRedirect(req.getContextPath() + "/admin/products");
+            return;
+        }
+
+        // Get product info before deletion to delete image file
+        Product product = productDao.getProductById(id);
+        if (product == null) {
+            getSessionFlash(req).setAttribute("error", "Product not found.");
+            resp.sendRedirect(req.getContextPath() + "/admin/products");
+            return;
+        }
+
+        // Delete the image file if it exists
+        if (product.getImage() != null && !product.getImage().isEmpty()) {
+            String filePath = getServletContext().getRealPath("/" + product.getImage());
+            File file = new File(filePath);
+            if (file.exists()) {
+                file.delete();
+            }
+        }
+
+        productDao.deleteProduct(id);
+        getSessionFlash(req).setAttribute("success", "Product deleted successfully!");
+        resp.sendRedirect(req.getContextPath() + "/admin/products");
+    }
+
+    // EXTRACT + IMAGE UPLOAD
+    private Product extractProduct(HttpServletRequest req, Product existing)
+            throws Exception {
 
         Product product = new Product();
 
-        product.setId(Integer.parseInt(req.getParameter("id")));
-        product.setName(req.getParameter("name"));
-        product.setDescription(req.getParameter("description"));
-        product.setPrice(Double.parseDouble(req.getParameter("price")));
-        product.setCategoryId(Integer.parseInt(req.getParameter("categoryId")));
-        product.setStock(Integer.parseInt(req.getParameter("stock")));
-        product.setImage(req.getParameter("image"));
+        String name = req.getParameter("name");
+        String description = req.getParameter("description");
 
-        productDao.updateProduct(product);
+        product.setName(name != null ? name.trim() : "");
+        product.setDescription(description != null ? description.trim() : "");
 
-        resp.sendRedirect(req.getContextPath() + "/admin/products");
+        product.setPrice(parseDouble(req.getParameter("price")));
+        product.setDiscountPrice(parseDouble(req.getParameter("discountPrice")));
+
+        product.setStock(parseInt(req.getParameter("stock")));
+        product.setCategoryId(parseInt(req.getParameter("categoryId")));
+
+        product.setBrand(req.getParameter("brand"));
+        product.setSku(req.getParameter("sku"));
+
+        product.setActive(req.getParameter("isActive") != null);
+        product.setFeatured(req.getParameter("isFeatured") != null);
+
+        // Image Handling
+        Part filePart = req.getPart("image");
+
+        if (filePart != null && filePart.getSize() > 0) {
+            String fileName = System.currentTimeMillis() + "_" + filePart.getSubmittedFileName();
+            String uploadPath = getServletContext().getRealPath("/uploads");
+
+            File dir = new File(uploadPath);
+            if (!dir.exists()) dir.mkdirs();
+
+            String filePath = uploadPath + File.separator + fileName;
+            filePart.write(filePath);
+
+            product.setImage("uploads/" + fileName);
+
+        } else if (existing != null) {
+            // KEEP OLD IMAGE if no new upload
+            product.setImage(existing.getImage());
+        }
+
+        return product;
     }
 
-    //Delete Product
-    private void deleteProduct(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
+    // SAFE PARSING HELPERS
+    private int parseInt(String val) {
+        try {
+            return Integer.parseInt(val);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
 
-        int id = Integer.parseInt(req.getParameter("id"));
-        productDao.deleteProduct(id);
+    private double parseDouble(String val) {
+        try {
+            return Double.parseDouble(val);
+        } catch (Exception e) {
+            return 0.0;
+        }
+    }
 
-        resp.sendRedirect(req.getContextPath() + "/admin/products");
+
+    // HELPER - SESSION ACCESS
+    private HttpSession getSessionFlash(HttpServletRequest req) {
+        return req.getSession();
     }
 }
