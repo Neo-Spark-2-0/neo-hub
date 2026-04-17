@@ -1,14 +1,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%--    importing libraries --%>
+
+    <%--     tailwind css--%>
+    <script src="https://cdn.tailwindcss.com"></script>
     <%--    tailwind config--%>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        primary: '#3B82F6',
-                        secondary: '#10B981',
-                        accent: '#F59E0B',
+                        primary: '#FFFFFF',
+                        secondary: '#F5F5F7',
+                        accent: '#1D1D1F',
                         dark: '#1F2937',
                         danger: '#EF4444',
                         warning: '#FBBF24',
@@ -21,8 +24,6 @@
             }
         }
     </script>
-    <%--     tailwind css--%>
-    <script src="https://cdn.tailwindcss.com"></script>
     <%--toastify css and js --%>
     <%--  CSS --%>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastify-js/1.12.0/toastify.css" />
