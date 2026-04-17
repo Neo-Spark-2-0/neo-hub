@@ -67,5 +67,12 @@
     </p>
 
 </div>
+
+
+<script>
+        <c:if test="${not empty error}">
+            showToast("<c:out value='${error}' />", "error");
+        </c:if>
+</script>
 </body>
 </html>

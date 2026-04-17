@@ -56,8 +56,9 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
             <div class="w-full h-[0.5px] bg-gray-300 my-2"></div>
 
-              <a href="${pageContext.request.contextPath}/logout"
-                   class="px-3 py-2 rounded-lg text-red-500 hover:bg-red-50 transition-colors">Logout</a>
+              <a href="#"
+                onclick="confirmLogout()"
+                class="px-3 py-2 rounded-lg text-red-500 hover:bg-red-50 transition-colors">Logout</a>
             </nav>
         </div>
         <div class="w-full md:w-3/4 rounded-lg flex flex-col bg-primary gap-y-4 p-4">
@@ -255,17 +256,6 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
                         Change password →
                   </button>
                   <div id="password-section" class="hidden mt-4 pt-4 border-t border-orange-200">
-                    <c:if test="${not empty passwordError}">
-                        <p class="text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-3">
-                            ${passwordError}
-                        </p>
-                    </c:if>
-
-                    <c:if test="${not empty passwordSuccess}">
-                        <p class="text-xs text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2 mb-3">
-                            ${passwordSuccess}
-                        </p>
-                    </c:if>
                         <form action="${pageContext.request.contextPath}/profile" method="post"
                               class="flex flex-col gap-3 w-full">
                             <input type="hidden" name="action" value="changePassword"/>
@@ -304,10 +294,10 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
                   </div>
 
 
-                  <form action="${pageContext.request.contextPath}/profile" method="post">
+                  <form action="${pageContext.request.contextPath}/profile" method="post" id="deleteForm" >
                     <input type="hidden" name="action" value="deleteAccount"/>
-                    <button type="submit"
-                            onclick="return confirm('Are you sure? This cannot be undone.')"
+                    <button type="button"
+                            onclick="confirmDelete()"
                             class="text-xs px-3 py-1.5 border border-red-400 text-red-500 bg-white rounded-lg hover:bg-red-50 transition-colors">
                         Delete account
                     </button>
@@ -351,6 +341,7 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
         document.querySelectorAll(".edit-mode-address").forEach(el => el.classList.remove("hidden"));
     }
 
+
     function cancelAddressEdit(){
         addressEditButton.classList.remove("hidden");
         addressActionButtons.classList.add("hidden");
@@ -359,12 +350,70 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
         document.querySelectorAll(".edit-mode-address").forEach(el => el.classList.add("hidden"));
     }
 
-    //password change toggle
+    //password change section toggle
     const passwordSection = document.querySelector("#password-section");
     function togglePassword() {
         passwordSection.classList.toggle("hidden");
     }
 
+
+        // alert for deleting accout 
+    function confirmDelete() {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "This action cannot be undone!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#ef4444",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: "Yes, delete it"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById("deleteForm").submit();
+            }
+        });
+    }
+
+    // alert for logout
+    function confirmLogout() {
+        Swal.fire({
+            title: "Logout?",
+            text: "You will be logged out of your account.",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#ef4444",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: "Yes, logout"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "${pageContext.request.contextPath}/logout";
+            }
+        });
+    }
+
+
+
+
+    // success and error messages from servlet
+        <c:if test="${not empty profileSuccess}">
+            showToast("<c:out value='${profileSuccess}' />", "success");
+        </c:if>
+
+        <c:if test="${not empty passwordSuccess}">
+            showToast("<c:out value='${passwordSuccess}' />", "success");
+        </c:if>
+
+        <c:if test="${not empty profileError}">
+            showToast("<c:out value='${profileError}' />", "error");
+        </c:if>
+
+        <c:if test="${not empty passwordError}">
+            showToast("<c:out value='${passwordError}' />", "error");
+        </c:if>
+
+        <c:if test="${not empty deleteError}">
+            showToast("<c:out value='${deleteError}' />", "error");
+        </c:if>
   </script>
   </body>
 </html>

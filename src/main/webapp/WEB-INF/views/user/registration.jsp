@@ -121,6 +121,20 @@
         const confirmPassword = confirmPasswordInput.value;
         warning.classList.toggle('hidden', password === confirmPassword);
     });
+
+
+
+    // errpr
+    <c:if test="${not empty error}">
+        showToast("<c:out value='${error}' />", "error");
+    </c:if>
+
+    // success
+    <c:if test="${not empty success}">
+        showToast("<c:out value='${success}' />", "success");
+    </c:if>
+
+
 </script>
 
 </body>
