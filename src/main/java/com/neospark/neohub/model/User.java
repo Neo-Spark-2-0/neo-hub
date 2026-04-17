@@ -180,6 +180,12 @@ public class User {
         this.updatedAt = updatedAt; 
     }
 
+    //Added:check admin role
+     public boolean isAdmin() {
+        return "admin".equalsIgnoreCase(role);
+        
+    }
+
     @Override
     public String toString() {
         return "User Information {" +
@@ -192,4 +198,6 @@ public class User {
                 ", isActive=" + isActive +
                 '}';
     }
+
+   
 }
