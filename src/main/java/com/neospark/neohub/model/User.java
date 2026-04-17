@@ -22,13 +22,14 @@ public class User {
     private String    profileImage;
     private String    role;
     private boolean   isActive;
-    private boolean isEmailVerified;
+    private boolean   emailVerified;
 
 
     // Other Details
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
+    public User() {}
 
     // Constructor for New User Registration 
     public User(String fullName, String email,String phone, String password) {
@@ -42,7 +43,7 @@ public class User {
     public User(int id, String fullName, String email, String password,
                 String phone, String province, String district, String city,
                 String ward, String street, String landmark,
-                String profileImage, String role, boolean isActive,
+                String profileImage, String role, boolean isActive, boolean isEmailVerified,
                 Timestamp createdAt, Timestamp updatedAt) {
         this.id           = id;
         this.fullName     = fullName;
@@ -58,6 +59,7 @@ public class User {
         this.profileImage = profileImage;
         this.role         = role;
         this.isActive     = isActive;
+        this.emailVerified = isEmailVerified;
         this.createdAt    = createdAt;
         this.updatedAt    = updatedAt;
     }
@@ -161,11 +163,11 @@ public class User {
         isActive = active; 
     }
 
-    public boolean isEmailVerified() {
-        return isEmailVerified;
+    public boolean getEmailVerified() {
+        return emailVerified;
     }
     public void setEmailVerified(boolean emailVerified) {
-        isEmailVerified = emailVerified;
+        this.emailVerified = emailVerified;
     }
 
     public Timestamp getCreatedAt() { 

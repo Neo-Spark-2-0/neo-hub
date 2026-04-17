@@ -57,6 +57,7 @@ public class UserDaoImpl implements UserDao {
                         rs.getString("profile_image"),
                         rs.getString("role"),
                         rs.getBoolean("is_active"),
+                        rs.getBoolean("is_email_verified"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at")
                 );
@@ -113,6 +114,7 @@ public class UserDaoImpl implements UserDao {
                         rs.getString("profile_image"),
                         rs.getString("role"),
                         rs.getBoolean("is_active"),
+                        rs.getBoolean("is_email_verified"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at")
                 );
@@ -151,6 +153,7 @@ public class UserDaoImpl implements UserDao {
                         rs.getString("profile_image"),
                         rs.getString("role"),
                         rs.getBoolean("is_active"),
+                        rs.getBoolean("is_email_verified"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at")
                 ));
@@ -169,21 +172,17 @@ public class UserDaoImpl implements UserDao {
         Connection connection = null;
         try {
             connection = DatabaseConnection.getConnection();
-            String sql = "UPDATE users SET full_name = ?, email = ?, phone = ?, province = ?, district = ?, city = ?, ward = ?, street = ?, landmark = ?, profile_image = ?, role = ?, is_active = ? WHERE id = ?";
+            String sql = "UPDATE users SET full_name = ?, phone = ?, province = ?, district = ?, city = ?, ward = ?, street = ?, landmark = ? WHERE id = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, user.getFullName());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, user.getPhone());
-            ps.setString(4, user.getProvince());
-            ps.setString(5, user.getDistrict());
-            ps.setString(6, user.getCity());
-            ps.setString(7, user.getWard());
-            ps.setString(8, user.getStreet());
-            ps.setString(9, user.getLandmark());
-            ps.setString(10, user.getProfileImage());
-            ps.setString(11, user.getRole());
-            ps.setBoolean(12, user.isActive());
-            ps.setInt(13, user.getId());
+            ps.setString(2, user.getPhone());
+            ps.setString(3, user.getProvince());
+            ps.setString(4, user.getDistrict());
+            ps.setString(5, user.getCity());
+            ps.setString(6, user.getWard());
+            ps.setString(7, user.getStreet());
+            ps.setString(8, user.getLandmark());
+            ps.setInt(9, user.getId());
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
