@@ -36,7 +36,7 @@ public class ProfileServlet extends HttpServlet {
             case "updateProfile"  -> handleUpdateProfile(req, resp);
             case "changePassword" -> handleChangePassword(req, resp);
             case "uploadPhoto"    -> handleUploadPhoto(req, resp);
-            case "deleteAccont"   -> deleteAccount(req, resp);
+            case "deleteAccount"   -> deleteAccount(req, resp);
             default -> resp.sendRedirect(req.getContextPath() + "/profile");
         }
     }
@@ -100,11 +100,11 @@ public class ProfileServlet extends HttpServlet {
             return;
         }
 
-        if (!ValidationUtil.isValidPassword(newPassword)) {
-            setErrorAndForward(request, response, "passwordError",
-                    "Password must be at least 8 characters, include uppercase, lowercase, and a number.");
-            return;
-        }
+        // if (!ValidationUtil.isValidPassword(newPassword)) {
+        //     setErrorAndForward(request, response, "passwordError",
+        //             "Password must be at least 8 characters, include uppercase, lowercase, and a number.");
+        //     return;
+        // }
 
         if (!ValidationUtil.isPasswordsMatch(confirmPassword, newPassword)) {
             setErrorAndForward(request, response, "passwordError", "New password and confirmation password do not match.");

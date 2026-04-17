@@ -18,17 +18,16 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
     <jsp:include page="/WEB-INF/views/common/import.jsp" />
   </head>
   <body class="bg-secondary font-poppins">
-    <main class="w-[90vw] mx-auto my-20">
-      <div class="flex gap-x-4">
-        <div class="bg-primary rounded-lg w-1/4 border border-secondary p-5 flex flex-col items-center gap-1">
+    <main class="w-[90vw] mx-auto my-10 md:my-20">
+      <div class="flex flex-col md:flex-row gap-4">
+        <div class="bg-primary rounded-lg w-full md:w-1/4 border border-secondary p-5 flex flex-col items-center gap-1">
           <form
             action="${pageContext.request.contextPath}/profile"
             method="post"
             id="photoForm"
           >
             <input type="hidden" name="action" value="uploadPhoto" />
-            <div  class="w-14 h-14 rounded-full bg-blue-50 border-2 border-secondary overflow-hidden flex items-center justify-content-center cursor-pointer
-            hover:border-blue-400 transition-colors mb-2" onclick="document.getElementById('photoInput').click()">
+            <div class="w-14 h-14 rounded-full bg-blue-50 border-2 border-secondary overflow-hidden flex items-center justify-content-center cursor-pointer hover:border-blue-400 transition-colors mb-2" onclick="document.getElementById('photoInput').click()">
               <c:choose>
                 <c:when test="${not empty user.profileImage}">
                   <img src="${pageContext.request.contextPath}/${user.profileImage}" alt="Photo" class="w-full h-full object-cover"/>
@@ -43,7 +42,7 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
             <input type="file" id="photoInput" name="profilePhoto" accept="image/*" class="hidden"
             onchange="document.getElementById('photoForm').submit()"/>
           </form>
-          <p class="text-sm font-semibold text-gray-800"><c:out value="${user.fullName}" /></p>
+          <p class="text-sm font-semibold text-gray-800 text-center"><c:out value="${user.fullName}" /></p>
             <span class="text-xs bg-gray-100 text-gray-500 px-3 py-0.5 rounded-full mb-4">
                 ${user.role eq 'ADMIN' ? 'Admin' : 'Customer'}
             </span>
@@ -61,10 +60,10 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
                    class="px-3 py-2 rounded-lg text-red-500 hover:bg-red-50 transition-colors">Logout</a>
             </nav>
         </div>
-        <div class="w-3/4 rounded-lg flex flex-col bg-primary gap-y-4 p-4">
+        <div class="w-full md:w-3/4 rounded-lg flex flex-col bg-primary gap-y-4 p-4">
             
                 
-          <section class="bg-white border border-gray-200 rounded-2xl p-6">
+          <section class="bg-white border border-gray-200 rounded-2xl p-4 md:p-6">
             <form action="${pageContext.request.contextPath}/profile"
                 method="post">
                 <!-- keeping these hidden inputs to retain address info during profile updates,because servlet needs these parameters too -->
@@ -75,8 +74,8 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
                 <input type="hidden" name="ward"     value="<c:out value="${user.ward}" />"/>
                 <input type="hidden" name="street"   value="<c:out value="${user.street}" />"/>
                 <input type="hidden" name="landmark" value="<c:out value="${user.landmark}" />"/>
-            <div class="flex justify-between items-center">
-                  <h1 class="text-lg text-accent font-semibold">Personal Information</h1>
+            <div class="flex flex-wrap items-center gap-2 justify-between sm:my-2 my-0">
+                  <h1 class="text-base md:text-lg text-accent font-semibold my-2 w-full sm:w-auto">Personal Information</h1>
                   <button type="button"
                     class="bg-black text-white px-4 py-2 text-[12px] rounded-lg hover:opacity-80 transition" 
                     id="personalEditButton"
@@ -98,25 +97,30 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
             </div>
             </div>
 
-            <div class="grid grid-cols-2 gap-x-8 gap-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 mt-2">
                 <%-- Name --%>
                 <div>
                     <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Full name</label>
-                    <p class="text-sm text-gray-800 view-mode" id="view-fullName"><c:out value="${user.fullName}" /></p>
-                    <input type="text" name="fullName" value="${user.fullName}" class="hidden edit-mode hidden edit-mode w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded-lg transition" required/>
+                    <p class="text-sm text-gray-800 view-mode-personal" id="view-fullName"><c:out value="${user.fullName}" /></p>
+                    <input type="text" name="fullName" value="<c:out value='${user.fullName}' />" class="hidden edit-mode-personal w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded-lg transition" required/>
                 </div>
 
                 <%-- Phone --%>
                 <div>
                     <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Phone</label>
-                    <p class="text-sm text-gray-800 view-mode">+977 <c:out value="${user.phone}" /></p>
-                    <input type="text" name="phone" value="<c:out value="${user.phone}" />" class="hidden edit-mode hidden edit-mode w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded-lg transition" placeholder="98XXXXXXXX" required/>
+                    <p class="text-sm text-gray-800 view-mode-personal">+977 <c:out value="${user.phone}" /></p>
+                    <input type="text" 
+                        name="phone" 
+                        value="<c:out value='${user.phone}' />" 
+                        required 
+                        class="hidden edit-mode-personal w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded-lg transition" 
+                        placeholder="98XXXXXXXX" />
                 </div>
 
                 <%-- Email --%>
                 <div>
                     <label class="text-xs font-semibold uppercase text-gray-400 mb-2">Email</label>
-                    <p class="text-sm text-gray-800"><c:out value="${user.email}" /></p>
+                    <p class="text-sm text-gray-800 break-all"><c:out value="${user.email}" /></p>
                 </div>
 
                 <%-- Verification Status --%>
@@ -136,12 +140,13 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
         </section>
 
 
-        <section class="bg-primary border border-gray-200 rounded-2xl p-6">
-              <div class="flex justify-between items-center">
-                <h1 class="text-lg text-accent font-semibold">Shipping Information</h1>
-                <button class="bg-black text-white px-4 py-2 text-[12px] rounded-lg"
-                onclick="enableAddressEdit()" id="addressEditBtn">Edit</button>
-
+        <section class="bg-primary border border-gray-200 rounded-2xl p-4 md:p-6">
+            <form id="address-form" action="${pageContext.request.contextPath}/profile"
+              method="post">
+              <div class="flex flex-wrap items-center gap-2 justify-between mb-2">
+                <h1 class="text-base md:text-lg text-accent font-semibold w-full sm:w-auto">Shipping Information</h1>
+                <button type="button" class="bg-black text-white px-4 py-2 text-[12px] rounded-lg"
+                onclick="enableAddressEdit()" id="addressEditButton">Edit</button>
 
               <div id="addressActionButtons" class="hidden flex gap-2">
                 <button type="submit"
@@ -157,22 +162,22 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
             </div>
               </div>
              
-              <form id="address-form" action="${pageContext.request.contextPath}/profile"
-              method="post">
+
+
               <!-- other input field kept because servlet needs these parameters during profile update, even if user is just updating address info. otherwise those fields will be overridden with null or empty values. -->
               <input type="hidden" name="action"   value="updateProfile"/>
               <input type="hidden" name="fullName" value="${user.fullName}"/>
               <input type="hidden" name="phone"    value="${user.phone}"/>
               
               
-              <div class="grid grid-cols-2 gap-x-8 gap-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4">
                 <!-- province  -->
                 <div>
                     <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Province</label>
-                    <p class="text-sm text-gray-800 view-address">
-                        ${not empty user.province ? user.province : '—'}
+                    <p class="text-sm text-gray-800 view-mode-address">
+                        <c:out value="${user.province}" default="-"/>
                     </p>
-                    <select name="province">
+                    <select name="province" class="hidden edit-mode-address w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded-lg transition">
                         <option value="">Select</option>
                         <c:forEach var="p" items="${['Koshi','Madhesh','Bagmati','Gandaki','Lumbini','Karnali','Sudurpashchim']}">
                             <option value="${p}" ${user.province eq p ? 'selected' : ''}>${p}</option>
@@ -180,111 +185,117 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
                     </select>
                 </div>
 
-
                 <!-- city  -->
                 <div>
                     <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">City</label>
-                    <p class="text-sm text-gray-800" id="view-city">
-                        ${not empty user.city ? user.city : '—'}
+                    <p class="text-sm text-gray-800 view-mode-address">
+                        <c:out value="${user.city}" default="-"/>
                     </p>
                     <input
-                           type="text" name="city" value="${user.city}"
-                           placeholder="e.g. Pokhara"/>
+                           type="text" name="city" value="<c:out value='${user.city}' />"
+                           placeholder="e.g. Pokhara"
+                           class="hidden edit-mode-address w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded-lg transition"/>
                 </div>
 
                 <%-- district --%>
                 <div>
                     <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">District</label>
-                    <p class="text-sm text-gray-800">
-                        ${not empty user.district ? user.district : '—'}
+                    <p class="text-sm text-gray-800 view-mode-address">
+                        <c:out value="${user.district}" default="-"/>
                     </p>
-                    <input type="text" name="district" value="${user.district}"
-                    placeholder="e.g. Kaski"/>
+                    <input type="text" name="district" value="<c:out value='${user.district}' />"
+                    placeholder="e.g. Kaski"
+                    class="hidden edit-mode-address w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded-lg transition"/>
                 </div>
 
                 <%-- ward --%>
                 <div>
                     <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Ward no.</label>
-                    <p class="text-sm text-gray-800">
-                        ${not empty user.ward ? user.ward : '—'}
+                    <p class="text-sm text-gray-800 view-mode-address">
+                        <c:out value="${user.ward}" default="-"/>
                     </p>
-                    <input type="text" name="ward" value="${user.ward}"
-                           placeholder="15"/>
+                    <input type="text" name="ward" value="<c:out value='${user.ward}' />"
+                           placeholder="15"
+                           class="hidden edit-mode-address w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded-lg transition"/>
                 </div>
 
                 <%-- street --%>
                 <div>
                     <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Street / tole</label>
-                    <p class="text-sm text-gray-800">
-                        ${not empty user.street ? user.street : '—'}
+                    <p class="text-sm text-gray-800 view-mode-address">
+                        <c:out value="${user.street}" default="-"/>
                     </p>
-                    <input type="text" name="street" value="${user.street}"
-                           placeholder="Tole name"/>
+                    <input type="text" name="street" value="<c:out value='${user.street}' />"
+                           placeholder="Tole name"
+                           class="hidden edit-mode-address w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded-lg transition"/>
                 </div>
 
                 <%-- landmark --%>
                 <div>
                     <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Landmark</label>
-                    <p class="text-sm text-gray-800">
-                        ${not empty user.landmark ? user.landmark : '—'}
+                    <p class="text-sm text-gray-800 view-mode-address">
+                       <c:out value="${user.landmark}" default="-"/>
                     </p>
-                    <input type="text" name="landmark" value="${user.landmark}"
-                          placeholder="Near hospital"/>
+                    <input type="text" name="landmark" 
+                    value="<c:out value='${user.landmark}' />"
+                    placeholder="Near hospital" class="hidden edit-mode-address w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded-lg transition"/>
                 </div>
                   </div>
                 </form>
-              
             </section>
 
 
-            <section class="bg-red-50 border border-red-200 rounded-2xl p-5">
-                <h1 class="text-lg text-accent font-semibold">Security Settings</h1>
+            <section class="bg-red-50 border border-red-200 rounded-2xl p-4 md:p-5">
+                <h1 class="text-base md:text-lg text-accent font-semibold my-2">Security Settings</h1>
 
-                <div class="flex justify-between">
+                <div class="flex flex-col sm:flex-row sm:justify-between items-start md:items-center gap-4">
                   <div>
                     <button type="button" onclick="togglePassword()"
                             class="text-sm text-blue-600 hover:underline">
                         Change password →
                   </button>
-                  <div id="pw-section" class="mt-4 pt-4 border-t border-orange-200">
+                  <div id="password-section" class="hidden mt-4 pt-4 border-t border-orange-200">
+                    <c:if test="${not empty passwordError}">
+                        <p class="text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-3">
+                            ${passwordError}
+                        </p>
+                    </c:if>
 
-                        <c:if test="${not empty passwordError}">
-                            <p class="text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-3">${passwordError}</p>
-                        </c:if>
-                        <c:if test="${not empty passwordSuccess}">
-                            <p class="text-xs text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2 mb-3">${passwordSuccess}</p>
-                        </c:if>
-
+                    <c:if test="${not empty passwordSuccess}">
+                        <p class="text-xs text-green-700 bg-green-50 border border-green-200 rounded-lg px-3 py-2 mb-3">
+                            ${passwordSuccess}
+                        </p>
+                    </c:if>
                         <form action="${pageContext.request.contextPath}/profile" method="post"
-                              class="flex flex-col gap-3 max-w-xs">
+                              class="flex flex-col gap-3 w-full">
                             <input type="hidden" name="action" value="changePassword"/>
 
                             <div>
-                                <label class="block text-xs font-semibold tracking-wide uppercase text-gray-400 mb-1">
+                                <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">
                                     Current password
                                 </label>
-                                <input class="field-input" type="password" name="currentPassword" required/>
+                                <input type="password" name="currentPassword" required class="w-full px-3 py-1 text-sm border border-gray-300 rounded-lg transition"/>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold tracking-wide uppercase text-gray-400 mb-1">
+                                <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">
                                     New password
                                 </label>
-                                <input class="field-input" type="password" name="newPassword" required/>
+                                <input type="password" name="newPassword"  required class="w-full px-3 py-1 text-sm border border-gray-300 rounded-lg transition"/>
                             </div>
                             <div>
-                                <label class="block text-xs font-semibold tracking-wide uppercase text-gray-400 mb-1">
+                                <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">
                                     Confirm password
                                 </label>
-                                <input class="field-input" type="password" name="confirmPassword" required/>
+                                <input type="password" name="confirmPassword" required class="w-full px-3 py-1 text-sm border border-gray-300 rounded-lg transition"/>
                             </div>
 
                             <div class="flex gap-2 mt-1">
                                 <button type="button" onclick="togglePassword()"
-                                        class="text-xs px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-white transition-colors text-gray-600">
+                                        class="bg-gray-300 text-gray-700 px-4 py-2 text-[12px] rounded-lg hover:opacity-80 transition">
                                     Cancel
                                 </button>
                                 <button type="submit"
-                                        class="text-xs px-3 py-1.5 bg-gray-900 text-white rounded-lg hover:bg-gray-700 transition-colors">
+                                        class="bg-black text-white px-4 py-2 text-[12px] rounded-lg hover:opacity-80 transition">
                                     Update
                                 </button>
                             </div>
@@ -307,32 +318,53 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
       </div>
     </main>
     <script>
-  const personalEditButton = document.getElementById("personalEditButton");
-  const personalActionButtons = document.getElementById("personalActionButtons");
+        // personal information edit 
+        // importing button and action buttons to toggle between them and show/hide based on edit mode
+  const personalEditButton = document.querySelector("#personalEditButton");
+  const personalActionButtons = document.querySelector("#personalActionButtons");
 
     function enablePersonalInformationEdit() {
         personalEditButton.classList.add("hidden");
         personalActionButtons.classList.remove("hidden");
 
-        document.querySelectorAll(".view-mode").forEach(el => el.classList.add("hidden"));
-        document.querySelectorAll(".edit-mode").forEach(el => el.classList.remove("hidden"));
+        document.querySelectorAll(".view-mode-personal").forEach(el => el.classList.add("hidden"));
+        document.querySelectorAll(".edit-mode-personal").forEach(el => el.classList.remove("hidden"));
     }
 
     function cancelPersonalInformationEdit() {
         personalEditButton.classList.remove("hidden");
         personalActionButtons.classList.add("hidden");
 
-        document.querySelectorAll(".view-mode").forEach(el => el.classList.remove("hidden"));
-        document.querySelectorAll(".edit-mode").forEach(el => el.classList.add("hidden"));
+        document.querySelectorAll(".view-mode-personal").forEach(el => el.classList.remove("hidden"));
+        document.querySelectorAll(".edit-mode-personal").forEach(el => el.classList.add("hidden"));
     }
 
+    // address edit
+    const addressEditButton = document.querySelector("#addressEditButton");
+    const addressActionButtons = document.querySelector("#addressActionButtons");
+    
     function enableAddressEdit() {
+        addressEditButton.classList.add("hidden");
+        addressActionButtons.classList.remove("hidden");
 
+        document.querySelectorAll(".view-mode-address").forEach(el => el.classList.add("hidden"));
+        document.querySelectorAll(".edit-mode-address").forEach(el => el.classList.remove("hidden"));
     }
 
     function cancelAddressEdit(){
-        
+        addressEditButton.classList.remove("hidden");
+        addressActionButtons.classList.add("hidden");
+
+        document.querySelectorAll(".view-mode-address").forEach(el => el.classList.remove("hidden"));
+        document.querySelectorAll(".edit-mode-address").forEach(el => el.classList.add("hidden"));
     }
+
+    //password change toggle
+    const passwordSection = document.querySelector("#password-section");
+    function togglePassword() {
+        passwordSection.classList.toggle("hidden");
+    }
+
   </script>
   </body>
 </html>
