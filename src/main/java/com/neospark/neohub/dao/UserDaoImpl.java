@@ -350,28 +350,29 @@ public int getTotalUserCount() {
 
 // Helper method to map ResultSet to User object
 private User mapUser(ResultSet rs) throws SQLException {
-    User user = new User(0, null, null, null, null, null, null, null, null, null, null, null, null, false, null, null);
+    User user = new User();
+
     user.setId(rs.getInt("id"));
     user.setFullName(rs.getString("full_name"));
     user.setEmail(rs.getString("email"));
+    user.setPassword(rs.getString("password")); // should be included??
     user.setPhone(rs.getString("phone"));
+
     user.setProvince(rs.getString("province"));
     user.setDistrict(rs.getString("district"));
     user.setCity(rs.getString("city"));
     user.setWard(rs.getString("ward"));
     user.setStreet(rs.getString("street"));
     user.setLandmark(rs.getString("landmark"));
+
     user.setProfileImage(rs.getString("profile_image"));
     user.setRole(rs.getString("role"));
     user.setActive(rs.getBoolean("is_active"));
-    
-    if (rs.getTimestamp("created_at") != null) {
-        user.setCreatedAt(rs.getTimestamp("created_at"));
-    }
-    if (rs.getTimestamp("updated_at") != null) {
-        user.setUpdatedAt(rs.getTimestamp("updated_at"));
-    }
-    
+    user.setEmailVerified(rs.getBoolean("is_email_verified"));
+
+    user.setCreatedAt(rs.getTimestamp("created_at"));
+    user.setUpdatedAt(rs.getTimestamp("updated_at"));
+
     return user;
 }
 
@@ -389,7 +390,7 @@ public List<User> getRecentUsers(int limit) {
         ResultSet rs = stmt.executeQuery();
 
         while (rs.next()) {
-            users.add(mapUser(rs));        // Using helper method (recommended)
+            users.add(mapUser(rs));        // Using helper method to map ResultSet to User object
         }
 
     } catch (SQLException e) {
