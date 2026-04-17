@@ -20,6 +20,10 @@ public interface UserDao {
     boolean deleteUser(int userId);
     boolean updatePassword(int id, String hashedPassword);
     boolean updateProfileImage(int id, String imagePath);
+
     // admin 
     boolean updateStatus(int userId, boolean isActive);
+    int getTotalUserCount(); //Added for dashboard stats
+    List<User> getRecentUsers(int i); //Added for dashboard recent users
+    
 }

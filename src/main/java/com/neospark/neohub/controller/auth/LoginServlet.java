@@ -58,6 +58,14 @@ public class LoginServlet extends HttpServlet {
         }
         SessionUtil.setAttribute(req, "user", user);
         CookieUtil.addCookie(resp, "email", user.getEmail(), 7 * 24 * 60 * 60);
-        resp.sendRedirect(req.getContextPath() + "/");
+
+        // resp.sendRedirect(req.getContextPath() + "/");
+
+        //Added: Role-based redirect
+        if (user.isAdmin()) {
+         resp.sendRedirect(req.getContextPath() + "/admin/dashboard");
+         } else {
+            resp.sendRedirect(req.getContextPath() + "/");
+        }
     }
 }

@@ -325,4 +325,79 @@ public boolean isEmailVerified(String email) {
     return false;
 }
 
+//Added:get total user count for admin dashboard stats
+@Override
+public int getTotalUserCount() {
+    String sql = "SELECT COUNT(*) FROM users WHERE role = 'USER'";
+        Connection connection = null;
+    try {
+        connection = DatabaseConnection.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql);
+         ResultSet rs = ps.executeQuery();
+        
+        if (rs.next()) {
+            return rs.getInt(1);
+        }
+        
+    } catch (SQLException e) {
+        System.out.println("Error getting total user count: " + e.getMessage());
+        e.printStackTrace();
+    } finally {
+        DatabaseConnection.closeConnection(connection);
+    }
+    return 0;
+}
+
+// Helper method to map ResultSet to User object
+private User mapUser(ResultSet rs) throws SQLException {
+    User user = new User();
+
+    user.setId(rs.getInt("id"));
+    user.setFullName(rs.getString("full_name"));
+    user.setEmail(rs.getString("email"));
+    user.setPassword(rs.getString("password")); // should be included??
+    user.setPhone(rs.getString("phone"));
+
+    user.setProvince(rs.getString("province"));
+    user.setDistrict(rs.getString("district"));
+    user.setCity(rs.getString("city"));
+    user.setWard(rs.getString("ward"));
+    user.setStreet(rs.getString("street"));
+    user.setLandmark(rs.getString("landmark"));
+
+    user.setProfileImage(rs.getString("profile_image"));
+    user.setRole(rs.getString("role"));
+    user.setActive(rs.getBoolean("is_active"));
+    user.setEmailVerified(rs.getBoolean("is_email_verified"));
+
+    user.setCreatedAt(rs.getTimestamp("created_at"));
+    user.setUpdatedAt(rs.getTimestamp("updated_at"));
+
+    return user;
+}
+
+@Override
+public List<User> getRecentUsers(int limit) {
+    String sql = "SELECT * FROM users WHERE role = 'USER' " +
+                 "ORDER BY created_at DESC LIMIT ?";
+    
+    List<User> users = new ArrayList<>();
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setInt(1, limit);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            users.add(mapUser(rs));        // Using helper method to map ResultSet to User object
+        }
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    
+    return users;
+}
+
 }
