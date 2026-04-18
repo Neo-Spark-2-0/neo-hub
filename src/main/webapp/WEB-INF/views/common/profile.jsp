@@ -56,9 +56,10 @@
             <nav class="w-full flex flex-col gap-0.5 text-sm">
               <a href="${pageContext.request.contextPath}/profile"
                    class="px-3 py-2 rounded-lg font-medium bg-gray-900 text-white">Profile</a>
+            <c:if test="${user.role ne 'ADMIN'}">
               <a href="${pageContext.request.contextPath}/orders"
                    class="px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">Orders</a>
-
+            </c:if>
             <div class="w-full h-[0.5px] bg-gray-300 my-2"></div>
 
               <a href="#"
@@ -146,7 +147,7 @@
           </form>
         </section>
 
-
+        <c:if test="${user.role ne 'ADMIN'}">
         <section class="bg-primary border border-gray-200 rounded-2xl p-4 md:p-6">
             <form id="address-form" action="${pageContext.request.contextPath}/profile"
               method="post">
@@ -264,6 +265,7 @@
                   </div>
                 </form>
             </section>
+            </c:if>
 
             <section class="bg-primary border border-gray-200 rounded-2xl p-4 md:p-6">
                 <h1 class="text-base md:text-lg text-accent font-semibold w-full sm:w-auto my-2">Account Details</h1> 

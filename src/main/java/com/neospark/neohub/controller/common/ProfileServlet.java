@@ -53,6 +53,15 @@ public class ProfileServlet extends HttpServlet {
         String ward      = request.getParameter("ward").trim();
         String street    = request.getParameter("street").trim();
         String landmark  = request.getParameter("landmark").trim();
+        if(sessionUser.isAdmin()){
+            province = "N/A";
+            district = "N/A";
+            city = "N/A";
+            localLevel = "N/A";
+            ward = "N/A";
+            street = "N/A";
+            landmark = "N/A";
+        }
         if(ValidationUtil.isAnyEmpty(fullName, phone, province, district, city, localLevel, ward, street, landmark)) {
             setErrorAndForward(request, response, "profileError", "Input fields cannot be empty.");
             return;
