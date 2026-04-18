@@ -1,161 +1,227 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>Register - NEO-HUB</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Create your NEO-HUB account to connect with the latest tech news, projects, and community. Join us today!">
-    <meta name="keywords" content="NEO-HUB, registration, sign up, create account, tech community">
-    <meta name="author" content="NEO-HUB Team">
-    <link rel="icon" href="${pageContext.request.contextPath}/static/images/favicon.png" type="image/x-icon">
-    <jsp:include page="/WEB-INF/views/common/import.jsp" />
-</head>
-<body class="font-poppins bg-gray-100 min-h-screen">
-<div class="p-6">
 
-    <!-- Header & Add Button -->
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Product Management</h1>
-        <a href="${pageContext.request.contextPath}/admin/products?action=add" 
-           class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow-sm transition">
-           + Add New Product
-        </a>
-    </div>
+<!-- 1. HEAD SECTION -->
+<jsp:include page="/WEB-INF/templates/common/head.jsp">
+    <jsp:param name="title" value="Manage Products" />
+</jsp:include>
 
-    <!-- Alert Messages (Success/Error) -->
-    <c:if test="${not empty success}">
-        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4 shadow-sm" role="alert">
-            <p class="font-bold">Success</p>
-            <p>${success}</p>
-        </div>
-    </c:if>
+<body class="bg-secondary font-poppins text-accent">
 
-    <c:if test="${not empty error}">
-        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 shadow-sm" role="alert">
-            <p class="font-bold">Error</p>
-            <p>${error}</p>
-        </div>
-    </c:if>
+    <!-- 2. SIDEBAR SECTION -->
+    <jsp:include page="/WEB-INF/templates/admin/sidebar.jsp">
+        <jsp:param name="activePage" value="products" />
+    </jsp:include>
 
-    <!-- Search & Filter Area -->
-    <div class="bg-white p-4 rounded shadow-sm mb-6 border">
-        <form action="${pageContext.request.contextPath}/admin/products" method="get" class="flex flex-wrap gap-4 items-end">
-            <div class="w-full md:w-1/3">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Search Products</label>
-                <input type="text" name="search" value="${search}"
-                       class="border border-gray-300 px-3 py-2 rounded w-full focus:ring-blue-500 focus:border-blue-500"
-                       placeholder="Enter product name..." />
-            </div>
+    <!-- 3. MAIN CONTENT CONTAINER -->
+    <div class="sm:ml-64 min-h-screen flex flex-col">
+        
+        <!-- 4. HEADER SECTION -->
+        <jsp:include page="/WEB-INF/templates/admin/header.jsp">
+            <jsp:param name="activePage" value="Product Management" />
+        </jsp:include>
 
-            <div class="w-full md:w-1/4">
-                <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                <select name="categoryId" class="border border-gray-300 px-3 py-2 rounded w-full">
-                    <option value="0">All Categories</option>
-                    <c:forEach var="cat" items="${categories}">
-                        <option value="${cat.id}" ${cat.id == categoryId ? 'selected' : ''}>
-                            ${cat.name}
-                        </option>
-                    </c:forEach>
-                </select>
-            </div>
-
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded transition shadow-sm">
-                Search
-            </button>
+        <!-- 5. MAIN CONTENT AREA -->
+        <main class="p-6 md:p-10 flex-1">
             
-            <a href="${pageContext.request.contextPath}/admin/products" class="text-gray-500 hover:underline text-sm pb-2">
-                Clear Filters
-            </a>
-        </form>
+            <!-- Page Heading & Add Button -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+                <div>
+                    <h2 class="text-2xl font-bold">Product Inventory</h2>
+                    <p class="text-xs text-gray-500 font-medium mt-1">Monitor stock, update pricing, and manage visibility.</p>
+                </div>
+                
+                <a href="${pageContext.request.contextPath}/admin/products?action=add" 
+                   class="inline-flex items-center justify-center gap-2 bg-info hover:opacity-90 text-white px-6 py-3 rounded-xl text-sm font-bold transition-all shadow-sm">
+                    <i class="fa-solid fa-plus text-xs"></i>
+                    Add New Product
+                </a>
+            </div>
+
+            <!-- SEARCH & FILTER CARD -->
+            <div class="bg-primary p-6 rounded-2xl shadow-sm border border-gray-100 mb-8">
+                <form action="${pageContext.request.contextPath}/admin/products" method="get" class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                    
+                    <%-- Search Input --%>
+                    <div class="md:col-span-5">
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest">Search</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+                            <input type="text" name="search" value="${search}"
+                                   class="w-full bg-secondary border-none rounded-xl py-3 pl-10 pr-4 text-sm focus:ring-2 focus:ring-info transition-all"
+                                   placeholder="Product name, brand or SKU..." />
+                        </div>
+                    </div>
+
+                    <%-- Category Dropdown --%>
+                    <div class="md:col-span-4">
+                        <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest">Category</label>
+                        <select name="categoryId" class="w-full bg-secondary border-none rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-info transition-all">
+                            <option value="0">All Categories</option>
+                            <c:forEach var="cat" items="${categories}">
+                                <option value="${cat.id}" ${cat.id == categoryId ? 'selected' : ''}>
+                                    ${cat.name}
+                                </option>
+                            </c:forEach>
+                        </select>
+                    </div>
+
+                    <%-- Action Buttons --%>
+                    <div class="md:col-span-3 flex gap-2">
+                        <button type="submit" class="flex-1 bg-accent text-white py-3 rounded-xl text-sm font-bold hover:opacity-90 transition shadow-sm">
+                            Apply Filters
+                        </button>
+                        <a href="${pageContext.request.contextPath}/admin/products" 
+                           class="p-3 bg-gray-100 text-gray-500 rounded-xl hover:bg-gray-200 transition flex items-center justify-center" title="Clear Filters">
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- DATA TABLE CARD -->
+            <div class="bg-primary rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="bg-secondary text-[10px] uppercase font-bold text-gray-400 tracking-wider">
+                            <tr>
+                                <th class="px-6 py-4">Image</th>
+                                <th class="px-6 py-4">Product Details</th>
+                                <th class="px-6 py-4">Price</th>
+                                <th class="px-6 py-4">Inventory</th>
+                                <th class="px-6 py-4">Status</th>
+                                <th class="px-6 py-4 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-secondary text-sm">
+                            <c:forEach var="p" items="${productList}">
+                                <tr class="hover:bg-secondary/30 transition-colors">
+                                    <td class="px-6 py-4">
+                                        <div class="w-14 h-14 rounded-xl bg-secondary overflow-hidden border border-gray-100 shadow-inner">
+                                            <c:choose>
+                                                <c:when test="${not empty p.image}">
+                                                    <img src="${pageContext.request.contextPath}/${p.image}" class="w-full h-full object-cover">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="w-full h-full flex items-center justify-center text-[10px] text-gray-300 italic">No Img</div>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="font-bold text-accent leading-tight">${p.name}</div>
+                                        <div class="flex items-center gap-2 mt-1">
+                                            <span class="text-[9px] font-bold bg-info/10 text-info px-1.5 py-0.5 rounded uppercase leading-none">${p.sku}</span>
+                                            <span class="text-[10px] text-gray-400 leading-none">${p.brand}</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 font-bold">
+                                        <c:choose>
+                                            <c:when test="${p.discountPrice > 0}">
+                                                <div class="text-success">Rs. ${p.discountPrice}</div>
+                                                <div class="text-[10px] text-gray-300 line-through font-normal">Rs. ${p.price}</div>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="text-accent">Rs. ${p.price}</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex flex-col gap-1">
+                                            <span class="text-xs font-bold ${p.stock < 10 ? 'text-danger' : 'text-accent'}">
+                                                ${p.stock} Units
+                                            </span>
+                                            <div class="w-16 h-1 bg-gray-100 rounded-full overflow-hidden">
+                                                <div class="h-full ${p.stock < 10 ? 'bg-danger' : 'bg-success'}" style="width: ${p.stock > 100 ? 100 : p.stock}%"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        <div class="flex items-center gap-1.5">
+                                            <c:if test="${p.active}">
+                                                <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
+                                                <span class="text-[10px] font-bold text-success uppercase">Active</span>
+                                            </c:if>
+                                            <c:if test="${not p.active}">
+                                                <span class="w-2 h-2 rounded-full bg-gray-300"></span>
+                                                <span class="text-[10px] font-bold text-gray-400 uppercase">Hidden</span>
+                                            </c:if>
+                                            <c:if test="${p.featured}">
+                                                <span class="ml-2 text-warning"><i class="fa-solid fa-star text-[10px]"></i></span>
+                                            </c:if>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 text-right">
+                                        <div class="flex justify-end items-center gap-2">
+                                            <%-- Edit Action --%>
+                                            <a href="${pageContext.request.contextPath}/admin/products?action=edit&id=${p.id}" 
+                                               class="w-9 h-9 flex items-center justify-center bg-info/10 text-info rounded-xl hover:bg-info hover:text-white transition-all shadow-sm"
+                                               title="Edit Product">
+                                                <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                            </a>
+                                            
+                                            <%-- Delete Action --%>
+                                            <form id="delete-form-${p.id}" action="${pageContext.request.contextPath}/admin/products" method="POST" class="inline">
+                                                <input type="hidden" name="action" value="delete">
+                                                <input type="hidden" name="id" value="${p.id}">
+                                                <button type="button" 
+                                                        onclick="confirmAdminAction('Warning: This will permanently remove the product and its image from the system. Continue?', 'delete-form-${p.id}')"
+                                                        class="w-9 h-9 flex items-center justify-center bg-danger/10 text-danger rounded-xl hover:bg-danger hover:text-white transition-all shadow-sm"
+                                                        title="Delete Product">
+                                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                            <c:if test="${empty productList}">
+                                <tr>
+                                    <td colspan="6" class="px-6 py-20 text-center">
+                                        <img src="${pageContext.request.contextPath}/static/images/empty-box.png" class="h-20 mx-auto opacity-20 mb-4" onerror="this.style.display='none'">
+                                        <p class="text-gray-400 italic text-sm">No products found in the database.</p>
+                                    </td>
+                                </tr>
+                            </c:if>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- PAGINATION SECTION -->
+                <c:if test="${totalPages > 1}">
+                    <div class="px-6 py-6 bg-secondary/20 border-t border-secondary flex justify-center items-center gap-1.5">
+                        <c:forEach begin="1" end="${totalPages}" var="i">
+                            <a href="?page=${i}&search=${search}&categoryId=${categoryId}" 
+                               class="w-9 h-9 flex items-center justify-center rounded-xl text-xs font-bold transition-all
+                               ${i == currentPage ? 'bg-accent text-white shadow-lg' : 'bg-primary text-gray-400 hover:bg-gray-200 border border-gray-100'}">
+                                ${i}
+                            </a>
+                        </c:forEach>
+                    </div>
+                </c:if>
+            </div>
+        </main>
+
+        <!-- 6. FOOTER SECTION -->
+        <jsp:include page="/WEB-INF/templates/admin/footer.jsp" />
     </div>
 
-    <!-- Table -->
-    <div class="overflow-x-auto bg-white rounded shadow-sm border">
-        <table class="min-w-full leading-normal">
-            <thead>
-                <tr class="bg-gray-50 border-b text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                    <th class="px-5 py-3">Image</th>
-                    <th class="px-5 py-3 text-center">SKU</th>
-                    <th class="px-5 py-3">Product Name</th>
-                    <th class="px-5 py-3">Price</th>
-                    <th class="px-5 py-3">Stock</th>
-                    <th class="px-5 py-3 text-center">Status</th>
-                    <th class="px-5 py-3 text-right">Actions</th>
-                </tr>
-            </thead>
+    <!-- SCRIPT FOR NOTIFICATIONS -->
+    <script>
+        window.onload = function() {
+            <%-- Read from session flash messages --%>
+            <c:if test="${not empty success}">
+                showToast("${success}", "success");
+            </c:if>
+            <c:if test="${not empty error}">
+                showToast("${error}", "error");
+            </c:if>
+        };
+    </script>
 
-            <tbody class="divide-y divide-gray-200">
-                <c:forEach var="p" items="${productList}">
-                    <tr class="hover:bg-gray-50 transition">
-                        <td class="px-5 py-4">
-                            <div class="h-12 w-12 overflow-hidden rounded bg-gray-100 border">
-                                <c:choose>
-                                    <c:when test="${not empty p.image}">
-                                        <!-- Corrected Path: Servlet already includes 'uploads/' in the string -->
-                                        <img src="${pageContext.request.contextPath}/${p.image}" 
-                                             class="h-full w-full object-cover" 
-                                             alt="${p.name}"/>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <div class="h-full w-full flex items-center justify-center text-gray-400 text-[10px]">NO IMG</div>
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-                        </td>
-                        <td class="px-5 py-4 text-center text-sm font-mono text-gray-500">${p.sku}</td>
-                        <td class="px-5 py-4">
-                            <div class="text-sm font-bold text-gray-900">${p.name}</div>
-                            <div class="text-xs text-gray-500 truncate w-40">${p.brand}</div>
-                        </td>
-                        <td class="px-5 py-4 text-sm font-semibold text-gray-700">
-                           <c:choose>
-                               <c:when test="${p.discountPrice > 0}">
-                                   <span class="text-green-600">Rs. ${p.discountPrice}</span>
-                                   <div class="text-[10px] text-gray-400 line-through">Rs. ${p.price}</div>
-                               </c:when>
-                               <c:otherwise>Rs. ${p.price}</c:otherwise>
-                           </c:choose>
-                        </td>
-                        <td class="px-5 py-4">
-                            <span class="px-2 py-1 text-xs font-medium rounded-full ${p.stock < 10 ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-700'}">
-                                ${p.stock} units
-                            </span>
-                        </td>
-                        <td class="px-5 py-4 text-center">
-                            <c:if test="${p.active}"><span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded mr-1">Active</span></c:if>
-                            <c:if test="${p.featured}"><span class="text-xs bg-amber-100 text-amber-800 px-2 py-0.5 rounded">★</span></c:if>
-                        </td>
-                        <td class="px-5 py-4 text-right text-sm font-medium">
-                            <a href="${pageContext.request.contextPath}/admin/products?action=edit&id=${p.id}" 
-                               class="text-blue-600 hover:text-blue-900 mr-4">Edit</a>
-                            
-                            <!--  NEW DELETE FORM (POST Method) -->
-                            <form action="${pageContext.request.contextPath}/admin/products" 
-                                  method="POST" 
-                                  class="inline-block"
-                                  onsubmit="return confirm('Are you sure you want to delete this product? This action cannot be undone.')">
-                                <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="id" value="${p.id}">
-                                <button type="submit" class="text-red-600 hover:text-red-900 font-medium">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                </c:forEach>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Pagination -->
-    <div class="mt-6 flex justify-center items-center gap-2">
-        <c:forEach begin="1" end="${totalPages}" var="i">
-            <a href="?page=${i}&search=${search}&categoryId=${categoryId}"
-               class="px-4 py-2 border rounded transition ${i == currentPage ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-700 hover:bg-gray-100'}">
-                ${i}
-            </a>
-        </c:forEach>
-    </div>
-
-</div>
 </body>
 </html>

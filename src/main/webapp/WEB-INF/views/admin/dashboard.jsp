@@ -1,217 +1,172 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Admin Dashboard | NEO-HUB</title>
-    <!-- Include your imports -->
-    <jsp:include page="../common/import.jsp"/>
-</head>
 
-<body class="bg-gray-100 font-poppins">
+<!-- Include Head Template -->
+<jsp:include page="/WEB-INF/templates/common/head.jsp">
+    <jsp:param name="title" value="Admin Dashboard" />
+</jsp:include>
 
-<!-- ===== LAYOUT ===== -->
-<div class="flex">
+<body class="bg-secondary font-poppins text-accent">
 
-    <!-- ===== SIDEBAR ===== -->
-    <aside class="w-64 bg-dark text-white min-h-screen fixed">
+    <!-- Sidebar Inclusion -->
+    <jsp:include page="/WEB-INF/templates/admin/sidebar.jsp">
+        <jsp:param name="activePage" value="dashboard" />
+    </jsp:include>
 
-        <div class="p-5 border-b border-gray-700">
-            <h2 class="text-xl font-bold text-primary">
-                <i class="fa fa-microchip mr-2"></i>NEO-HUB
-            </h2>
-            <p class="text-xs text-gray-400">Admin Panel</p>
-        </div>
+    <!-- Main Content Container -->
+    <div class="sm:ml-64 min-h-screen flex flex-col">
+        
+        <!-- Header Inclusion -->
+        <jsp:include page="/WEB-INF/templates/admin/header.jsp">
+            <jsp:param name="activePage" value="Dashboard" />
+        </jsp:include>
 
-        <nav class="mt-4 text-sm">
-
-            <p class="px-5 text-gray-400 text-xs mb-2">MAIN</p>
-            <a href="${pageContext.request.contextPath}/admin/dashboard"
-               class="flex items-center gap-3 px-5 py-3 bg-primary/10 text-primary border-l-4 border-primary">
-                <i class="fa fa-chart-line"></i> Dashboard
-            </a>
-
-            <p class="px-5 text-gray-400 text-xs mt-4 mb-2">MANAGEMENT</p>
-
-            <a href="${pageContext.request.contextPath}/admin/users"
-               class="flex items-center gap-3 px-5 py-3 hover:bg-white/5">
-                <i class="fa fa-users"></i> Users
-            </a>
-
-            <a href="${pageContext.request.contextPath}/admin/products"
-               class="flex items-center gap-3 px-5 py-3 hover:bg-white/5">
-                <i class="fa fa-box"></i> Products
-            </a>
-
-            <a href="${pageContext.request.contextPath}/admin/categories"
-               class="flex items-center gap-3 px-5 py-3 hover:bg-white/5">
-                <i class="fa fa-tags"></i> Categories
-            </a>
-
-            <a href="${pageContext.request.contextPath}/admin/orders"
-               class="flex items-center gap-3 px-5 py-3 hover:bg-white/5">
-                <i class="fa fa-shopping-cart"></i> Orders
-            </a>
-
-            <p class="px-5 text-gray-400 text-xs mt-4 mb-2">ACCOUNT</p>
-
-            <a href="${pageContext.request.contextPath}/logout"
-               class="flex items-center gap-3 px-5 py-3 hover:bg-red-500/20 text-red-400">
-                <i class="fa fa-sign-out-alt"></i> Logout
-            </a>
-
-        </nav>
-    </aside>
-
-    <!-- ===== MAIN CONTENT ===== -->
-    <main class="ml-64 w-full">
-
-        <!-- TOP BAR -->
-        <div class="bg-white shadow px-6 py-4 flex justify-between items-center">
-
-            <div>
-                <h2 class="text-lg font-semibold text-dark">Dashboard</h2>
-                <p class="text-sm text-gray-500">
-                    Welcome back, ${sessionScope.user.fullName}
-                </p>
-            </div>
-
-            <div class="flex items-center gap-3">
-                <img src="${pageContext.request.contextPath}/uploads/profiles/${sessionScope.user.profileImage}"
-                     class="w-10 h-10 rounded-full border object-cover"/>
-                <span class="text-sm font-medium">${sessionScope.user.fullName}</span>
-            </div>
-
-        </div>
-
-        <!-- CONTENT -->
-        <div class="p-6 space-y-6">
-
-            <!-- ===== STATS ===== -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-
-                <!-- Users -->
-                <div class="bg-white p-5 rounded-xl shadow flex items-center gap-4">
-                    <div class="bg-blue-500 text-white p-3 rounded-lg">
-                        <i class="fa fa-users"></i>
+        <main class="p-6 md:p-10">
+            
+            <!-- STATS SECTION -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                
+                <!-- Revenue Card -->
+                <div class="bg-primary p-6 rounded-2xl shadow-sm border border-gray-100 transition hover:shadow-md">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-3 bg-success/10 text-success rounded-xl">
+                            <i class="fa-solid fa-money-bill-trend-up text-lg"></i>
+                        </div>
+                        <span class="text-[10px] font-bold text-success bg-success/10 px-2 py-1 rounded-lg">+12.5%</span>
                     </div>
-                    <div>
-                        <h3 class="text-xl font-bold">${totalUsers}</h3>
-                        <p class="text-sm text-gray-500">Users</p>
+                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total Revenue</p>
+                    <h3 class="text-2xl font-bold mt-1">Rs. <fmt:formatNumber value="${totalRevenue}" pattern="#,##0"/></h3>
+                </div>
+
+                <!-- Orders Card -->
+                <div class="bg-primary p-6 rounded-2xl shadow-sm border border-gray-100 transition hover:shadow-md">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-3 bg-info/10 text-info rounded-xl">
+                            <i class="fa-solid fa-cart-shopping text-lg"></i>
+                        </div>
                     </div>
+                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total Orders</p>
+                    <h3 class="text-2xl font-bold mt-1">${totalOrders}</h3>
                 </div>
 
-                <!-- Products -->
-                <div class="bg-white p-5 rounded-xl shadow flex items-center gap-4">
-                    <div class="bg-green-500 text-white p-3 rounded-lg">
-                        <i class="fa fa-box"></i>
+                <!-- Products Card -->
+                <div class="bg-primary p-6 rounded-2xl shadow-sm border border-gray-100 transition hover:shadow-md">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-3 bg-warning/10 text-warning rounded-xl">
+                            <i class="fa-solid fa-box text-lg"></i>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="text-xl font-bold">${totalProducts}</h3>
-                        <p class="text-sm text-gray-500">Products</p>
+                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Total Products</p>
+                    <h3 class="text-2xl font-bold mt-1">${totalProducts}</h3>
+                </div>
+
+                <!-- Users Card -->
+                <div class="bg-primary p-6 rounded-2xl shadow-sm border border-gray-100 transition hover:shadow-md">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="p-3 bg-accent/10 text-accent rounded-xl">
+                            <i class="fa-solid fa-users text-lg"></i>
+                        </div>
                     </div>
-                </div>
-
-                <!-- Orders -->
-                <div class="bg-white p-5 rounded-xl shadow flex items-center gap-4">
-                    <div class="bg-yellow-500 text-white p-3 rounded-lg">
-                        <i class="fa fa-shopping-cart"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold">${totalOrders}</h3>
-                        <p class="text-sm text-gray-500">Orders</p>
-                    </div>
-                </div>
-
-                <!-- Revenue -->
-                <div class="bg-white p-5 rounded-xl shadow flex items-center gap-4">
-                    <div class="bg-cyan-500 text-white p-3 rounded-lg">
-                        <i class="fa fa-dollar-sign"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-bold">
-                            Rs. <fmt:formatNumber value="${totalRevenue}" pattern="#,##0"/>
-                        </h3>
-                        <p class="text-sm text-gray-500">Revenue</p>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- ===== ORDER STATUS ===== -->
-            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
-
-                <div class="bg-white p-4 rounded-lg shadow text-center border-t-4 border-yellow-400">
-                    <h3 class="text-xl font-bold text-yellow-500">${pendingOrders}</h3>
-                    <p class="text-sm text-gray-500">Pending</p>
-                </div>
-
-                <div class="bg-white p-4 rounded-lg shadow text-center border-t-4 border-blue-400">
-                    <h3 class="text-xl font-bold text-blue-500">${processingOrders}</h3>
-                    <p class="text-sm text-gray-500">Processing</p>
-                </div>
-
-                <div class="bg-white p-4 rounded-lg shadow text-center border-t-4 border-indigo-500">
-                    <h3 class="text-xl font-bold text-indigo-500">${shippedOrders}</h3>
-                    <p class="text-sm text-gray-500">Shipped</p>
-                </div>
-
-                <div class="bg-white p-4 rounded-lg shadow text-center border-t-4 border-green-500">
-                    <h3 class="text-xl font-bold text-green-500">${deliveredOrders}</h3>
-                    <p class="text-sm text-gray-500">Delivered</p>
-                </div>
-
-                <div class="bg-white p-4 rounded-lg shadow text-center border-t-4 border-red-500">
-                    <h3 class="text-xl font-bold text-red-500">${cancelledOrders}</h3>
-                    <p class="text-sm text-gray-500">Cancelled</p>
-                </div>
-
-            </div>
-
-            <!-- ===== RECENT ORDERS ===== -->
-            <div class="bg-white rounded-xl shadow">
-                <div class="flex justify-between items-center p-4 border-b">
-                    <h3 class="font-semibold">Recent Orders</h3>
-                    <a href="${pageContext.request.contextPath}/admin/orders"
-                       class="text-primary text-sm">View All</a>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="w-full text-sm">
-                        <thead class="bg-gray-100 text-gray-600">
-                        <tr>
-                            <th class="p-3 text-left">Order</th>
-                            <th class="p-3">Customer</th>
-                            <th class="p-3">Amount</th>
-                            <th class="p-3">Status</th>
-                        </tr>
-                        </thead>
-
-                        <tbody>
-                        <c:forEach var="order" items="${recentOrders}">
-                            <tr class="border-t hover:bg-gray-50">
-                                <td class="p-3">${order.orderNumber}</td>
-                                <td class="p-3">${order.userName}</td>
-                                <td class="p-3">Rs. ${order.totalAmount}</td>
-                                <td class="p-3">
-                                    <span class="px-2 py-1 text-xs rounded-full bg-gray-200">
-                                        ${order.orderStatus}
-                                    </span>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
+                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Active Users</p>
+                    <h3 class="text-2xl font-bold mt-1">${totalUsers}</h3>
                 </div>
             </div>
 
-        </div>
+            <!-- GRID: STATUS TRACKER + RECENT ORDERS -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                
+                <!-- Status Tracker Column -->
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="bg-primary p-6 rounded-2xl shadow-sm border border-gray-100">
+                        <h4 class="text-sm font-bold mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-bullseye text-info"></i> Order Fulfillment
+                        </h4>
+                        <div class="space-y-4">
+                            <div class="flex items-center justify-between p-3 bg-secondary rounded-xl">
+                                <span class="text-xs font-bold text-warning uppercase">Pending</span>
+                                <span class="text-sm font-bold">${pendingOrders}</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-secondary rounded-xl">
+                                <span class="text-xs font-bold text-info uppercase">Processing</span>
+                                <span class="text-sm font-bold">${processingOrders}</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-secondary rounded-xl">
+                                <span class="text-xs font-bold text-success uppercase">Delivered</span>
+                                <span class="text-sm font-bold">${deliveredOrders}</span>
+                            </div>
+                            <div class="flex items-center justify-between p-3 bg-secondary rounded-xl">
+                                <span class="text-xs font-bold text-danger uppercase">Cancelled</span>
+                                <span class="text-sm font-bold">${cancelledOrders}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-    </main>
-</div>
+                <!-- Recent Orders Table Column -->
+                <div class="lg:col-span-2">
+                    <div class="bg-primary rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                        <div class="px-6 py-5 border-b border-secondary flex justify-between items-center bg-white">
+                            <h3 class="font-bold text-sm uppercase tracking-wide">Recent Transactions</h3>
+                            <a href="${pageContext.request.contextPath}/admin/orders" 
+                               class="text-xs font-bold text-info hover:underline">View All Orders</a>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead class="bg-secondary text-[10px] uppercase font-bold text-gray-400 tracking-wider">
+                                    <tr>
+                                        <th class="px-6 py-4">Order ID</th>
+                                        <th class="px-6 py-4">Customer</th>
+                                        <th class="px-6 py-4">Amount</th>
+                                        <th class="px-6 py-4">Status</th>
+                                        <th class="px-6 py-4">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-secondary text-sm">
+                                    <c:forEach var="order" items="${recentOrders}">
+                                        <tr class="hover:bg-secondary/50 transition-colors">
+                                            <td class="px-6 py-4 font-bold text-accent">#${order.orderNumber}</td>
+                                            <td class="px-6 py-4 text-gray-600">${order.userName}</td>
+                                            <td class="px-6 py-4 font-bold text-accent">Rs. ${order.totalAmount}</td>
+                                            <td class="px-6 py-4">
+                                                <span class="px-2 py-1 text-[10px] font-bold rounded-lg uppercase
+                                                    ${order.orderStatus eq 'DELIVERED' ? 'bg-success/10 text-success' : 
+                                                      order.orderStatus eq 'CANCELLED' ? 'bg-danger/10 text-danger' : 'bg-gray-100 text-gray-500'}">
+                                                    ${order.orderStatus}
+                                                </span>
+                                            </td>
+                                            <td class="px-6 py-4 text-xs text-gray-400">
+                                                <fmt:formatDate value="${order.orderDate}" pattern="MMM dd, yyyy"/>
+                                            </td>
+                                        </tr>
+                                    </c:forEach>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <jsp:include page="/WEB-INF/templates/admin/footer.jsp" />
+    </div>
+
+    </div>
+    
+    <!--  handle any redirect notifications (Flash Messages) -->
+    <script>
+        window.onload = function() {
+            <c:if test="${not empty successMsg}">
+                showToast("${successMsg}", "success");
+            </c:if>
+            <c:if test="${not empty errorMsg}">
+                showToast("${errorMsg}", "error");
+            </c:if>
+        };
+    </script>
 
 </body>
 </html>
