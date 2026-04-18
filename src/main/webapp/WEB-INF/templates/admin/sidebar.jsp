@@ -57,7 +57,18 @@
                     <span class="ms-3 text-sm">Users</span>
                 </a>
             </li>
+
+            <li>
+                 <a href="${pageContext.request.contextPath}/admin/promos" 
+                     class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${param.activePage == 'promos' ? 'bg-blue-600 text-white' : 'text-slate-400 hover:bg-slate-800'}">
+                     <i class="fa-solid fa-ticket w-5"></i>
+                     <span class="text-sm font-medium">Offers & Promos</span>
+                </a>
+            </li>
+
         </ul>
+
+     
 
         <!-- Logout at Bottom -->
         <div class="pt-4 border-t border-gray-700">
