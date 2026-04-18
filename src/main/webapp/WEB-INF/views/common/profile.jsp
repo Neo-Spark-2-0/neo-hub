@@ -36,7 +36,10 @@
                 <c:otherwise>
                   <span class="text-base font-semibold text-blue-500 w-full h-full flex items-center justify-center">
                    <c:set var="parts" value="${fn:split(user.fullName, ' ')}" />
-                    <c:out value="${fn:substring(parts[0], 0, 1)}${fn:substring(parts[1], 0, 1)}" />
+                    ${fn:substring(parts[0], 0, 1)}
+                    <c:if test="${fn:length(parts) > 1}">
+                        ${fn:substring(parts[1], 0, 1)}
+                    </c:if>
                   </span>
                 </c:otherwise>
               </c:choose>
@@ -216,7 +219,7 @@
 
                 <!-- local level  -->
                 <div>
-                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Local Level</label>
+                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Municipality</label>
                     <p class="text-sm text-gray-800 view-mode-address">
                         <c:out value="${user.localLevel}" default="-"/>
                     </p>

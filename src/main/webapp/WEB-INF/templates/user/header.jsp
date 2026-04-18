@@ -4,59 +4,50 @@
 <header class="bg-primary border-b border-gray-200 sticky top-0 z-50">
     <div class="w-[90vw] mx-auto flex items-center justify-between h-14 gap-4">
 
-        <%-- ── Logo ── --%>
+        <!-- logo  -->
         <a href="${pageContext.request.contextPath}/"
            class="flex items-center gap-2 flex-shrink-0">
-            <img src="${pageContext.request.contextPath}/static/images/logo.png"
+            <img src="${pageContext.request.contextPath}/static/images/neo-hub-logo.png"
                  alt="NEO-HUB"
-                 class="h-7 w-auto"
-                 onerror="this.style.display='none'" />
-            <span class="text-base font-semibold text-accent tracking-tight">NEO-HUB</span>
+                 class="h-20 w-auto">
         </a>
 
-        <%-- ── Desktop nav links ── --%>
-        <nav class="hidden md:flex items-center gap-0.5 text-sm flex-1 justify-center">
+        <!-- links  -->
+        <nav class="hidden md:flex items-center gap-0.5 text-sm justify-center">
             <a href="${pageContext.request.contextPath}/"
-               class="px-3 py-1.5 rounded-lg font-medium transition-colors
+               class="px-3 py-1.5 rounded-lg font-medium transition
                ${param.activePage eq 'home' ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'}">
                 Home
             </a>
             <a href="${pageContext.request.contextPath}/products"
-               class="px-3 py-1.5 rounded-lg font-medium transition-colors
+               class="px-3 py-1.5 rounded-lg font-medium transition
                ${param.activePage eq 'products' ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'}">
                 Products
             </a>
             <a href="${pageContext.request.contextPath}/about"
-               class="px-3 py-1.5 rounded-lg font-medium transition-colors
+               class="px-3 py-1.5 rounded-lg font-medium transition
                ${param.activePage eq 'about' ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'}">
                 About Us
             </a>
         </nav>
 
-        <%-- ── Right side icons ── --%>
-        <div class="flex items-center gap-1 flex-shrink-0">
+        <!-- right section icons  -->
+        <div class="flex items-center gap-1">
 
-            <c:choose>
-                <%-- ── LOGGED IN ── --%>
-                <c:when test="${not empty sessionScope.user}">
+        <c:choose>
+            <%-- logged in details shown in nav bar --%>
+            <c:when test="${not empty sessionScope.user}">
 
-                    <%-- Notifications --%>
-                    <div class="relative">
+                    <%-- Notification button --%>
+                    <div class="relative" id="notificationDropdown">
                         <button onclick="toggleNotifications()"
                                 class="w-9 h-9 flex items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
                             <i class="fa fa-bell text-sm"></i>
-                            <%-- Badge: show only when there are notifications --%>
-                            <c:if test="${not empty sessionScope.notifCount and sessionScope.notifCount > 0}">
-                                <span class="absolute top-1 right-1 bg-danger text-white text-[9px] font-bold
-                                             w-3.5 h-3.5 flex items-center justify-center rounded-full">
-                                    ${sessionScope.notifCount}
-                                </span>
-                            </c:if>
                         </button>
 
-                        <%-- Notification dropdown --%>
-                        <div id="notifDropdown"
-                             class="hidden absolute right-0 top-full mt-1 w-72 bg-primary border border-gray-200
+                        <%-- Notification panel --%>
+                        <div id="notificationMenu"
+                             class="hidden absolute right-[-120px] md:right-0 top-full mt-1 w-72 bg-primary border border-gray-200
                                     rounded-xl shadow-md z-50 overflow-hidden">
                             <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
                                 <p class="text-xs font-semibold text-accent">Notifications</p>
@@ -69,24 +60,18 @@
                         </div>
                     </div>
 
-                    <%-- Cart --%>
+                    <%-- Cart button --%>
                     <a href="${pageContext.request.contextPath}/cart"
-                       class="relative w-9 h-9 flex items-center justify-center rounded-lg text-gray-600
-                              hover:bg-gray-100 transition-colors">
+                       class="relative w-9 h-9 flex items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
                         <i class="fa fa-cart-shopping text-sm"></i>
-                        <c:if test="${not empty sessionScope.cartCount and sessionScope.cartCount > 0}">
-                            <span class="absolute top-1 right-1 bg-accent text-white text-[9px] font-bold
-                                         w-3.5 h-3.5 flex items-center justify-center rounded-full">
-                                ${sessionScope.cartCount}
-                            </span>
-                        </c:if>
                     </a>
 
                     <%-- Profile dropdown --%>
                     <div class="relative" id="profileDropdown">
                         <button onclick="toggleProfileMenu()"
                                 class="flex items-center gap-2 pl-1 pr-2 py-1 rounded-lg hover:bg-gray-100 transition-colors">
-                            <%-- Avatar --%>
+
+                            <!-- profile image avatar  -->
                             <div class="w-7 h-7 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center flex-shrink-0">
                                 <c:choose>
                                     <c:when test="${not empty sessionScope.user.profileImage}">
@@ -95,7 +80,12 @@
                                     </c:when>
                                     <c:otherwise>
                                         <span class="text-[11px] font-semibold text-gray-600">
-                                            <c:out value="${fn:substring(sessionScope.user.fullName, 0, 2)}" />
+
+                                    <c:set var="parts" value="${fn:split(sessionScope.user.fullName, ' ')}" />
+                                    ${fn:substring(parts[0], 0, 1)}
+                                    <c:if test="${fn:length(parts) > 1}">
+                                    ${fn:substring(parts[1], 0, 1)}
+                                    </c:if>
                                         </span>
                                     </c:otherwise>
                                 </c:choose>
@@ -108,7 +98,7 @@
 
                         <%-- Profile dropdown menu --%>
                         <div id="profileMenu"
-                             class="hidden absolute right-0 top-full mt-1 w-44 bg-primary border border-gray-200
+                             class="hidden absolute right-0 top-full mt-1 w-54 bg-primary border border-gray-200
                                     rounded-xl shadow-md py-1 z-50">
                             <div class="px-4 py-2 border-b border-gray-100">
                                 <p class="text-xs font-semibold text-accent truncate">
@@ -127,17 +117,16 @@
                                 <i class="fa fa-box text-xs text-gray-400 w-4 text-center"></i> My Orders
                             </a>
                             <div class="h-[0.5px] bg-gray-200 my-1"></div>
-                            <a href="${pageContext.request.contextPath}/logout"
+                            <a href="#"
                                class="flex items-center gap-2 px-4 py-2 text-sm text-danger hover:bg-red-50 transition-colors"
-                               onclick="return confirm('Are you sure you want to logout?')">
+                               onclick="confirmLogout()">
                                 <i class="fa fa-right-from-bracket text-xs w-4 text-center"></i> Logout
                             </a>
                         </div>
                     </div>
 
                 </c:when>
-
-                <%-- ── NOT LOGGED IN ── --%>
+                <%-- when user is logged in --%>   
                 <c:otherwise>
                     <a href="${pageContext.request.contextPath}/login"
                        class="px-4 py-1.5 rounded-lg bg-accent text-white text-sm font-medium
@@ -147,7 +136,7 @@
                 </c:otherwise>
             </c:choose>
 
-            <%-- Mobile hamburger --%>
+            <%-- Mobile menu button --%>
             <button onclick="toggleMobileMenu()"
                     class="md:hidden w-9 h-9 flex items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100">
                 <i class="fa fa-bars text-sm"></i>
@@ -155,7 +144,7 @@
         </div>
     </div>
 
-    <%-- ── Mobile nav dropdown ── --%>
+    <%-- Mobile nav dropdown  --%>
     <div id="mobileMenu" class="hidden md:hidden border-t border-gray-200 bg-primary">
         <nav class="w-[90vw] mx-auto py-3 flex flex-col gap-1 text-sm">
             <a href="${pageContext.request.contextPath}/"
@@ -178,9 +167,6 @@
                 <a href="${pageContext.request.contextPath}/cart"
                    class="px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium">
                     <i class="fa fa-cart-shopping mr-2 text-xs"></i>Cart
-                    <c:if test="${not empty sessionScope.cartCount and sessionScope.cartCount > 0}">
-                        <span class="ml-1 bg-accent text-white text-[10px] px-1.5 py-0.5 rounded-full">${sessionScope.cartCount}</span>
-                    </c:if>
                 </a>
                 <a href="${pageContext.request.contextPath}/orders"
                    class="px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium">
@@ -190,9 +176,9 @@
                    class="px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium">
                     <i class="fa fa-user mr-2 text-xs"></i>Profile
                 </a>
-                <a href="${pageContext.request.contextPath}/logout"
+                <a href="#"
                    class="px-3 py-2 rounded-lg text-danger hover:bg-red-50 font-medium"
-                   onclick="return confirm('Are you sure you want to logout?')">
+                   onclick="confirmLogout()">
                     <i class="fa fa-right-from-bracket mr-2 text-xs"></i>Logout
                 </a>
             </c:if>
@@ -208,28 +194,51 @@
 </header>
 
 <script>
+    const profileMenu = document.getElementById('profileMenu');
+    const profileDropdown = document.getElementById('profileDropdown');
+    const notificationMenu = document.getElementById('notificationMenu');
+    const notificationDropdown = document.getElementById('notificationDropdown');
+    const mobileMenu = document.getElementById('mobileMenu');
+
     function toggleProfileMenu() {
-        document.getElementById('profileMenu').classList.toggle('hidden');
-        // close notif if open
-        document.getElementById('notifDropdown') &&
-        document.getElementById('notifDropdown').classList.add('hidden');
+        profileMenu.classList.toggle('hidden');
+        notificationMenu.classList.add('hidden');
     }
+
     function toggleNotifications() {
-        document.getElementById('notifDropdown').classList.toggle('hidden');
-        document.getElementById('profileMenu').classList.add('hidden');
+        notificationMenu.classList.toggle('hidden');
+        profileMenu.classList.add('hidden');
     }
+
     function toggleMobileMenu() {
-        document.getElementById('mobileMenu').classList.toggle('hidden');
+        mobileMenu.classList.toggle('hidden');
     }
-    // Close dropdowns on outside click
-    document.addEventListener('click', function(e) {
-        const pd = document.getElementById('profileDropdown');
-        if (pd && !pd.contains(e.target)) {
-            document.getElementById('profileMenu').classList.add('hidden');
+
+    // closing dropdowns on outside click
+    document.addEventListener('click', (e) => {
+        if (!profileDropdown.contains(e.target)) {
+            profileMenu.classList.add('hidden');
         }
-        const nd = document.getElementById('notifDropdown');
-        if (nd && !e.target.closest('button[onclick="toggleNotifications()"]') && !nd.contains(e.target)) {
-            nd.classList.add('hidden');
+        if (!notificationDropdown.contains(e.target)) {
+            notifications.classList.add('hidden');
         }
     });
+
+    // alert for logout
+    function confirmLogout() {
+        Swal.fire({
+            title: "Logout?",
+            text: "You will be logged out of your account.",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonColor: "#ef4444",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: "Yes, logout"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "${pageContext.request.contextPath}/logout";
+            }
+        });
+    }
+
 </script>

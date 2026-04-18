@@ -35,8 +35,18 @@ public class ValidationUtil {
         if (isNullOrEmpty(phone)) return false;
         return phone.matches("^(98|97|96)[0-9]{8}$");
     }
-        public static boolean isValidName(String name) {
-        if (isNullOrEmpty(name)) return false;
-        return name.trim().length() >= 2 && name.matches("^[a-zA-Z ]+$");
-    }
+    public static boolean isFullName(String username) {
+        if (isNullOrEmpty(username)) return false;
+
+        String[] parts = username.trim().split("\\s+");
+        if (parts.length < 2 || parts.length > 3) return false;
+
+            for (String part : parts) {
+                if (!part.matches("[a-zA-Z]+")) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
 }

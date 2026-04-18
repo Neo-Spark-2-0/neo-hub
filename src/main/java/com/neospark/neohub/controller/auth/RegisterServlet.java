@@ -37,8 +37,9 @@ public class RegisterServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/views/user/registration.jsp").forward(request, response);
             return;
         }
-        if (!ValidationUtil.isValidName(fullName)) {
-            request.setAttribute("error", "Name must be at least 2 characters and letters only.");
+
+        if (!ValidationUtil.isFullName(fullName)) {
+            request.setAttribute("error", "Full name must contain at least 2 words.");
             request.getRequestDispatcher("/WEB-INF/views/user/registration.jsp").forward(request, response);
             return;
         }

@@ -57,10 +57,8 @@ public class ProfileServlet extends HttpServlet {
             setErrorAndForward(request, response, "profileError", "Input fields cannot be empty.");
             return;
         }
-
-        if (!ValidationUtil.isValidName(fullName)) {
-            setErrorAndForward(request, response, "profileError",
-                    "Name must be at least 2 characters and letters only.");
+        if(!ValidationUtil.isFullName(fullName)){
+            setErrorAndForward(request, response, "profileError", "Full name must contain at least 2 words.");
             return;
         }
         if (!ValidationUtil.isValidPhone(phone)) {
