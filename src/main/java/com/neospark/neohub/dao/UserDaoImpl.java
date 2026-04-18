@@ -42,26 +42,7 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(1, email);
             ResultSet rs = preparedStatement.executeQuery();
             if (rs.next()) {
-                return new User(
-                        rs.getInt("id"),
-                        rs.getString("full_name"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("phone"),
-                        rs.getString("province"),
-                        rs.getString("district"),
-                        rs.getString("city"),
-                        rs.getString("local_level"),
-                        rs.getString("ward"),
-                        rs.getString("street"),
-                        rs.getString("landmark"),
-                        rs.getString("profile_image"),
-                        rs.getString("role"),
-                        rs.getBoolean("is_active"),
-                        rs.getBoolean("is_email_verified"),
-                        rs.getTimestamp("created_at"),
-                        rs.getTimestamp("updated_at")
-                );
+                return mapUser(rs);
             }
         }catch (SQLException e) {
             System.out.println("Error finding user by email: " + e.getMessage());
@@ -100,26 +81,7 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setInt(1, userId);
             ResultSet rs = preparedStatement.executeQuery();
             if (rs.next()) {
-                return new User(
-                        rs.getInt("id"),
-                        rs.getString("full_name"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("phone"),
-                        rs.getString("province"),
-                        rs.getString("district"),
-                        rs.getString("city"),
-                        rs.getString("local_level"),
-                        rs.getString("ward"),
-                        rs.getString("street"),
-                        rs.getString("landmark"),
-                        rs.getString("profile_image"),
-                        rs.getString("role"),
-                        rs.getBoolean("is_active"),
-                        rs.getBoolean("is_email_verified"),
-                        rs.getTimestamp("created_at"),
-                        rs.getTimestamp("updated_at")
-                );
+                return mapUser(rs);
             }
         }catch (SQLException e) {
             System.out.println("Error finding user by ID: " + e.getMessage());
@@ -140,26 +102,7 @@ public class UserDaoImpl implements UserDao {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                users.add(new User(
-                        rs.getInt("id"),
-                        rs.getString("full_name"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("phone"),
-                        rs.getString("province"),
-                        rs.getString("district"),
-                        rs.getString("city"),
-                        rs.getString("local_level"),
-                        rs.getString("ward"),
-                        rs.getString("street"),
-                        rs.getString("landmark"),
-                        rs.getString("profile_image"),
-                        rs.getString("role"),
-                        rs.getBoolean("is_active"),
-                        rs.getBoolean("is_email_verified"),
-                        rs.getTimestamp("created_at"),
-                        rs.getTimestamp("updated_at")
-                ));
+                users.add(mapUser(rs));
             }
             return users;
         } catch (SQLException e) {
@@ -359,49 +302,41 @@ private User mapUser(ResultSet rs) throws SQLException {
     user.setId(rs.getInt("id"));
     user.setFullName(rs.getString("full_name"));
     user.setEmail(rs.getString("email"));
-    user.setPassword(rs.getString("password")); // should be included??
+    user.setPassword(rs.getString("password"));
     user.setPhone(rs.getString("phone"));
-
     user.setProvince(rs.getString("province"));
     user.setDistrict(rs.getString("district"));
     user.setCity(rs.getString("city"));
+    user.setLocalLevel(rs.getString("local_level"));
     user.setWard(rs.getString("ward"));
     user.setStreet(rs.getString("street"));
     user.setLandmark(rs.getString("landmark"));
-
     user.setProfileImage(rs.getString("profile_image"));
     user.setRole(rs.getString("role"));
     user.setActive(rs.getBoolean("is_active"));
     user.setEmailVerified(rs.getBoolean("is_email_verified"));
-
     user.setCreatedAt(rs.getTimestamp("created_at"));
     user.setUpdatedAt(rs.getTimestamp("updated_at"));
 
     return user;
 }
 
-@Override
-public List<User> getRecentUsers(int limit) {
-    String sql = "SELECT * FROM users WHERE role = 'USER' " +
-                 "ORDER BY created_at DESC LIMIT ?";
-    
-    List<User> users = new ArrayList<>();
-
-    try (Connection conn = DatabaseConnection.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-        stmt.setInt(1, limit);
-        ResultSet rs = stmt.executeQuery();
-
-        while (rs.next()) {
-            users.add(mapUser(rs));        // Using helper method to map ResultSet to User object
+    @Override
+    public List<User> getRecentUsers(int limit) {
+        String sql = "SELECT * FROM users WHERE role = 'USER' ORDER BY created_at DESC LIMIT ?";
+        List<User> users = new ArrayList<>();
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, limit);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                users.add(mapUser(rs));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
+        
+        return users;
     }
-    
-    return users;
-}
 
 }

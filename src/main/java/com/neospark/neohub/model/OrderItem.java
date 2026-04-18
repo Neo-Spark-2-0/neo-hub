@@ -9,55 +9,68 @@ public class OrderItem implements Serializable {
     private int id;
     private int orderId;
     private int productId;
-    private String productName;   // snapshot at time of order
-    private String productImage;  // snapshot at time of order
-    private double price;         // snapshot at time of order
     private int quantity;
-    private double subtotal;      // price * quantity
+    private double unitPrice;         
 
     // Constructors
     public OrderItem() {}
 
-    public OrderItem(int id, int orderId, int productId, String productName,
-                     String productImage, double price, int quantity, double subtotal) {
+    public OrderItem(int id, int orderId, int productId, int quantity, double unitPrice) {
         this.id = id;
         this.orderId = orderId;
         this.productId = productId;
-        this.productName = productName;
-        this.productImage = productImage;
-        this.price = price;
         this.quantity = quantity;
-        this.subtotal = subtotal;
+        this.unitPrice = unitPrice;
     }
 
-    // Getters & Setters
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getId() {
+        return id;
+    }
 
-    public int getOrderId() { return orderId; }
-    public void setOrderId(int orderId) { this.orderId = orderId; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public int getProductId() { return productId; }
-    public void setProductId(int productId) { this.productId = productId; }
+    public int getOrderId() {
+        return orderId;
+    }
 
-    public String getProductName() { return productName; }
-    public void setProductName(String productName) { this.productName = productName; }
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
 
-    public String getProductImage() { return productImage; }
-    public void setProductImage(String productImage) { this.productImage = productImage; }
+    public int getProductId() {
+        return productId;
+    }
 
-    public double getPrice() { return price; }
-    public void setPrice(double price) { this.price = price; }
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
 
-    public int getQuantity() { return quantity; }
-    public void setQuantity(int quantity) { this.quantity = quantity; }
+    public int getQuantity() {
+        return quantity;
+    }
 
-    public double getSubtotal() { return subtotal; }
-    public void setSubtotal(double subtotal) { this.subtotal = subtotal; }
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public double getUnitPrice() {
+        return unitPrice;
+    }
+
+    public void setUnitPrice(double unitPrice) {
+        this.unitPrice = unitPrice;
+    }
 
     @Override
     public String toString() {
-        return "OrderItem{id=" + id + ", productName='" + productName +
-               "', quantity=" + quantity + ", subtotal=" + subtotal + "}";
+        return "OrderItem{" +
+                "id=" + id +
+                ", orderId=" + orderId +
+                ", productId=" + productId +
+                ", quantity=" + quantity +
+                ", unitPrice=" + unitPrice +
+                '}';
     }
 }

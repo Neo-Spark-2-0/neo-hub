@@ -9,7 +9,7 @@ public class Order implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int id;
-    private String orderNumber;     // e.g., "NEO-2024-00001"
+    private String orderNumber; 
 
     // User
     private int userId;

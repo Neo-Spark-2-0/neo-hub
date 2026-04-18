@@ -220,7 +220,7 @@
             profileMenu.classList.add('hidden');
         }
         if (!notificationDropdown.contains(e.target)) {
-            notifications.classList.add('hidden');
+            notificationMenu.classList.add('hidden');
         }
     });
 

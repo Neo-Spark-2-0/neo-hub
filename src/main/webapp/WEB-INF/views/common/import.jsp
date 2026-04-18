@@ -61,11 +61,14 @@
             padding: 12px 16px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.12);
             color: #fff !important;
+            max-width: none !important;
+            width: auto !important;
         }
         .toast-success { background: #22C55E !important; }
         .toast-error   { background: #EF4444 !important; }
         .toast-warning { background: #F59E0B !important; }
         .toast-info    { background: #3B82F6 !important; }
+
     </style>
 
     <script>

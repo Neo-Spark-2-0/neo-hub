@@ -31,6 +31,7 @@
         });
     }
 
+    
     // Initialize Flowbite tooltips/dropdowns if needed
     if (typeof initFlowbite === 'function') {
         initFlowbite();
