@@ -19,6 +19,7 @@ CREATE TABLE users (
                         province      VARCHAR(100),
                         district      VARCHAR(100),
                         city          VARCHAR(100),
+                        local_level   VARCHAR(100),
                         ward          VARCHAR(50),
                         street        VARCHAR(255),
                         landmark      VARCHAR(255),

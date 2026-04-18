@@ -14,6 +14,7 @@ public class User {
     private String    province;
     private String    district;
     private String    city;
+    private String    localLevel;
     private String    ward;
     private String    street;
     private String    landmark;
@@ -41,8 +42,7 @@ public class User {
 
     // Full Table Mapping Constructor
     public User(int id, String fullName, String email, String password,
-                String phone, String province, String district, String city,
-                String ward, String street, String landmark,
+                String phone, String province, String district, String city, String localLevel, String ward, String street, String landmark,
                 String profileImage, String role, boolean isActive, boolean isEmailVerified,
                 Timestamp createdAt, Timestamp updatedAt) {
         this.id           = id;
@@ -53,6 +53,7 @@ public class User {
         this.province     = province;
         this.district     = district;
         this.city         = city;
+        this.localLevel  = localLevel;
         this.ward         = ward;
         this.street       = street;
         this.landmark     = landmark;
@@ -119,6 +120,13 @@ public class User {
     }
     public void setCity(String city) { 
         this.city = city; 
+    }
+
+    public String getLocalLevel() {
+        return localLevel;
+    }
+    public void setLocalLevel(String local_level) {
+        this.localLevel = local_level;
     }
 
     public String getWard() { 

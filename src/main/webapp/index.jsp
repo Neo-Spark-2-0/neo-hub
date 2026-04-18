@@ -12,6 +12,6 @@
     <title>NEO-HUB</title>
   </head>
   <body>
-<%--    <% response.sendRedirect("register");%>--%>
+    <% response.sendRedirect("home");%>
   </body>
 </html>

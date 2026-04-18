@@ -51,6 +51,7 @@ public class UserDaoImpl implements UserDao {
                         rs.getString("province"),
                         rs.getString("district"),
                         rs.getString("city"),
+                        rs.getString("local_level"),
                         rs.getString("ward"),
                         rs.getString("street"),
                         rs.getString("landmark"),
@@ -108,6 +109,7 @@ public class UserDaoImpl implements UserDao {
                         rs.getString("province"),
                         rs.getString("district"),
                         rs.getString("city"),
+                        rs.getString("local_level"),
                         rs.getString("ward"),
                         rs.getString("street"),
                         rs.getString("landmark"),
@@ -147,6 +149,7 @@ public class UserDaoImpl implements UserDao {
                         rs.getString("province"),
                         rs.getString("district"),
                         rs.getString("city"),
+                        rs.getString("local_level"),
                         rs.getString("ward"),
                         rs.getString("street"),
                         rs.getString("landmark"),
@@ -172,17 +175,18 @@ public class UserDaoImpl implements UserDao {
         Connection connection = null;
         try {
             connection = DatabaseConnection.getConnection();
-            String sql = "UPDATE users SET full_name = ?, phone = ?, province = ?, district = ?, city = ?, ward = ?, street = ?, landmark = ? WHERE id = ?";
+            String sql = "UPDATE users SET full_name = ?, phone = ?, province = ?, district = ?, city = ?, local_level = ?, ward = ?, street = ?, landmark = ? WHERE id = ?";
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, user.getFullName());
             ps.setString(2, user.getPhone());
             ps.setString(3, user.getProvince());
             ps.setString(4, user.getDistrict());
             ps.setString(5, user.getCity());
-            ps.setString(6, user.getWard());
-            ps.setString(7, user.getStreet());
-            ps.setString(8, user.getLandmark());
-            ps.setInt(9, user.getId());
+            ps.setString(6, user.getLocalLevel());
+            ps.setString(7, user.getWard());
+            ps.setString(8, user.getStreet());
+            ps.setString(9, user.getLandmark());
+            ps.setInt(10, user.getId());
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {

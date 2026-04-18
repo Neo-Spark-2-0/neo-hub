@@ -2,22 +2,22 @@
 prefix="c" uri="jakarta.tags.core" %> <%@ taglib prefix="fmt"
 uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <html>
-  <head>
-    <title><c:out value="${user.fullName}" /> Profile - NEO-HUB</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta charset="UTF-8" />
-    <meta
-      name="description"
-      content="<c:out value="${user.fullName}" />'s profile page on NEO-HUB. View and edit your profile information, manage your account settings, and explore your activity on the platform."
-    />
-    <meta
-      name="keywords"
-      content="NEO-HUB, profile, user profile, account settings, activity, <c:out value="${user.fullName}" />"
-    />
-    <meta name="author" content="${user.fullName}" />
-    <jsp:include page="/WEB-INF/views/common/import.jsp" />
-  </head>
+
+<jsp:include page="/WEB-INF/templates/common/head.jsp">
+    <jsp:param name="title" value="${user.fullName}'s Profile" />
+    <jsp:param name="metaDescription" value="Profile page on NEO-HUB. View and manage account information." />
+    <jsp:param name="metaKeywords" value="profile, NEO-HUB NEO-SPARK" />
+    <jsp:param name="metaAuthor" value="NEO-HUB Team, NEO-SPARK Team" />
+</jsp:include>
+
+
   <body class="bg-secondary font-poppins">
+    <!-- importing and using header  -->
+    <jsp:include page="/WEB-INF/templates/user/header.jsp">
+        <jsp:param name="activePage" value="profile" />
+    </jsp:include>
+
+
     <main class="w-[90vw] mx-auto my-10 md:my-20">
       <div class="flex flex-col md:flex-row gap-4">
         <div class="bg-primary rounded-lg w-full md:w-1/4 border border-secondary p-5 flex flex-col items-center gap-1">
@@ -72,6 +72,7 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
                 <input type="hidden" name="province" value="<c:out value="${user.province}" />"/>
                 <input type="hidden" name="district" value="<c:out value="${user.district}" />"/>
                 <input type="hidden" name="city"     value="<c:out value="${user.city}" />"/>
+                <input type="hidden" name="local_evel" value="<c:out value="${user.localLevel}" />"/>
                 <input type="hidden" name="ward"     value="<c:out value="${user.ward}" />"/>
                 <input type="hidden" name="street"   value="<c:out value="${user.street}" />"/>
                 <input type="hidden" name="landmark" value="<c:out value="${user.landmark}" />"/>
@@ -186,6 +187,18 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
                     </select>
                 </div>
 
+
+                <%-- district --%>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">District</label>
+                    <p class="text-sm text-gray-800 view-mode-address">
+                        <c:out value="${user.district}" default="-"/>
+                    </p>
+                    <input type="text" name="district" value="<c:out value='${user.district}' />"
+                    placeholder="e.g. Kaski"
+                    class="hidden edit-mode-address w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded-lg transition"/>
+                </div>
+
                 <!-- city  -->
                 <div>
                     <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">City</label>
@@ -198,15 +211,17 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
                            class="hidden edit-mode-address w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded-lg transition"/>
                 </div>
 
-                <%-- district --%>
+
+                <!-- local level  -->
                 <div>
-                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">District</label>
+                    <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Local Level</label>
                     <p class="text-sm text-gray-800 view-mode-address">
-                        <c:out value="${user.district}" default="-"/>
+                        <c:out value="${user.localLevel}" default="-"/>
                     </p>
-                    <input type="text" name="district" value="<c:out value='${user.district}' />"
-                    placeholder="e.g. Kaski"
-                    class="hidden edit-mode-address w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded-lg transition"/>
+                    <input
+                        type="text" name="localLevel" value="<c:out value='${user.localLevel}' />"
+                        placeholder="e.g. Pokhara Metropolitan City"
+                        class="hidden edit-mode-address w-full mt-1 px-3 py-2 text-sm border border-gray-300 rounded-lg transition"/>
                 </div>
 
                 <%-- ward --%>
@@ -245,6 +260,44 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
                 </form>
             </section>
 
+            <section class="bg-primary border border-gray-200 rounded-2xl p-4 md:p-6">
+                <h1 class="text-base md:text-lg text-accent font-semibold w-full sm:w-auto my-2">Account Details</h1> 
+                <div class="flex flex-wrap justify-between">
+                    <div>
+                    <p class="block text-xs font-semibold uppercase text-gray-400 mb-1">
+                        Member since 
+                    </p>
+                    <p class="text-sm text-gray-800 mb-4">
+                        <fmt:formatDate value="${user.createdAt}" pattern="MMMM dd, yyyy"/>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="block text-xs font-semibold uppercase text-gray-400 mb-1">
+                        Last updated on 
+                    </p>
+                    <p class="text-sm text-gray-800 mb-4">
+                        <fmt:formatDate value="${user.updatedAt}" pattern="MMMM dd, yyyy"/>
+                    </p>
+                </div>
+
+                <div>
+                    <p class="block text-xs font-semibold uppercase text-gray-400 mb-1">
+                       Account status
+                    </p>
+                    <p class="text-sm text-gray-800">
+                        <c:choose>
+                            <c:when test="${user.active}">
+                              <span><i class="fa-solid fa-circle animate-pulse text-green-500 text-[5px]"></i></span>  Active
+                            </c:when>
+                            <c:otherwise>
+                                <span><i class="fa-solid fa-circle animate-pulse text-red-500 text-[5px]"></i></span> Inactive
+                            </c:otherwise>
+                        </c:choose>
+                    </p>
+                </div>
+                </div>
+            </section>
 
             <section class="bg-red-50 border border-red-200 rounded-2xl p-4 md:p-5">
                 <h1 class="text-base md:text-lg text-accent font-semibold my-2">Security Settings</h1>
