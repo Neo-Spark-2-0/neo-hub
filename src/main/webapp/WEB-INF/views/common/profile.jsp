@@ -19,7 +19,7 @@
     </jsp:include>
 
 
-    <main class="w-[90vw] mx-auto my-10 md:my-20">
+    <main class="w-[90vw] mx-auto my-5 md:my-20">
       <div class="flex flex-col md:flex-row gap-4">
         <div class="bg-primary rounded-lg w-full md:w-1/4 border border-secondary p-5 flex flex-col items-center gap-1">
           <form
