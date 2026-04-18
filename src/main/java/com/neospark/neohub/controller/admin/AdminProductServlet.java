@@ -128,7 +128,7 @@ public class AdminProductServlet extends HttpServlet {
             throws ServletException, IOException {
 
         req.setAttribute("categories", categoryDao.getAllCategories());
-        req.getRequestDispatcher("/WEB-INF/views/admin/add-product.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/views/admin/add-products.jsp").forward(req, resp);
     }
 
     private void showEditForm(HttpServletRequest req, HttpServletResponse resp)
@@ -152,7 +152,7 @@ public class AdminProductServlet extends HttpServlet {
 
         req.setAttribute("product", product);
         req.setAttribute("categories", categoryDao.getAllCategories());
-        req.getRequestDispatcher("/WEB-INF/views/admin/edit-product.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/views/admin/edit-products.jsp").forward(req, resp);
     }
 
     // POST

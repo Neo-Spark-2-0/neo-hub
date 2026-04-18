@@ -3,10 +3,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <jsp:include page="/WEB-INF/templates/common/head.jsp">
-    <jsp:param name="title" value="NEO-HUB - IoT Equipment & Project Marketplace" />
-    <jsp:param name="metaDescription" value="Shop the best IoT equipment, Arduino boards, sensors, and ready-made IoT kits at NEO-HUB. Fast shipping and best quality." />
+    <jsp:param name="title" value="NEO-HUB | Home" />
+    <jsp:param name="metaDescription" value="Welcome to NEO-HUB, your one-stop shop for IoT equipment and projects." />
     <jsp:param name="metaKeywords" value="IoT, Arduino, sensors, electronics, IoT kits, NEO-HUB" />
-    <jsp:param name="metaAuthor" value="NEO-HUB" />
+    <jsp:param name="metaAuthor" value="NEO-HUB Team, NEO-SPARK Team" />
 </jsp:include>
 
 <body class="font-poppins bg-secondary">
@@ -15,7 +15,7 @@
     </jsp:include>
 
     <main class="w-[90vw] mx-auto my-10">
-
+        <h1>Home page </h1>
     </main>
 
 

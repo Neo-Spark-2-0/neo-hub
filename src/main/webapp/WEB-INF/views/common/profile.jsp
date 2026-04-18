@@ -1,6 +1,7 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %> <%@ taglib
-prefix="c" uri="jakarta.tags.core" %> <%@ taglib prefix="fmt"
-uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %> 
+<%@ taglib prefix="c" uri="jakarta.tags.core" %> 
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %> 
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 <html>
 
 <jsp:include page="/WEB-INF/templates/common/head.jsp">
@@ -34,7 +35,8 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
                 </c:when>
                 <c:otherwise>
                   <span class="text-base font-semibold text-blue-500 w-full h-full flex items-center justify-center">
-                   <c:out value="${fn:substring(user.fullName, 0, 3)}" />
+                   <c:set var="parts" value="${fn:split(user.fullName, ' ')}" />
+                    <c:out value="${fn:substring(parts[0], 0, 1)}${fn:substring(parts[1], 0, 1)}" />
                   </span>
                 </c:otherwise>
               </c:choose>
@@ -72,7 +74,7 @@ uri="jakarta.tags.fmt" %> <%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
                 <input type="hidden" name="province" value="<c:out value="${user.province}" />"/>
                 <input type="hidden" name="district" value="<c:out value="${user.district}" />"/>
                 <input type="hidden" name="city"     value="<c:out value="${user.city}" />"/>
-                <input type="hidden" name="local_evel" value="<c:out value="${user.localLevel}" />"/>
+                <input type="hidden" name="localLevel" value="<c:out value="${user.localLevel}" />"/>
                 <input type="hidden" name="ward"     value="<c:out value="${user.ward}" />"/>
                 <input type="hidden" name="street"   value="<c:out value="${user.street}" />"/>
                 <input type="hidden" name="landmark" value="<c:out value="${user.landmark}" />"/>
