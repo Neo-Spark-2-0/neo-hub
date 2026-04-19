@@ -1,7 +1,6 @@
 package com.neospark.neohub.dao;
 
 import java.util.List;
-import java.util.Map;
 
 import com.neospark.neohub.model.Product;
 
@@ -16,7 +15,6 @@ public interface ProductDao {
     boolean updateStock(int productId, int quantity);
 
     List<Product> getRecentProducts(int limit);
-    List<Map<String, Object>> getTopSellingProducts(int limit);
     int getTotalProductCount();
     List<Product> getLowStockProducts(int limit);
     Product getProductById(int id);
@@ -26,5 +24,6 @@ public interface ProductDao {
     List<Product> searchProducts(String keyword);
     List<Product> getProductsByFilter(Integer categoryId, Double minPrice, Double maxPrice, String sortBy);
     List<Product> getProductsPaginated(int offset, int limit, String keyword, int categoryId);
-    List<Map<String, Object>> getSalesByCategory();
+    List<Object[]> getSalesByCategory();
+    List<Object[]> getTopSellingProducts(int limit);
 }

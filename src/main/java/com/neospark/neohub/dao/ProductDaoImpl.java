@@ -432,9 +432,9 @@ public class ProductDaoImpl implements ProductDao {
 
     // needs review
     @Override
-    public List<Map<String, Object>> getTopSellingProducts(int limit) {
-        String sql = "SELECT p.name, SUM(oi.quantity) AS total_sold FROM order_items oi JOIN products p ON oi.product_id = p.id GROUP BY p.id, p.name ORDER BY total_sold DESC LIMIT ?";
-        List<Map<String, Object>> result = new ArrayList<>();
+    public List<Object[]> getTopSellingProducts(int limit) {
+        String sql = "SELECT products.name, SUM(order_items.quantity) AS total_sold FROM order_items JOIN products ON order_items.product_id = products.id GROUP BY products.id, products.name ORDER BY total_sold DESC LIMIT ?";
+        List<Object[]> result = new ArrayList<>();
         Connection connection = null;
         try {
             connection = DatabaseConnection.getConnection();
@@ -442,10 +442,7 @@ public class ProductDaoImpl implements ProductDao {
             ps.setInt(1, limit);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Map<String, Object> row = new HashMap<>();
-                row.put("name", rs.getString("name"));
-                row.put("totalSold", rs.getInt("total_sold"));
-                result.add(row);
+                result.add(new Object[]{rs.getString("name"), rs.getInt("total_sold")});
             }
         } catch (SQLException e) {
             System.out.println("Error getting top selling products: " + e.getMessage());
@@ -454,22 +451,18 @@ public class ProductDaoImpl implements ProductDao {
         }
         return result;
     }
-
-    // needs review 
+    // needs review
     @Override
-    public List<Map<String, Object>> getSalesByCategory() {
-        String sql = "SELECT c.name AS category_name, SUM(oi.quantity) AS total_sold FROM order_items oi JOIN products p ON oi.product_id = p.id JOIN categories c ON p.category_id = c.id GROUP BY c.id, c.name ORDER BY total_sold DESC";
-        List<Map<String, Object>> result = new ArrayList<>();
+    public List<Object[]> getSalesByCategory() {
+        String sql = "SELECT categories.name, SUM(order_items.quantity) AS total_sold FROM order_items JOIN products ON order_items.product_id = products.id JOIN categories ON products.category_id = categories.id GROUP BY categories.id, categories.name ORDER BY total_sold DESC";
+        List<Object[]> result = new ArrayList<>();
         Connection connection = null;
         try {
             connection = DatabaseConnection.getConnection();
             PreparedStatement ps = connection.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Map<String, Object> row = new HashMap<>();
-                row.put("categoryName", rs.getString("category_name"));
-                row.put("totalSold", rs.getInt("total_sold"));
-                result.add(row);
+                result.add(new Object[]{rs.getString("name"), rs.getInt("total_sold")});
             }
         } catch (SQLException e) {
             System.out.println("Error getting sales by category: " + e.getMessage());
