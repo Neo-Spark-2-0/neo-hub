@@ -13,6 +13,8 @@ public class PromoCode {
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
+    public PromoCode() {}
+
     public PromoCode(int id, String code, double discountPercent, LocalDate expiryDate, boolean isActive, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
         this.code = code;

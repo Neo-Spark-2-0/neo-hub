@@ -1,4 +1,3 @@
-
 -- Turning off strict mode
 SET sql_mode = '';
 DROP DATABASE IF EXISTS neohub;
@@ -83,7 +82,7 @@ CREATE TABLE IF NOT EXISTS promo_codes (
     code VARCHAR(50) NOT NULL UNIQUE,
     discount_percent DECIMAL(5,2) NOT NULL,
     expiry_date DATE NOT NULL,
-    is_active TINYINT(1) DEFAULT 1,
+    is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
