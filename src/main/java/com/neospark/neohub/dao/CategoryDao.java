@@ -7,16 +7,19 @@ public interface CategoryDao {
     // CRUD
     boolean addCategory(Category category);
     boolean updateCategory(Category category);
+    boolean updateCategoryImage(int id, String imagePath);
+    boolean updateStatus(int id, boolean isActive);
     boolean deleteCategory(int id);
     
-    // Fetch
+    // fetch
     Category getCategoryById(int id);
+    Category getCategoryByName(String name);
     List<Category> getAllCategories();
     List<Category> getActiveCategories();
     
-    // Dashboard
+    // dashboard to get category count
     int getTotalCategoryCount();
     
-    // Check
+    // checking is category exist
     boolean isCategoryNameExists(String name);
 }
