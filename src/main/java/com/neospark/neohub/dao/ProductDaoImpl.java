@@ -5,14 +5,482 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.neospark.neohub.utils.DatabaseConnection;
 import com.neospark.neohub.model.Product;
 
 public class ProductDaoImpl implements ProductDao {
 
-    // Helper - Map ResultSet to Product
+    @Override
+    public boolean addProduct(Product product) {
+        String sql = "INSERT INTO products (name, description, price, discount_price, stock, image, brand, stock_keeping_unit, is_featured, is_active, category_id) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, product.getName());
+            ps.setString(2, product.getDescription());
+            ps.setDouble(3, product.getPrice());
+            ps.setDouble(4, product.getDiscountPrice());
+            ps.setInt(5, product.getStock());
+            ps.setString(6, product.getImage());
+            ps.setString(7, product.getBrand());
+            ps.setString(8, product.getStockKeepingUnit());
+            ps.setBoolean(9, product.isFeatured());
+            ps.setBoolean(10, product.isActive());
+            ps.setInt(11, product.getCategoryId());
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("Error adding product: " + e.getMessage());
+            return false;
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+    }
+
+    @Override
+    public boolean updateProduct(Product product) {
+        String sql = "UPDATE products SET name=?, description=?, price=?, discount_price=?, stock=?, brand=?, stock_keeping_unit=?, is_featured=?, is_active=?, category_id=? WHERE id=?";
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, product.getName());
+            ps.setString(2, product.getDescription());
+            ps.setDouble(3, product.getPrice());
+            ps.setDouble(4, product.getDiscountPrice());
+            ps.setInt(5, product.getStock());
+            ps.setString(6, product.getBrand());
+            ps.setString(7, product.getStockKeepingUnit());
+            ps.setBoolean(8, product.isFeatured());
+            ps.setBoolean(9, product.isActive());
+            ps.setInt(10, product.getCategoryId());
+            ps.setInt(11, product.getId());
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating product: " + e.getMessage());
+            return false;
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+    }
+
+    @Override
+    public boolean updateProductImage(int id, String imagePath) {
+        String sql = "UPDATE products SET image=? WHERE id=?";
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, imagePath);
+            ps.setInt(2, id);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating product image: " + e.getMessage());
+            return false;
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+    }
+
+    @Override
+    public boolean deleteProduct(int id) {
+        String sql = "DELETE FROM products WHERE id=?";
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("Error deleting product: " + e.getMessage());
+            return false;
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+    }
+
+    @Override
+    public Product getProductById(int id) {
+        String sql = "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.id = ?";
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapProduct(rs);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting product by ID: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return null;
+    }
+
+    @Override
+    public List<Product> getAllProducts() {
+        String sql = "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id ORDER BY products.created_at DESC";
+        List<Product> products = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                products.add(mapProduct(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting all products: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return products;
+    }
+
+    @Override
+    public List<Product> getProductsByCategory(int categoryId) {
+        String sql = "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.category_id = ? AND products.is_active = TRUE ORDER BY products.created_at DESC";
+
+        List<Product> products = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, categoryId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                products.add(mapProduct(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting products by category: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return products;
+    }
+
+
+    @Override
+    public List<Product> getFeaturedProducts() {
+        String sql = "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.is_featured = TRUE AND products.is_active = TRUE ORDER BY products.created_at DESC";
+        List<Product> products = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                products.add(mapProduct(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting featured products: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return products;
+    }
+
+
+    @Override
+    public List<Product> searchProducts(String keyword) {
+        String sql = "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.is_active = TRUE AND (products.name LIKE ? OR products.description LIKE ? OR products.brand LIKE ?) ORDER BY products.name ASC";
+        List<Product> products = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            String searchTerm = "%" + keyword + "%";
+            ps.setString(1, searchTerm);
+            ps.setString(2, searchTerm);
+            ps.setString(3, searchTerm);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                products.add(mapProduct(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error searching products: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return products;
+    }
+
+
+    @Override
+    public int getTotalProductCount() {
+        String sql = "SELECT COUNT(*) FROM products";
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
+        } catch (SQLException e) {
+            System.out.println("Error getting total product count: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return 0;
+    }
+
+
+    @Override
+    public List<Product> getLowStockProducts(int threshold) {
+        String sql = "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.stock <= ? AND products.is_active = TRUE ORDER BY products.stock ASC";
+        List<Product> products = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, threshold);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                products.add(mapProduct(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting low stock products: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return products;
+    }
+
+    @Override
+    public List<Product> getRecentProducts(int limit) {
+        String sql = "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.is_active = TRUE ORDER BY products.created_at DESC LIMIT ?";
+        List<Product> products = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, limit);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                products.add(mapProduct(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting recent products: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return products;
+    }
+
+    @Override
+    public boolean updateStock(int productId, int quantity) {
+        String sql = "UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?";
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, quantity);
+            ps.setInt(2, productId);
+            ps.setInt(3, quantity);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating stock: " + e.getMessage());
+            return false;
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+    }
+
+    @Override
+    public boolean updateFeaturedStatus(int id, boolean isFeatured) {
+        String sql = "UPDATE products SET is_featured=? WHERE id=?";
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setBoolean(1, isFeatured);
+            ps.setInt(2, id);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating featured status: " + e.getMessage());
+            return false;
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+    }
+
+    @Override
+    public boolean updateActiveStatus(int id, boolean isActive) {
+        String sql = "UPDATE products SET is_active=? WHERE id=?";
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setBoolean(1, isActive);
+            ps.setInt(2, id);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            System.out.println("Error updating active status: " + e.getMessage());
+            return false;
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+    }
+
+    // needs review
+    @Override
+    public List<Product> getProductsPaginated(int offset, int limit, String keyword, int categoryId) {
+        StringBuilder sql = new StringBuilder(
+            "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.is_active = TRUE"
+        );
+
+        if (keyword != null && !keyword.isEmpty()) {
+            sql.append(" AND (products.name LIKE ? OR products.description LIKE ?)");
+        }
+        if (categoryId > 0) {
+            sql.append(" AND products.category_id = ?");
+        }
+        sql.append(" ORDER BY products.created_at DESC LIMIT ? OFFSET ?");
+
+        List<Product> products = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql.toString());
+            int index = 1;
+            if (keyword != null && !keyword.isEmpty()) {
+                String search = "%" + keyword + "%";
+                ps.setString(index++, search);
+                ps.setString(index++, search);
+            }
+            if (categoryId > 0) {
+                ps.setInt(index++, categoryId);
+            }
+            ps.setInt(index++, limit);
+            ps.setInt(index, offset);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                products.add(mapProduct(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting paginated products: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return products;
+    }
+
+    // needs review
+    @Override
+    public List<Product> getProductsByFilter(Integer categoryId, Double minPrice, Double maxPrice, String sortBy) {
+        StringBuilder sql = new StringBuilder(
+            "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.is_active = TRUE"
+        );
+ 
+        if (categoryId != null){
+            sql.append(" AND products.category_id = ?");
+        }
+        if (minPrice != null){
+            sql.append(" AND products.price >= ?");
+        }
+        if (maxPrice != null){
+            sql.append(" AND products.price <= ?");
+        }
+        if ("price_asc".equals(sortBy)){
+            sql.append(" ORDER BY products.price ASC");
+        } else if ("price_desc".equals(sortBy)){
+            sql.append(" ORDER BY products.price DESC");
+        } else if ("name_asc".equals(sortBy)){
+            sql.append(" ORDER BY products.name ASC");
+        } else {
+            sql.append(" ORDER BY products.created_at DESC");
+        }
+
+        List<Product> products = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql.toString());
+            int index = 1;
+            if (categoryId != null){
+                ps.setInt(index++, categoryId);
+            }
+            if (minPrice != null){
+                ps.setDouble(index++, minPrice);
+            }
+            if (maxPrice != null){
+                ps.setDouble(index++, maxPrice);
+            }
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                products.add(mapProduct(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error filtering products: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return products;
+    }
+
+    // needs review
+    @Override
+    public List<Map<String, Object>> getTopSellingProducts(int limit) {
+        String sql = "SELECT p.name, SUM(oi.quantity) AS total_sold FROM order_items oi JOIN products p ON oi.product_id = p.id GROUP BY p.id, p.name ORDER BY total_sold DESC LIMIT ?";
+        List<Map<String, Object>> result = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, limit);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Map<String, Object> row = new HashMap<>();
+                row.put("name", rs.getString("name"));
+                row.put("totalSold", rs.getInt("total_sold"));
+                result.add(row);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting top selling products: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return result;
+    }
+
+    // needs review 
+    @Override
+    public List<Map<String, Object>> getSalesByCategory() {
+        String sql = "SELECT c.name AS category_name, SUM(oi.quantity) AS total_sold FROM order_items oi JOIN products p ON oi.product_id = p.id JOIN categories c ON p.category_id = c.id GROUP BY c.id, c.name ORDER BY total_sold DESC";
+        List<Map<String, Object>> result = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Map<String, Object> row = new HashMap<>();
+                row.put("categoryName", rs.getString("category_name"));
+                row.put("totalSold", rs.getInt("total_sold"));
+                result.add(row);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting sales by category: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return result;
+    }
+
+
+    // helper method to map ResultSet to Product object
     private Product mapProduct(ResultSet rs) throws SQLException {
         Product product = new Product();
         product.setId(rs.getInt("id"));
@@ -23,395 +491,13 @@ public class ProductDaoImpl implements ProductDao {
         product.setStock(rs.getInt("stock"));
         product.setImage(rs.getString("image"));
         product.setBrand(rs.getString("brand"));
-        product.setSku(rs.getString("sku"));
+        product.setStockKeepingUnit(rs.getString("stock_keeping_unit"));
+        product.setFeatured(rs.getBoolean("is_featured"));
+        product.setActive(rs.getBoolean("is_active"));
         product.setCategoryId(rs.getInt("category_id"));
         product.setCategoryName(rs.getString("category_name"));
-        product.setActive(rs.getBoolean("is_active"));
-        product.setFeatured(rs.getBoolean("is_featured"));
-        product.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-        product.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
-        return product;
+        product.setCreatedAt(rs.getTimestamp("created_at"));
+        product.setUpdatedAt(rs.getTimestamp("updated_at"));
+        return product; 
     }
-
-    // Add Product
-    @Override
-    public boolean addProduct(Product product) {
-        String sql = "INSERT INTO products (name, description, price, discount_price, stock, " +
-                     "image, brand, sku, category_id, is_active, is_featured) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, product.getName());
-            stmt.setString(2, product.getDescription());
-            stmt.setDouble(3, product.getPrice());
-            stmt.setDouble(4, product.getDiscountPrice());
-            stmt.setInt(5, product.getStock());
-            stmt.setString(6, product.getImage());
-            stmt.setString(7, product.getBrand());
-            stmt.setString(8, product.getSku());
-            stmt.setInt(9, product.getCategoryId());
-            stmt.setBoolean(10, product.isActive());
-            stmt.setBoolean(11, product.isFeatured());
-
-            return stmt.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    // Update Product
-    @Override
-    public boolean updateProduct(Product product) {
-        String sql = "UPDATE products SET name=?, description=?, price=?, discount_price=?, " +
-                     "stock=?, image=?, brand=?, sku=?, category_id=?, is_active=?, " +
-                     "is_featured=?, updated_at=NOW() WHERE id=?";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, product.getName());
-            stmt.setString(2, product.getDescription());
-            stmt.setDouble(3, product.getPrice());
-            stmt.setDouble(4, product.getDiscountPrice());
-            stmt.setInt(5, product.getStock());
-            stmt.setString(6, product.getImage());
-            stmt.setString(7, product.getBrand());
-            stmt.setString(8, product.getSku());
-            stmt.setInt(9, product.getCategoryId());
-            stmt.setBoolean(10, product.isActive());
-            stmt.setBoolean(11, product.isFeatured());
-            stmt.setInt(12, product.getId());
-
-            return stmt.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    // Delete Product
-    @Override
-    public boolean deleteProduct(int id) {
-        String sql = "DELETE FROM products WHERE id=?";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, id);
-            return stmt.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    // Get Product By Id
-    @Override
-    public Product getProductById(int id) {
-        String sql = "SELECT p.*, c.name AS category_name " +
-                     "FROM products p " +
-                     "LEFT JOIN categories c ON p.category_id = c.id " +
-                     "WHERE p.id=?";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                return mapProduct(rs);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    // Get All Products
-    @Override
-    public List<Product> getAllProducts() {
-        String sql = "SELECT p.*, c.name AS category_name " +
-                     "FROM products p " +
-                     "LEFT JOIN categories c ON p.category_id = c.id " +
-                     "ORDER BY p.created_at DESC";
-        List<Product> products = new ArrayList<>();
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                products.add(mapProduct(rs));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return products;
-    }
-
-    // Get Products By Category
-    @Override
-    public List<Product> getProductsByCategory(int categoryId) {
-        String sql = "SELECT p.*, c.name AS category_name " +
-                     "FROM products p " +
-                     "LEFT JOIN categories c ON p.category_id = c.id " +
-                     "WHERE p.category_id=? AND p.is_active=true " +
-                     "ORDER BY p.created_at DESC";
-        List<Product> products = new ArrayList<>();
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, categoryId);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                products.add(mapProduct(rs));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return products;
-    }
-
-    // Get Featured Products
-    @Override
-    public List<Product> getFeaturedProducts() {
-        String sql = "SELECT p.*, c.name AS category_name " +
-                     "FROM products p " +
-                     "LEFT JOIN categories c ON p.category_id = c.id " +
-                     "WHERE p.is_featured=true AND p.is_active=true " +
-                     "ORDER BY p.created_at DESC";
-        List<Product> products = new ArrayList<>();
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            while (rs.next()) {
-                products.add(mapProduct(rs));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return products;
-    }
-
-    // Search Products
-    @Override
-    public List<Product> searchProducts(String keyword) {
-        String sql = "SELECT p.*, c.name AS category_name " +
-                     "FROM products p " +
-                     "LEFT JOIN categories c ON p.category_id = c.id " +
-                     "WHERE p.is_active=true AND " +
-                     "(p.name LIKE ? OR p.description LIKE ? OR p.brand LIKE ?) " +
-                     "ORDER BY p.created_at DESC";
-        List<Product> products = new ArrayList<>();
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            String searchTerm = "%" + keyword + "%";
-            stmt.setString(1, searchTerm);
-            stmt.setString(2, searchTerm);
-            stmt.setString(3, searchTerm);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                products.add(mapProduct(rs));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return products;
-    }
-
-    // Get Total Product Count
-    @Override
-    public int getTotalProductCount() {
-        String sql = "SELECT COUNT(*) FROM products";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    // Get Low Stock Products
-    @Override
-    public List<Product> getLowStockProducts(int limit) {
-        String sql = "SELECT p.*, c.name AS category_name " +
-                     "FROM products p " +
-                     "LEFT JOIN categories c ON p.category_id = c.id " +
-                     "WHERE p.stock <= 5 AND p.is_active=true " +
-                     "ORDER BY p.stock ASC LIMIT ?";
-        List<Product> products = new ArrayList<>();
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, limit);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                products.add(mapProduct(rs));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return products;
-    }
-
-    // Update Stock
-    @Override
-    public boolean updateStock(int productId, int quantity) {
-        String sql = "UPDATE products SET stock = stock - ?, updated_at=NOW() WHERE id=? AND stock >= ?";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, quantity);
-            stmt.setInt(2, productId);
-            stmt.setInt(3, quantity);
-
-            return stmt.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    // Toggle Product Status
-    @Override
-    public boolean toggleProductStatus(int id) {
-        String sql = "UPDATE products SET is_active = NOT is_active, updated_at=NOW() WHERE id=?";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, id);
-            return stmt.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    // Get Products with Pagination & Filtering
-    @Override
-public List<Product> getProductsPaginated(int offset, int limit, String keyword, int categoryId) {
-    List<Product> products = new ArrayList<>();
-
-    String sql = "SELECT p.*, c.name AS category_name FROM products p " +
-                 "LEFT JOIN categories c ON p.category_id = c.id " +
-                 "WHERE 1=1 ";
-
-    if (keyword != null && !keyword.isEmpty()) {
-        sql += "AND (p.name LIKE ? OR p.brand LIKE ?) ";
-    }
-
-    if (categoryId > 0) {
-        sql += "AND p.category_id = ? ";
-    }
-
-    sql += "ORDER BY p.created_at DESC LIMIT ? OFFSET ?";
-
-    try (Connection conn = DatabaseConnection.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-        int index = 1;
-
-        if (keyword != null && !keyword.isEmpty()) {
-            stmt.setString(index++, "%" + keyword + "%");
-            stmt.setString(index++, "%" + keyword + "%");
-        }
-
-        if (categoryId > 0) {
-            stmt.setInt(index++, categoryId);
-        }
-
-        stmt.setInt(index++, limit);
-        stmt.setInt(index, offset);
-
-        ResultSet rs = stmt.executeQuery();
-
-        while (rs.next()) {
-            products.add(mapProduct(rs));
-        }
-
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
-
-    return products;
-}
-
-// Get Product Count with Filtering
-@Override
-public int getProductCount(String keyword, int categoryId) {
-    String sql = "SELECT COUNT(*) FROM products WHERE 1=1 ";
-
-    // Dynamic conditions
-    if (keyword != null && !keyword.trim().isEmpty()) {
-        sql += "AND (name LIKE ? OR brand LIKE ?) ";
-    }
-
-    if (categoryId > 0) {
-        sql += "AND category_id = ? ";
-    }
-
-    try (Connection conn = DatabaseConnection.getConnection();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-        int index = 1;
-
-        // Set keyword parameters
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            String searchTerm = "%" + keyword.trim() + "%";
-            stmt.setString(index++, searchTerm);
-            stmt.setString(index++, searchTerm);
-        }
-
-        // Set category filter
-        if (categoryId > 0) {
-            stmt.setInt(index++, categoryId);
-        }
-
-        ResultSet rs = stmt.executeQuery();
-
-        if (rs.next()) {
-            return rs.getInt(1);
-        }
-
-    } catch (SQLException e) {
-        System.out.println("Error getting product count: " + e.getMessage());
-        e.printStackTrace();
-    }
-
-    return 0;
-}
-
 }

@@ -24,6 +24,7 @@ public class Product implements Serializable {
 
     // Category
     private int categoryId;
+    private String categoryName;
 
     // Timestamps
     private Timestamp createdAt;
@@ -32,7 +33,7 @@ public class Product implements Serializable {
     // Constructors
     public Product() {}
 
-    public Product(int id, String name, String description, double price, double discountPrice, int stock, String image, String brand, String stockKeepingUnit, boolean isFeatured, boolean isActive, int categoryId, Timestamp createdAt, Timestamp updatedAt) {
+    public Product(int id, String name, String description, double price, double discountPrice, int stock, String image, String brand, String stockKeepingUnit, boolean isFeatured, boolean isActive, int categoryId, String categoryName, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -45,6 +46,7 @@ public class Product implements Serializable {
         this.isFeatured = isFeatured;
         this.isActive = isActive;
         this.categoryId = categoryId;
+        this.categoryName = categoryName;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -143,6 +145,14 @@ public class Product implements Serializable {
 
     public void setCategoryId(int categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public Timestamp getCreatedAt() {
