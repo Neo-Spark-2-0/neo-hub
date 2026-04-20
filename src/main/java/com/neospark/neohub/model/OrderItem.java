@@ -8,17 +8,22 @@ public class OrderItem {
     private int orderId;
     private int productId;
     private int quantity;
-    private double unitPrice;         
+    private double unitPrice;  
+    private String productName;
+    private String productImage;
 
     // Constructors
     public OrderItem() {}
 
-    public OrderItem(int id, int orderId, int productId, int quantity, double unitPrice) {
+
+    public OrderItem(int id, int orderId, int productId, int quantity, double unitPrice, String productName, String productImage) {
         this.id = id;
         this.orderId = orderId;
         this.productId = productId;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
+        this.productName = productName;
+        this.productImage = productImage;
     }
 
     public int getId() {
@@ -61,6 +66,22 @@ public class OrderItem {
         this.unitPrice = unitPrice;
     }
 
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getProductImage() {
+        return productImage;
+    }
+
+    public void setProductImage(String productImage) {
+        this.productImage = productImage;
+    }
+
     @Override
     public String toString() {
         return "OrderItem{" +
@@ -69,6 +90,8 @@ public class OrderItem {
                 ", productId=" + productId +
                 ", quantity=" + quantity +
                 ", unitPrice=" + unitPrice +
+                ", productName='" + productName + '\'' +
+                ", productImage='" + productImage + '\'' +
                 '}';
     }
 }
