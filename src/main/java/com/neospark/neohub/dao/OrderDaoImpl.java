@@ -12,10 +12,6 @@ import com.neospark.neohub.model.Order;
 import com.neospark.neohub.model.OrderItem;
 
 public class OrderDaoImpl implements OrderDao {
-
-    // ============================================
-    // ✅ HELPER - Map ResultSet to Order
-    // ============================================
     private Order mapOrder(ResultSet rs) throws SQLException {
         Order order = new Order();
         order.setId(rs.getInt("id"));
