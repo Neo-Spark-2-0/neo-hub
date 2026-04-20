@@ -1,10 +1,8 @@
 package com.neospark.neohub.model;
 
-import java.io.Serializable;
 
-public class OrderItem implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+public class OrderItem {
 
     private int id;
     private int orderId;

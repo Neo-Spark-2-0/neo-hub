@@ -1,11 +1,9 @@
 package com.neospark.neohub.model;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Product implements Serializable {
+public class Product {
 
-    private static final long serialVersionUID = 1L;
 
     // product details 
     private int id;

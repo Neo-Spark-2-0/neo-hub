@@ -1,13 +1,10 @@
 package com.neospark.neohub.model;
 
-import java.io.Serializable;
 import java.security.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
 
-public class Order implements Serializable {
+public class Order {
 
-    private static final long serialVersionUID = 1L;
 
     private int id;
     
