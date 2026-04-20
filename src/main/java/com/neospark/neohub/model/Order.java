@@ -1,6 +1,6 @@
 package com.neospark.neohub.model;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.util.List;
 
 public class Order {
@@ -28,6 +28,19 @@ public class Order {
 
     // order items
     private List<OrderItem> orderItems;
+
+    
+
+    // get from user table using left join
+    private String userFullName;
+    private String userPhone;
+    private String userAddress;
+
+    // get from promocode table using left join
+    private String paymentMethod;
+    private String paymentStatus;
+    private String transactionId;
+
 
     // constructors
     public Order() {}
@@ -137,6 +150,52 @@ public class Order {
         this.orderItems = orderItems;
     }
 
+         String getUserFullName() {
+        return userFullName;
+    }
+
+    public void setUserFullName(String userFullName) {
+        this.userFullName = userFullName;
+    }
+
+    public String getUserPhone() {
+        return userPhone;
+    }
+
+    public void setUserPhone(String userPhone) {
+        this.userPhone = userPhone;
+    }
+
+    public String getUserAddress() {
+        return userAddress;
+    }
+
+    public void setUserAddress(String userAddress) {
+        this.userAddress = userAddress;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+    public String getTransactionId() {
+        return transactionId;
+    }
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
+    }
+
 
     @Override
     public String toString() {
@@ -152,6 +211,12 @@ public class Order {
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 ", orderItems=" + orderItems +
+                ", userFullName='" + userFullName + '\'' +
+                ", userPhone='" + userPhone + '\'' +
+                ", userAddress='" + userAddress + '\'' +
+                ", paymentMethod='" + paymentMethod + '\'' +
+                ", paymentStatus='" + paymentStatus + '\'' +
+                ", transactionId='" + transactionId + '\'' +
                 '}';
     }
 }

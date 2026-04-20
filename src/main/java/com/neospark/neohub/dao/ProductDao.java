@@ -14,6 +14,7 @@ public interface ProductDao {
     boolean deleteProduct(int id);
     boolean updateStock(int productId, int quantity);
 
+    
     List<Product> getRecentProducts(int limit);
     int getTotalProductCount();
     List<Product> getLowStockProducts(int limit);

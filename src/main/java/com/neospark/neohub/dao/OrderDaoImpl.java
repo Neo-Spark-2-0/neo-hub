@@ -9,400 +9,278 @@ import java.util.List;
 
 import com.neospark.neohub.utils.DatabaseConnection;
 import com.neospark.neohub.model.Order;
-import com.neospark.neohub.model.OrderItem;
 
 public class OrderDaoImpl implements OrderDao {
-    private Order mapOrder(ResultSet rs) throws SQLException {
-        Order order = new Order();
-        order.setId(rs.getInt("id"));
-        order.setOrderNumber(rs.getString("order_number"));
-        order.setUserId(rs.getInt("user_id"));
-        order.setUserName(rs.getString("user_name"));
-        order.setPaymentMethod(rs.getString("payment_method"));
-        order.setPaymentStatus(rs.getString("payment_status"));
-        order.setOrderStatus(rs.getString("order_status"));
-        order.setSubtotal(rs.getDouble("subtotal"));
-        order.setShippingCharge(rs.getDouble("shipping_charge"));
-        order.setTotalAmount(rs.getDouble("total_amount"));
-        order.setShippingAddress(rs.getString("shipping_address"));
-        order.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-        order.setUpdatedAt(rs.getTimestamp("updated_at").toLocalDateTime());
-        return order;
-    }
 
-    // ============================================
-    // ✅ HELPER - Map ResultSet to OrderItem
-    // ============================================
-    private OrderItem mapOrderItem(ResultSet rs) throws SQLException {
-        OrderItem item = new OrderItem();
-        item.setId(rs.getInt("id"));
-        item.setOrderId(rs.getInt("order_id"));
-        item.setProductId(rs.getInt("product_id"));
-        item.setProductName(rs.getString("product_name"));
-        item.setPrice(rs.getDouble("price"));
-        item.setQuantity(rs.getInt("quantity"));
-        item.setSubtotal(rs.getDouble("subtotal"));
-        return item;
-    }
-
-    // ============================================
-    // ✅ HELPER - Get Order Items by Order ID
-    // ============================================
-    private List<OrderItem> getOrderItems(int orderId, Connection conn)
-            throws SQLException {
-        String sql = "SELECT * FROM order_items WHERE order_id = ?";
-        List<OrderItem> items = new ArrayList<>();
-
-        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setInt(1, orderId);
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                items.add(mapOrderItem(rs));
-            }
-        }
-        return items;
-    }
-
-    // ============================================
-    // ✅ Place Order (with Transaction)
-    // ============================================
     @Override
     public boolean placeOrder(Order order) {
-        String orderSql = "INSERT INTO orders (order_number, user_id, payment_method, " +
-                          "payment_status, order_status, subtotal, shipping_charge, " +
-                          "total_amount, shipping_address) " +
-                          "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO orders (sub_total_amount, shipping_charge, discount_amount, total_amount, promo_code_id, order_status, user_id) VALUES (?, ?, ?, ?, ?, 'Pending', ?)";
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setDouble(1, order.getSubTotalAmount());
+            ps.setDouble(2, order.getShippingCharge());
+            ps.setDouble(3, order.getDiscountAmount());
+            ps.setDouble(4, order.getTotalAmount());
 
-        String itemSql  = "INSERT INTO order_items (order_id, product_id, product_name, " +
-                          "price, quantity, subtotal) " +
-                          "VALUES (?, ?, ?, ?, ?, ?)";
-
-        try (Connection conn = DatabaseConnection.getConnection()) {
-
-            // ✅ Start Transaction
-            conn.setAutoCommit(false);
-
-            try (PreparedStatement orderStmt = conn.prepareStatement(
-                    orderSql, PreparedStatement.RETURN_GENERATED_KEYS)) {
-
-                orderStmt.setString(1, order.getOrderNumber());
-                orderStmt.setInt(2, order.getUserId());
-                orderStmt.setString(3, order.getPaymentMethod());
-                orderStmt.setString(4, order.getPaymentStatus());
-                orderStmt.setString(5, order.getOrderStatus());
-                orderStmt.setDouble(6, order.getSubtotal());
-                orderStmt.setDouble(7, order.getShippingCharge());
-                orderStmt.setDouble(8, order.getTotalAmount());
-                orderStmt.setString(9, order.getShippingAddress());
-
-                orderStmt.executeUpdate();
-
-                // ✅ Get Generated Order ID
-                ResultSet generatedKeys = orderStmt.getGeneratedKeys();
-                if (generatedKeys.next()) {
-                    int orderId = generatedKeys.getInt(1);
-
-                    // ✅ Insert Order Items
-                    try (PreparedStatement itemStmt = conn.prepareStatement(itemSql)) {
-                        for (OrderItem item : order.getOrderItems()) {
-                            itemStmt.setInt(1, orderId);
-                            itemStmt.setInt(2, item.getProductId());
-                            itemStmt.setString(3, item.getProductName());
-                            itemStmt.setDouble(4, item.getPrice());
-                            itemStmt.setInt(5, item.getQuantity());
-                            itemStmt.setDouble(6, item.getSubtotal());
-                            itemStmt.addBatch();
-                        }
-                        itemStmt.executeBatch();
-                    }
-                }
-
-                // ✅ Commit Transaction
-                conn.commit();
-                return true;
-
-            } catch (SQLException e) {
-                // ✅ Rollback if error
-                conn.rollback();
-                e.printStackTrace();
+            if (order.getPromoCodeId() != null) {
+                ps.setInt(5, order.getPromoCodeId());
+            } else {
+                ps.setNull(5, java.sql.Types.INTEGER);
             }
+            ps.setInt(6, order.getUserId());
 
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                return true;
+            }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error placing order: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
         }
         return false;
     }
 
-    // ============================================
-    // ✅ Update Order Status
-    // ============================================
+
     @Override
-    public boolean updateOrderStatus(int orderId, String status) {
-        String sql = "UPDATE orders SET order_status = ?, " +
-                     "updated_at = NOW() WHERE id = ?";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, status);
-            stmt.setInt(2, orderId);
-            return stmt.executeUpdate() > 0;
-
+    public boolean updateOrderStatus(int orderId, String orderStatus) {
+        String sql = "UPDATE orders SET order_status = ? WHERE id = ?";
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, orderStatus);
+            ps.setInt(2, orderId);
+            return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error updating order status: " + e.getMessage());
+            return false;
+        } finally {
+            DatabaseConnection.closeConnection(connection);
         }
-        return false;
     }
 
-    // ============================================
-    // ✅ Update Payment Status
-    // ============================================
-    @Override
-    public boolean updatePaymentStatus(int orderId, String paymentStatus) {
-        String sql = "UPDATE orders SET payment_status = ?, " +
-                     "updated_at = NOW() WHERE id = ?";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, paymentStatus);
-            stmt.setInt(2, orderId);
-            return stmt.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    // ============================================
-    // ✅ Get Order By ID
-    // ============================================
     @Override
     public Order getOrderById(int id) {
-        String sql = "SELECT o.*, u.full_name AS user_name " +
-                     "FROM orders o " +
-                     "LEFT JOIN users u ON o.user_id = u.id " +
-                     "WHERE o.id = ?";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-
+        String sql = "SELECT orders.*, users.full_name AS user_full_name, users.phone AS user_phone, users.street, users.city, users.district, users.province, payments.method AS payment_method, payments.status AS payment_status, payments.transaction_id FROM orders LEFT JOIN users   ON orders.user_id  = users.id LEFT JOIN payments ON payments.order_id = orders.id WHERE orders.id = ?";
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
-                Order order = mapOrder(rs);
-                // ✅ Also fetch order items
-                order.setOrderItems(getOrderItems(id, conn));
-                return order;
+                return mapOrder(rs);
             }
-
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error getting order by ID: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
         }
         return null;
     }
 
-    // ============================================
-    // ✅ Get Order By Order Number
-    // ============================================
-    @Override
-    public Order getOrderByOrderNumber(String orderNumber) {
-        String sql = "SELECT o.*, u.full_name AS user_name " +
-                     "FROM orders o " +
-                     "LEFT JOIN users u ON o.user_id = u.id " +
-                     "WHERE o.order_number = ?";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, orderNumber);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                Order order = mapOrder(rs);
-                order.setOrderItems(getOrderItems(order.getId(), conn));
-                return order;
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    // ============================================
-    // ✅ Get All Orders
-    // ============================================
-    @Override
+     @Override
     public List<Order> getAllOrders() {
-        String sql = "SELECT o.*, u.full_name AS user_name " +
-                     "FROM orders o " +
-                     "LEFT JOIN users u ON o.user_id = u.id " +
-                     "ORDER BY o.created_at DESC";
+        String sql = "SELECT orders.*, users.full_name AS user_full_name, users.phone AS user_phone, users.street, users.city, users.district, users.province, payments.method AS payment_method, payments.status AS payment_status, payments.transaction_id FROM orders LEFT JOIN users ON orders.user_id  = users.id LEFT JOIN payments ON payments.order_id = orders.id ORDER BY orders.created_at DESC";
         List<Order> orders = new ArrayList<>();
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 orders.add(mapOrder(rs));
             }
-
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error getting all orders: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return orders;
+    }
+   @Override
+    public List<Order> getOrdersByUser(int userId) {
+        String sql = "SELECT o.*, "
+                   + "u.full_name AS user_full_name, u.phone AS user_phone, "
+                   + "u.street, u.city, u.district, u.province, "
+                   + "p.method AS payment_method, p.status AS payment_status, p.transaction_id "
+                   + "FROM orders o "
+                   + "LEFT JOIN users u    ON o.user_id  = u.id "
+                   + "LEFT JOIN payments p ON p.order_id = o.id "
+                   + "WHERE o.user_id = ? ORDER BY o.created_at DESC";
+        List<Order> orders = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) orders.add(mapOrder(rs));
+        } catch (SQLException e) {
+            System.out.println("Error getting orders by user: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
         }
         return orders;
     }
 
-    // ============================================
-    // ✅ Get Orders By User ID
-    // ============================================
     @Override
-    public List<Order> getOrdersByUserId(int userId) {
-        String sql = "SELECT o.*, u.full_name AS user_name " +
-                     "FROM orders o " +
-                     "LEFT JOIN users u ON o.user_id = u.id " +
-                     "WHERE o.user_id = ? " +
-                     "ORDER BY o.created_at DESC";
+    public List<Order> getOrdersByStatus(String orderStatus) {
+        String sql = "SELECT o.*, "
+                   + "u.full_name AS user_full_name, u.phone AS user_phone, "
+                   + "u.street, u.city, u.district, u.province, "
+                   + "p.method AS payment_method, p.status AS payment_status, p.transaction_id "
+                   + "FROM orders o "
+                   + "LEFT JOIN users u    ON o.user_id  = u.id "
+                   + "LEFT JOIN payments p ON p.order_id = o.id "
+                   + "WHERE o.order_status = ? ORDER BY o.created_at DESC";
         List<Order> orders = new ArrayList<>();
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, userId);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                orders.add(mapOrder(rs));
-            }
-
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, orderStatus);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) orders.add(mapOrder(rs));
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error getting orders by status: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
         }
         return orders;
     }
-
-    // ============================================
-    // ✅ Get Orders By Status
-    // ============================================
-    @Override
-    public List<Order> getOrdersByStatus(String status) {
-        String sql = "SELECT o.*, u.full_name AS user_name " +
-                     "FROM orders o " +
-                     "LEFT JOIN users u ON o.user_id = u.id " +
-                     "WHERE o.order_status = ? " +
-                     "ORDER BY o.created_at DESC";
-        List<Order> orders = new ArrayList<>();
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, status);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                orders.add(mapOrder(rs));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return orders;
-    }
-
-    // ============================================
-    // ✅ Get Total Order Count
-    // ============================================
     @Override
     public int getTotalOrderCount() {
         String sql = "SELECT COUNT(*) FROM orders";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt(1);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error getting total order count: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
         }
         return 0;
     }
-
-    // ============================================
-    // ✅ Get Total Revenue (Only PAID orders)
-    // ============================================
     @Override
     public double getTotalRevenue() {
-        String sql = "SELECT COALESCE(SUM(total_amount), 0) " +
-                     "FROM orders WHERE payment_status = 'PAID'";
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql);
-             ResultSet rs = stmt.executeQuery()) {
-
-            if (rs.next()) {
-                return rs.getDouble(1);
-            }
-
+        String sql = "SELECT COALESCE(SUM(total_amount), 0) FROM orders WHERE order_status != 'Cancelled'";
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getDouble(1);
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error getting total revenue: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
         }
         return 0.0;
     }
 
-    // ============================================
-    // ✅ Get Order Count By Status
-    // ============================================
-    @Override
-    public int getOrderCountByStatus(String status) {
-        String sql = "SELECT COUNT(*) FROM orders WHERE order_status = ?";
 
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            stmt.setString(1, status);
-            ResultSet rs = stmt.executeQuery();
-
-            if (rs.next()) {
-                return rs.getInt(1);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    // ============================================
-    // ✅ Get Recent Orders
-    // ============================================
     @Override
     public List<Order> getRecentOrders(int limit) {
-        String sql = "SELECT o.*, u.full_name AS user_name " +
-                     "FROM orders o " +
-                     "LEFT JOIN users u ON o.user_id = u.id " +
-                     "ORDER BY o.created_at DESC LIMIT ?";
+        String sql = "SELECT o.*, "
+                   + "u.full_name AS user_full_name, u.phone AS user_phone, "
+                   + "u.street, u.city, u.district, u.province, "
+                   + "p.method AS payment_method, p.status AS payment_status, p.transaction_id "
+                   + "FROM orders o "
+                   + "LEFT JOIN users u    ON o.user_id  = u.id "
+                   + "LEFT JOIN payments p ON p.order_id = o.id "
+                   + "ORDER BY o.created_at DESC LIMIT ?";
         List<Order> orders = new ArrayList<>();
-
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setInt(1, limit);
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                orders.add(mapOrder(rs));
-            }
-
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, limit);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) orders.add(mapOrder(rs));
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("Error getting recent orders: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
         }
         return orders;
     }
+
+    @Override
+    public List<Object[]> getMonthlyRevenue() {
+        String sql = "SELECT DATE_FORMAT(created_at, '%Y-%m') AS month, "
+                + "COALESCE(SUM(total_amount), 0) AS revenue "
+                + "FROM orders WHERE order_status != 'Cancelled' "
+                + "GROUP BY month ORDER BY month ASC LIMIT 12";
+        List<Object[]> result = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                result.add(new Object[]{rs.getString("month"), rs.getDouble("revenue")});
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting monthly revenue: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return result;
+    }
+
+
+       private Order mapOrder(ResultSet rs) throws SQLException {
+        Order order = new Order();
+        order.setId(rs.getInt("id"));
+        order.setSubTotalAmount(rs.getDouble("sub_total_amount"));
+        order.setShippingCharge(rs.getDouble("shipping_charge"));
+        order.setDiscountAmount(rs.getDouble("discount_amount"));
+        order.setTotalAmount(rs.getDouble("total_amount"));
+        order.setOrderStatus(rs.getString("order_status"));
+        order.setUserId(rs.getInt("user_id"));
+        order.setCreatedAt(rs.getTimestamp("created_at"));
+        order.setUpdatedAt(rs.getTimestamp("updated_at"));
+ 
+        // Nullable FK
+        int promoCodeId = rs.getInt("promo_code_id");
+        order.setPromoCodeId(rs.wasNull() ? null : promoCodeId);
+ 
+        // User details from  left join users table
+        order.setUserFullName(rs.getString("user_full_name"));
+        order.setUserPhone(rs.getString("user_phone"));
+        order.setUserAddress(buildAddress(
+            rs.getString("street"), 
+            rs.getString("city"),
+            rs.getString("district"), 
+            rs.getString("province")
+        ));
+ 
+        // Payment details from left join payments table
+        order.setPaymentMethod(rs.getString("payment_method"));
+        order.setPaymentStatus(rs.getString("payment_status"));
+        order.setTransactionId(rs.getString("transaction_id"));
+ 
+        return order;
+    }
+
+    private String buildAddress(String street, String city, String district, String province) {
+        StringBuilder sb = new StringBuilder();
+        if (street   != null && !street.isEmpty())   sb.append(street).append(", ");
+        if (city     != null && !city.isEmpty())     sb.append(city).append(", ");
+        if (district != null && !district.isEmpty()) sb.append(district).append(", ");
+        if (province != null && !province.isEmpty()) sb.append(province);
+        return sb.toString().replaceAll(",\\s*$", "");
+}
+    
 }
