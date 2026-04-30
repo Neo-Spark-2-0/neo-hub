@@ -1,6 +1,6 @@
 package com.neospark.neohub.model;
 
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 public class Payment {
     private int id;

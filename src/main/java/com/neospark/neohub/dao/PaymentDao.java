@@ -1,3 +1,4 @@
+package com.neospark.neohub.dao;
 import java.util.List;
 
 import com.neospark.neohub.model.Payment;
