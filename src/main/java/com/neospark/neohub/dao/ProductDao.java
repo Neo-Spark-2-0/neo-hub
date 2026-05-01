@@ -17,6 +17,7 @@ public interface ProductDao {
     
     List<Product> getRecentProducts(int limit);
     int getTotalProductCount();
+    int getProductCount(String keyword, int categoryId);
     List<Product> getLowStockProducts(int limit);
     Product getProductById(int id);
     List<Product> getAllProducts();
