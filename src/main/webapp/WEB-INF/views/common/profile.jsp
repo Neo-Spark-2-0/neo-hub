@@ -26,12 +26,13 @@
             action="${pageContext.request.contextPath}/profile"
             method="post"
             id="photoForm"
+            enctype="multipart/form-data"
           >
             <input type="hidden" name="action" value="uploadPhoto" />
             <div class="w-14 h-14 rounded-full bg-blue-50 border-2 border-secondary overflow-hidden flex items-center justify-content-center cursor-pointer hover:border-blue-400 transition-colors mb-2" onclick="document.getElementById('photoInput').click()">
               <c:choose>
                 <c:when test="${not empty user.profileImage}">
-                  <img src="${pageContext.request.contextPath}/${user.profileImage}" alt="Photo" class="w-full h-full object-cover"/>
+                  <img src="${pageContext.request.contextPath}/uploads/${user.profileImage}" alt="Photo" class="w-full h-full object-cover"/>
                 </c:when>
                 <c:otherwise>
                   <span class="text-base font-semibold text-blue-500 w-full h-full flex items-center justify-center">
@@ -44,7 +45,7 @@
                 </c:otherwise>
               </c:choose>
             </div>
-            <input type="file" id="photoInput" name="profilePhoto" accept="image/*" class="hidden"
+            <input type="file" id="photoInput" name="profilePhoto" accept="image/png, image/jpeg, image/jpg" class="hidden"
             onchange="document.getElementById('photoForm').submit()"/>
           </form>
           <p class="text-sm font-semibold text-gray-800 text-center"><c:out value="${user.fullName}" /></p>

@@ -29,6 +29,7 @@ uri="jakarta.tags.fmt" %>
         position: absolute;
         inset: 0;
         opacity: 0.04;
+        pointer-events: none;
         background:
         repeating-linear-gradient(
             0deg,

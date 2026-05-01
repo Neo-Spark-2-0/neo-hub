@@ -5,6 +5,7 @@ import java.io.IOException;
 import com.neospark.neohub.dao.UserDao;
 import com.neospark.neohub.dao.UserDaoImpl;
 import com.neospark.neohub.model.User;
+import com.neospark.neohub.utils.ImageUploadUtil;
 import com.neospark.neohub.utils.PasswordUtil;
 import com.neospark.neohub.utils.SessionUtil;
 import com.neospark.neohub.utils.ValidationUtil;
@@ -15,8 +16,14 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Part;
 
 @WebServlet("/profile")
+@MultipartConfig(
+    fileSizeThreshold = 1024 * 1024,
+    maxFileSize = 5 * 1024 * 1024, 
+    maxRequestSize = 10 * 1024 * 1024 
+)
 public class ProfileServlet extends HttpServlet {
      private final UserDao userDao = new UserDaoImpl();
     @Override
@@ -131,29 +138,26 @@ public class ProfileServlet extends HttpServlet {
             setErrorAndForward(request, response, "passwordError", "Failed to update password. Try again.");
         }
     }
-    // @MultipartConfig(fileSizeThreshold = 1024 * 1024, // 1 MB)
     public void handleUploadPhoto(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // need review as it is copy pasted from ai 
-        // User sessionUser = (User) request.getSession().getAttribute("loggedInUser");
-        // Part filePart    = request.getPart("profilePhoto");
-
-        // try {
-        //     String imagePath = ImageUploadUtil.uploadProfileImage(filePart, request.getServletContext().getRealPath(""));
-        //     if (imagePath == null) {
-        //         setErrorAndForward(request, response, "photoError", "Please select an image file.");
-        //         return;
-        //     }
-        //     boolean success = userDao.updateProfileImage(sessionUser.getId(), imagePath);
-        //     if (success) {
-        //         User updated = userDao.getUserById(sessionUser.getId());
-        //         request.getSession().setAttribute("loggedInUser", updated);
-        //         setSuccessAndForward(request, response, "photoSuccess", "Profile photo updated successfully.");
-        //     } else {
-        //         setErrorAndForward(request, response, "photoError", "Failed to upload photo. Try again.");
-        //     }
-        // } catch (IOException e) {
-        //     setErrorAndForward(request, response, "photoError", e.getMessage());
-        // }
+        Part imagePart = request.getPart("profilePhoto");
+        String imagePath = ImageUploadUtil.uploadImage(imagePart, "profile");
+        if (imagePath == null){
+            imagePath = null;
+        }
+        User sessionUser = (User) SessionUtil.getAttribute(request, "user");
+        User dbUser = userDao.getUserById(sessionUser.getId());
+        String oldImage = dbUser.getProfileImage();
+        boolean success = userDao.updateProfileImage(sessionUser.getId(), imagePath);
+        if (success) {
+            if (oldImage != null && !oldImage.isEmpty()) {
+            ImageUploadUtil.deleteImage(oldImage);
+        }
+            User updatedUser = userDao.getUserById(sessionUser.getId());
+            SessionUtil.setAttribute(request, "user", updatedUser);
+            setSuccessAndForward(request, response, "photoSuccess", "Profile photo updated successfully.");
+        } else {
+            setErrorAndForward(request, response, "photoError", "Failed to update profile photo. Try again.");
+        }
     }
 
 

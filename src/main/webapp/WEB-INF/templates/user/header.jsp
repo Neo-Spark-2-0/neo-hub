@@ -80,7 +80,7 @@
                             <div class="w-7 h-7 rounded-full bg-gray-200 overflow-hidden flex items-center justify-center flex-shrink-0">
                                 <c:choose>
                                     <c:when test="${not empty sessionScope.user.profileImage}">
-                                        <img src="${pageContext.request.contextPath}/${sessionScope.user.profileImage}"
+                                        <img src="${pageContext.request.contextPath}/uploads/${sessionScope.user.profileImage}"
                                              class="w-full h-full object-cover" alt="Photo" />
                                     </c:when>
                                     <c:otherwise>
