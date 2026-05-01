@@ -14,9 +14,6 @@ import com.neospark.neohub.utils.DatabaseConnection;
 
 public class PaymentDaoImpl implements PaymentDao {
 
-    // ─────────────────────────────────────────────
-    // CREATE
-    // ─────────────────────────────────────────────
 
     @Override
     public boolean createPayment(Payment payment) {
@@ -40,9 +37,6 @@ public class PaymentDaoImpl implements PaymentDao {
         }
     }
 
-    // ─────────────────────────────────────────────
-    // READ
-    // ─────────────────────────────────────────────
 
     @Override
     public Payment getPaymentByOrderId(int orderId) {
@@ -80,9 +74,6 @@ public class PaymentDaoImpl implements PaymentDao {
         return payments;
     }
 
-    // ─────────────────────────────────────────────
-    // UPDATE
-    // ─────────────────────────────────────────────
 
     @Override
     public boolean updatePaymentStatus(int orderId, String status, String transactionId) {
@@ -108,9 +99,6 @@ public class PaymentDaoImpl implements PaymentDao {
         }
     }
 
-    // ─────────────────────────────────────────────
-    // HELPER
-    // ─────────────────────────────────────────────
 
     private Payment mapPayment(ResultSet rs) throws SQLException {
         Payment payment = new Payment(

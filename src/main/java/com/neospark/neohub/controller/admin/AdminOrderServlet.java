@@ -58,7 +58,7 @@ public class AdminOrderServlet extends HttpServlet {
             }
         } else if ("updatePayment".equals(action)) {
             String payStatus = req.getParameter("paymentStatus");
-            if (orderDao.updatePaymentStatus(orderId, payStatus)) {
+            if (orderDao.updateOrderStatus(orderId, payStatus)) {
                 req.getSession().setAttribute("success", "Payment status updated.");
             }
         }

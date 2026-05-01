@@ -49,12 +49,16 @@ public class AdminDashboardServlet extends HttpServlet {
         double totalRevenue = orderDao.getTotalRevenue();
 
         // Order Status Counts
-        int pendingOrders = orderDao.getOrderCountByStatus("PENDING");
-        int processingOrders = orderDao.getOrderCountByStatus("PROCESSING");
-        int shippedOrders = orderDao.getOrderCountByStatus("SHIPPED");
-        int deliveredOrders = orderDao.getOrderCountByStatus("DELIVERED");
-        int cancelledOrders = orderDao.getOrderCountByStatus("CANCELLED");
-
+        List<Order> pendingOrdersList = orderDao.getOrdersByStatus("PENDING");
+        int pendingOrders = pendingOrdersList.size();
+        List<Order> processingOrdersList = orderDao.getOrdersByStatus("PROCESSING");
+        int processingOrders = processingOrdersList.size();
+        List<Order> shippedOrdersList = orderDao.getOrdersByStatus("SHIPPED");
+        int shippedOrders = shippedOrdersList.size();
+        List<Order> deliveredOrdersList = orderDao.getOrdersByStatus("DELIVERED");
+        int deliveredOrders = deliveredOrdersList.size();
+        List<Order> cancelledOrdersList = orderDao.getOrdersByStatus("CANCELLED");
+        int cancelledOrders = cancelledOrdersList.size();
         // Recent Data (latest 5)
         List<Order> recentOrders = orderDao.getRecentOrders(5);
         List<User> recentUsers = userDao.getRecentUsers(5);

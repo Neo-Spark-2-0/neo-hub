@@ -109,7 +109,7 @@ public class AdminProductServlet extends HttpServlet {
         int offset = (page - 1) * PAGE_SIZE;
 
         List<Product> products = productDao.getProductsPaginated(offset, PAGE_SIZE, keyword, categoryId);
-        int totalProducts = productDao.getProductCount(keyword, categoryId);
+        int totalProducts = productDao.getTotalProductCount();
 
         int totalPages = (int) Math.ceil((double) totalProducts / PAGE_SIZE);
 
@@ -288,7 +288,7 @@ public class AdminProductServlet extends HttpServlet {
         product.setCategoryId(parseInt(req.getParameter("categoryId")));
 
         product.setBrand(req.getParameter("brand"));
-        product.setSku(req.getParameter("sku"));
+        product.setStockKeepingUnit(req.getParameter("sku"));
 
         product.setActive(req.getParameter("isActive") != null);
         product.setFeatured(req.getParameter("isFeatured") != null);
