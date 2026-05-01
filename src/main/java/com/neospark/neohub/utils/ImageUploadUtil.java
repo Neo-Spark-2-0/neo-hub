@@ -7,10 +7,8 @@ import jakarta.servlet.http.Part;
 
 
 public class ImageUploadUtil {
-
-
-    private static final String BASE_UPLOAD_DIR =
-            System.getProperty("user.home") + File.separator + "neohub-uploads";
+    
+    private static final String BASE_UPLOAD_DIR = System.getProperty("user.home") + File.separator + "neohub-uploads";
 
     private static final String[] ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"};
 
@@ -20,18 +18,17 @@ public class ImageUploadUtil {
             return null;
         }
 
-        String originalName = getSubmittedFileName(part);
-        if (originalName == null || originalName.isEmpty()) {
+        String fileName = part.getSubmittedFileName();
+        if (fileName == null || fileName.isEmpty()) {
             return null;
         }
 
-        String extension = getExtension(originalName).toLowerCase();
+        String extension = getExtension(fileName);
         if (!isAllowedExtension(extension)) {
-            System.out.println("ImageUploadUtil: rejected extension " + extension);
+            System.out.println("You cannot upload files with the extension " + extension);
             return null;
         }
 
-        // Create upload directory if it doesn't exist
         String uploadPath = BASE_UPLOAD_DIR + File.separator + folder;
         File uploadDir = new File(uploadPath);
         if (!uploadDir.exists()) {
@@ -40,17 +37,20 @@ public class ImageUploadUtil {
 
         String uniqueName = UUID.randomUUID().toString() + extension;
 
-        part.write(uploadPath + File.separator + uniqueName);
-
-        return folder + "/" + uniqueName;
+        try {
+            part.write(uploadPath + File.separator + uniqueName);
+            return folder + "/" + uniqueName;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static void deleteImage(String imagePath) {
         if (imagePath == null || imagePath.isEmpty()) {
             return;
         }
-
-        if (imagePath.startsWith("static/") || imagePath.startsWith("default")) {
+        if (imagePath.startsWith("static/")) {
             return;
         }
         File file = new File(BASE_UPLOAD_DIR + File.separator + imagePath.replace("/", File.separator));
@@ -61,25 +61,17 @@ public class ImageUploadUtil {
 
     private static boolean isAllowedExtension(String extension) {
         for (String allowed : ALLOWED_EXTENSIONS) {
-            if (allowed.equals(extension)) return true;
+            if (allowed.equals(extension)){
+                return true;
+            }
         }
         return false;
     }
-
-    private static String getSubmittedFileName(Part part) {
-        String header = part.getHeader("content-disposition");
-        if (header == null) return null;
-        for (String token : header.split(";")) {
-            token = token.trim();
-            if (token.startsWith("filename")) {
-                return token.substring(token.indexOf('=') + 1).trim().replace("\"", "");
-            }
-        }
-        return null;
-    }
-
     private static String getExtension(String filename) {
-        int dot = filename.lastIndexOf('.');
-        return (dot >= 0) ? filename.substring(dot) : ".jpg";
+        int dotIndex = filename.lastIndexOf(".");
+        if (dotIndex == -1) {
+            return "";
+        }
+        return filename.substring(dotIndex).toLowerCase();
     }
 }

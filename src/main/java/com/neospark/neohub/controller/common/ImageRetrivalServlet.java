@@ -59,10 +59,7 @@ public class ImageRetrivalServlet extends HttpServlet {
             response.setContentType(contentType);
         }
 
-        // Browser caches image for 1 day
-        response.setHeader("Cache-Control", "public, max-age=86400");
         response.setContentLengthLong(file.length());
-
 
         try (OutputStream out = response.getOutputStream()) {
             Files.copy(file.toPath(), out);
