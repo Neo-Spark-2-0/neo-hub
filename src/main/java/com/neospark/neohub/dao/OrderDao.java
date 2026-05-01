@@ -8,7 +8,6 @@ public interface OrderDao {
     // CRUD
     boolean placeOrder(Order order);
     boolean updateOrderStatus(int orderId, String orderStatus);
-    boolean updatePaymentStatus(int orderId, String paymentStatus);
     
     // Fetch
     Order getOrderById(int id);

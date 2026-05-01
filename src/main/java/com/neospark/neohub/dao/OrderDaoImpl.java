@@ -257,25 +257,6 @@ public class OrderDaoImpl implements OrderDao {
         return 0;
     }
 
-    @Override
-    public boolean updatePaymentStatus(int orderId, String paymentStatus) {
-    String sql = "UPDATE payments SET status = ? WHERE order_id = ?";
-    Connection connection = null;
-    try {
-        connection = DatabaseConnection.getConnection();
-        PreparedStatement ps = connection.prepareStatement(sql);
-        ps.setString(1, paymentStatus);
-        ps.setInt(2, orderId);
-        return ps.executeUpdate() > 0;
-    } catch (SQLException e) {
-        System.out.println("Error updating payment status: " + e.getMessage());
-        return false;
-    } finally {
-        DatabaseConnection.closeConnection(connection);
-    }
-}
-
-
        private Order mapOrder(ResultSet rs) throws SQLException {
         Order order = new Order();
         order.setId(rs.getInt("id"));
