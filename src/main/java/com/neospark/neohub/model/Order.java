@@ -150,7 +150,7 @@ public class Order {
         this.orderItems = orderItems;
     }
 
-         String getUserFullName() {
+    public String getUserFullName() {
         return userFullName;
     }
 

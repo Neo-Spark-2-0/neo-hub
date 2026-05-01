@@ -8,6 +8,7 @@ public interface OrderDao {
     // CRUD
     boolean placeOrder(Order order);
     boolean updateOrderStatus(int orderId, String orderStatus);
+    boolean updatePaymentStatus(int orderId, String paymentStatus);
     
     // Fetch
     Order getOrderById(int id);
@@ -17,6 +18,7 @@ public interface OrderDao {
     
     // Dashboard
     int getTotalOrderCount();
+    int getOrderCountByStatus(String orderStatus);
     double getTotalRevenue();
     List<Order> getRecentOrders(int limit);
     List<Object[]> getMonthlyRevenue();
