@@ -7,6 +7,7 @@
     <meta name="description" content="${param.metaDescription}" />
     <meta name="keywords" content="${param.metaKeywords}" />
     <meta name="author" content="${param.metaAuthor}" />
+    <link rel="icon" href="${pageContext.request.contextPath}/static/images/favicon.png" type="image/x-icon" />
     <jsp:include page="/WEB-INF/views/common/import.jsp" />
 </head>
 

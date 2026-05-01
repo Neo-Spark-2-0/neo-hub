@@ -1,460 +1,155 @@
--- Turning off strict mode
+-- =====================================================
+-- NEO-HUB – Realistic Test Data (Compact Version)
+-- =====================================================
+
 SET sql_mode = '';
 USE neohub;
 
--- =====================================================
--- 1. Users (50+ rows)
---    Includes the default admin + 50 regular users
---    Passwords are hashed using BCrypt: "password123"
--- =====================================================
+-- -----------------------------------------------------
+-- 1. USERS (Admin + 9 Customers)
+--    Password for all is 'password123' – you must replace
+--    the hash with a real BCrypt hash, e.g. from
+--    PasswordUtil.getHashPassword("password123")
+-- -----------------------------------------------------
 INSERT INTO users (full_name, email, password, phone, province, district, city, street, role, is_active, is_email_verified) VALUES
 ('Admin', 'admin@neohub.com', '$2a$10$aCaiJw4Zpmrko9FiWF1AzOUE542GKLfm8vB6JAeHRCYsaYAow8LSK', '9812345678', 'Bagmati', 'Kathmandu', 'Kathmandu', 'Admin Street', 'ADMIN', TRUE, TRUE),
-('Ram Prasad Sharma', 'ram.sharma@example.com', '$2a$10$dummyhash1', '9812345670', 'Bagmati', 'Lalitpur', 'Patan', 'Mangal Bazaar', 'USER', TRUE, TRUE),
-('Sita Thapa', 'sita.thapa@example.com', '$2a$10$dummyhash2', '9812345671', 'Bagmati', 'Bhaktapur', 'Bhaktapur', 'Durbar Square', 'USER', TRUE, TRUE),
-('Hari Nepal', 'hari.nepal@example.com', '$2a$10$dummyhash3', '9812345672', 'Province1', 'Jhapa', 'Birtamode', 'Main Road', 'USER', TRUE, TRUE),
-('Gita Karki', 'gita.karki@example.com', '$2a$10$dummyhash4', '9812345673', 'Province2', 'Banke', 'Nepalgunj', 'Bypass', 'USER', TRUE, TRUE),
-('Bikram Shrestha', 'bikram@example.com', '$2a$10$dummyhash5', '9812345674', 'Bagmati', 'Kathmandu', 'Kirtipur', 'Bagbazar', 'USER', TRUE, TRUE),
-('Sunita Maharjan', 'sunita@example.com', '$2a$10$dummyhash6', '9812345675', 'Bagmati', 'Lalitpur', 'Jawalakhel', 'Kumaripati', 'USER', TRUE, TRUE),
-('Ramesh Basnet', 'ramesh@example.com', '$2a$10$dummyhash7', '9812345676', 'Province3', 'Chitwan', 'Bharatpur', 'Lakeside', 'USER', TRUE, TRUE),
-('Kavita Adhikari', 'kavita@example.com', '$2a$10$dummyhash8', '9812345677', 'Province4', 'Kaski', 'Pokhara', 'New Road', 'USER', TRUE, TRUE),
-('Prakash Thapa', 'prakash@example.com', '$2a$10$dummyhash9', '9812345678', 'Province5', 'Rupandehi', 'Butwal', 'Traffic Chowk', 'USER', TRUE, TRUE),
-('Maya Rai', 'maya.rai@example.com', '$2a$10$dummyhash10', '9812345679', 'Province6', 'Surkhet', 'Birendranagar', 'Jumla Road', 'USER', TRUE, TRUE),
-('Deepak Poudel', 'deepak@example.com', '$2a$10$dummyhash11', '9812345680', 'Bagmati', 'Kathmandu', 'Balaju', 'Chakrapath', 'USER', TRUE, TRUE),
-('Anita Ghimire', 'anita@example.com', '$2a$10$dummyhash12', '9812345681', 'Province1', 'Morang', 'Biratnagar', 'Mills Area', 'USER', TRUE, TRUE),
-('Rajesh Hamal', 'rajesh@example.com', '$2a$10$dummyhash13', '9812345682', 'Province2', 'Dang', 'Ghorahi', 'Airport Road', 'USER', TRUE, TRUE),
-('Nisha Bhandari', 'nisha@example.com', '$2a$10$dummyhash14', '9812345683', 'Province3', 'Nawalpur', 'Kawasoti', 'Bypass', 'USER', TRUE, TRUE),
-('Sushil Paneru', 'sushil@example.com', '$2a$10$dummyhash15', '9812345684', 'Bagmati', 'Kathmandu', 'Baneshwor', 'Bhatbhateni', 'USER', TRUE, TRUE),
-('Rita K.C.', 'rita.kc@example.com', '$2a$10$dummyhash16', '9812345685', 'Province4', 'Myagdi', 'Beni', 'Bazaar', 'USER', TRUE, TRUE),
-('Gopal Shrestha', 'gopal@example.com', '$2a$10$dummyhash17', '9812345686', 'Province5', 'Kapilvastu', 'Taulihawa', 'Gautam Buddha Road', 'USER', TRUE, TRUE),
-('Shova Thakuri', 'shova@example.com', '$2a$10$dummyhash18', '9812345687', 'Province6', 'Dailekh', 'Narayan', 'Dullu', 'USER', TRUE, TRUE),
-('Dhruba Ghimire', 'dhruba@example.com', '$2a$10$dummyhash19', '9812345688', 'Province7', 'Kailali', 'Dhangadhi', 'Attariya', 'USER', TRUE, TRUE),
-('Laxmi Thapa', 'laxmi@example.com', '$2a$10$dummyhash20', '9812345689', 'Bagmati', 'Bhaktapur', 'Thimi', 'Suryabinayak', 'USER', TRUE, TRUE),
-('Bijay K.C.', 'bijay@example.com', '$2a$10$dummyhash21', '9812345690', 'Province1', 'Sunsari', 'Dharan', 'Bhanu Chowk', 'USER', TRUE, TRUE),
-('Sarita Dhakal', 'sarita@example.com', '$2a$10$dummyhash22', '9812345691', 'Province2', 'Parsa', 'Birgunj', 'Adarsh Nagar', 'USER', TRUE, TRUE),
-('Rabin Magar', 'rabin@example.com', '$2a$10$dummyhash23', '9812345692', 'Province3', 'Makwanpur', 'Hetauda', 'Industrial Road', 'USER', TRUE, TRUE),
-('Sabina Rana', 'sabina@example.com', '$2a$10$dummyhash24', '9812345693', 'Bagmati', 'Kathmandu', 'Gaushala', 'Pashupati', 'USER', TRUE, TRUE),
-('Suman Subedi', 'suman@example.com', '$2a$10$dummyhash25', '9812345694', 'Province4', 'Parbat', 'Kushma', 'Bazaar', 'USER', TRUE, TRUE),
-('Rekha Acharya', 'rekha@example.com', '$2a$10$dummyhash26', '9812345695', 'Province5', 'Palpa', 'Tansen', 'Shreenagar', 'USER', TRUE, TRUE),
-('Mohan B.K.', 'mohan.bk@example.com', '$2a$10$dummyhash27', '9812345696', 'Province6', 'Jumla', 'Jumla Bazar', 'Karnali', 'USER', TRUE, TRUE),
-('Srijana Neupane', 'srijana@example.com', '$2a$10$dummyhash28', '9812345697', 'Province7', 'Kanchanpur', 'Mahendranagar', 'Bhimdatta', 'USER', TRUE, TRUE),
-('Himal Adhikari', 'himal@example.com', '$2a$10$dummyhash29', '9812345698', 'Bagmati', 'Lalitpur', 'Lagankhel', 'Pulchowk', 'USER', TRUE, TRUE),
-('Indira Baral', 'indira@example.com', '$2a$10$dummyhash30', '9812345699', 'Province1', 'Ilam', 'Ilam Bazar', 'Fikkal', 'USER', TRUE, TRUE),
-('Bishnu Koirala', 'bishnu@example.com', '$2a$10$dummyhash31', '9812345700', 'Province2', 'Bara', 'Simara', 'Airport Road', 'USER', TRUE, TRUE),
-('Yamuna Sharma', 'yamuna@example.com', '$2a$10$dummyhash32', '9812345701', 'Province3', 'Dhading', 'Dhading Besi', 'Main Chowk', 'USER', TRUE, TRUE),
-('Santa Baniya', 'santa@example.com', '$2a$10$dummyhash33', '9812345702', 'Bagmati', 'Kathmandu', 'Swayambhu', 'Ring Road', 'USER', TRUE, TRUE),
-('Pabitra Thapa', 'pabitra@example.com', '$2a$10$dummyhash34', '9812345703', 'Province4', 'Baglung', 'Baglung Bazar', 'Dhorpatan', 'USER', TRUE, TRUE),
-('Bharat Subba', 'bharat@example.com', '$2a$10$dummyhash35', '9812345704', 'Province5', 'Arghakhanchi', 'Sandhikharka', 'Highway', 'USER', TRUE, TRUE),
-('Manju Pradhan', 'manju@example.com', '$2a$10$dummyhash36', '9812345705', 'Province6', 'Salyan', 'Salyan Bazar', 'Khalanga', 'USER', TRUE, TRUE),
-('Tika Limbu', 'tika@example.com', '$2a$10$dummyhash37', '9812345706', 'Province7', 'Doti', 'Dipayal', 'Silgadhi', 'USER', TRUE, TRUE),
-('Lila Tamang', 'lila@example.com', '$2a$10$dummyhash38', '9812345707', 'Bagmati', 'Kathmandu', 'Budhanilkantha', 'School Road', 'USER', TRUE, TRUE),
-('Kedar Gautam', 'kedar@example.com', '$2a$10$dummyhash39', '9812345708', 'Province1', 'Panchthar', 'Phidim', 'Bazaar', 'USER', TRUE, TRUE),
-('Sushma Pokhrel', 'sushma@example.com', '$2a$10$dummyhash40', '9812345709', 'Province2', 'Rautahat', 'Gaur', 'Hospital Road', 'USER', TRUE, TRUE),
-('Kamal Nepal', 'kamal@example.com', '$2a$10$dummyhash41', '9812345710', 'Province3', 'Gorkha', 'Gorkha Bazar', 'Palung', 'USER', TRUE, TRUE),
-('Indira Shrestha', 'indira.shrestha@example.com', '$2a$10$dummyhash42', '9812345711', 'Bagmati', 'Kathmandu', 'Boudha', 'Jorpati', 'USER', TRUE, TRUE),
-('Navaraj Khadka', 'navaraj@example.com', '$2a$10$dummyhash43', '9812345712', 'Province4', 'Syangja', 'Putalibazar', 'Waling', 'USER', TRUE, TRUE),
-('Anjali Acharya', 'anjali@example.com', '$2a$10$dummyhash44', '9812345713', 'Province5', 'Gulmi', 'Tamghas', 'Resunga', 'USER', TRUE, TRUE),
-('Khagendra Thapa', 'khagendra@example.com', '$2a$10$dummyhash45', '9812345714', 'Province6', 'Jajarkot', 'Khalanga', 'Bheri', 'USER', TRUE, TRUE),
-('Bimala Koirala', 'bimala@example.com', '$2a$10$dummyhash46', '9812345715', 'Province7', 'Achham', 'Mangalsen', 'Bazar', 'USER', TRUE, TRUE),
-('Rajan Dhital', 'rajan@example.com', '$2a$10$dummyhash47', '9812345716', 'Bagmati', 'Lalitpur', 'Godawari', 'Chapagaun', 'USER', TRUE, TRUE),
-('Sangita Rai', 'sangita@example.com', '$2a$10$dummyhash48', '9812345717', 'Province1', 'Taplejung', 'Taplejung Bazar', 'Phungling', 'USER', TRUE, TRUE),
-('Purna Malla', 'purna@example.com', '$2a$10$dummyhash49', '9812345718', 'Province2', 'Sarlahi', 'Malangwa', 'Airport Area', 'USER', TRUE, TRUE),
-('Durga Bhandari', 'durga@example.com', '$2a$10$dummyhash50', '9812345719', 'Province3', 'Sindhupalchok', 'Chautara', 'Bus Park', 'USER', TRUE, TRUE);
+('Ram Sharma', 'ram@example.com', '$2a$10$replaceWithRealHashForPassword123', '9812345670', 'Bagmati', 'Lalitpur', 'Patan', 'Mangal Bazaar', 'USER', TRUE, TRUE),
+('Sita Thapa', 'sita@example.com', '$2a$10$replaceWithRealHashForPassword123', '9812345671', 'Bagmati', 'Bhaktapur', 'Bhaktapur', 'Durbar Square', 'USER', TRUE, TRUE),
+('Hari Nepal', 'hari@example.com', '$2a$10$replaceWithRealHashForPassword123', '9812345672', 'Province1', 'Jhapa', 'Birtamode', 'Main Road', 'USER', TRUE, TRUE),
+('Gita Karki', 'gita@example.com', '$2a$10$replaceWithRealHashForPassword123', '9812345673', 'Province2', 'Banke', 'Nepalgunj', 'Bypass', 'USER', TRUE, TRUE),
+('Bikram Shrestha', 'bikram@example.com', '$2a$10$replaceWithRealHashForPassword123', '9812345674', 'Bagmati', 'Kathmandu', 'Kirtipur', 'Bagbazar', 'USER', TRUE, TRUE),
+('Sunita Maharjan', 'sunita@example.com', '$2a$10$replaceWithRealHashForPassword123', '9812345675', 'Bagmati', 'Lalitpur', 'Jawalakhel', 'Kumaripati', 'USER', TRUE, TRUE),
+('Ramesh Basnet', 'ramesh@example.com', '$2a$10$replaceWithRealHashForPassword123', '9812345676', 'Province3', 'Chitwan', 'Bharatpur', 'Lakeside', 'USER', TRUE, TRUE),
+('Kavita Adhikari', 'kavita@example.com', '$2a$10$replaceWithRealHashForPassword123', '9812345677', 'Province4', 'Kaski', 'Pokhara', 'New Road', 'USER', TRUE, TRUE),
+('Prakash Thapa', 'prakash@example.com', '$2a$10$replaceWithRealHashForPassword123', '9812345678', 'Province5', 'Rupandehi', 'Butwal', 'Traffic Chowk', 'USER', TRUE, TRUE);
 
--- =====================================================
--- 2. Categories (50 rows)
---    Realistic IoT categories + subcategories
--- =====================================================
-INSERT INTO categories (name, description, image, is_active) VALUES
-('Arduino Boards', 'Official Arduino and compatible boards', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('ESP8266 & ESP32', 'WiFi and Bluetooth enabled microcontrollers', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Raspberry Pi', 'Single board computers for IoT', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Sensors', 'Temperature, humidity, motion, gas, etc.', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Actuators', 'Motors, servos, relays, solenoids', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Displays', 'LCD, OLED, TFT, 7-segment', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Communication Modules', 'LoRa, GSM, Bluetooth, RF', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Power Supplies', 'Batteries, solar panels, regulators', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('IoT Kits', 'Complete starter kits for IoT learning', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Development Boards', 'Other MCU boards: STM32, ATtiny, etc.', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Arduino Shields', 'Expansion boards for Arduino Uno', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Breadboards & Jumpers', 'Prototyping essentials', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Tools', 'Multimeters, soldering irons, wire strippers', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Cables & Connectors', 'USB, HDMI, jumper wires, adapters', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Enclosures', 'Project boxes, cases, mounting plates', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Relays & Switches', 'Mechanical and solid-state relays, buttons', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('LEDs & Lighting', 'RGB LEDs, strips, neopixels', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Resistors & Capacitors', 'Basic electronic components', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Audio Modules', 'Speakers, amplifiers, sound sensors', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Cameras', 'OV7670, ESP32-CAM, Raspberry Pi camera', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('RFID/NFC', 'RFID readers, tags, NFC modules', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('GPS Modules', 'GPS receivers for location tracking', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Accelerometers', 'MPU6050, ADXL345, etc.', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Gas Sensors', 'MQ-2, MQ-135, CO2 sensors', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Temperature/Humidity', 'DHT11, DHT22, BME280', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Pressure Sensors', 'BMP180, BMP280, LPS25H', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Current Sensors', 'ACS712, INA219, CT sensors', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Motor Drivers', 'L298N, L293D, A4988', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Servo Motors', 'Standard and micro servos', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Stepper Motors', 'NEMA 17, 28BYJ-48', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('DC Motors', 'Brushed and brushless DC motors', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Pumps & Valves', 'Water pumps, solenoid valves', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Heaters & Fans', 'Heating elements, cooling fans', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Solar Power', 'Solar panels, charge controllers', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Batteries', 'Li-ion, LiPo, 18650, battery holders', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Chargers', 'Battery charging modules (TP4056, etc.)', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Logic Level Converters', 'Bi-directional 5V/3.3V converters', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Real Time Clocks', 'DS3231, DS1307 modules', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Memory Modules', 'Micro SD card adapters, EEPROM', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('USB to TTL', 'FTDI, CH340, CP2102 converters', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('IoT Platforms', 'NodeMCU, Wemos D1, Seeed Studio', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Machine Learning', 'Edge AI, TensorFlow Lite boards', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Voice Recognition', 'Speech synthesis, voice modules', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Gesture Sensors', 'APDS-9960, PAJ7620', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Flex Sensors', 'Bend sensors for wearables', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Waterproof Sensors', 'Water level, flow sensors', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Industrial IoT', 'Modbus, RS485, PLC interfaces', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Robotics Chassis', 'Robot car kits, arm kits', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Educational Kits', 'STEM kits for schools', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE),
-('Wearables', 'Smart watches, health trackers (DIY)', 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', TRUE);
+-- -----------------------------------------------------
+-- 2. CATEGORIES (8 main IoT categories)
+-- -----------------------------------------------------
+INSERT INTO categories (name, description, is_active) VALUES
+('Arduino Boards', 'Official and compatible Arduino microcontrollers', TRUE),
+('ESP8266 & ESP32', 'WiFi and Bluetooth enabled development boards', TRUE),
+('Raspberry Pi', 'Single-board computers for advanced IoT', TRUE),
+('Sensors', 'Temperature, motion, gas, humidity sensors', TRUE),
+('Displays', 'LCD, OLED, and TFT screens', TRUE),
+('Motors & Drivers', 'Servo, stepper, DC motors and motor drivers', TRUE),
+('IoT Kits', 'Starter kits and bundles', TRUE),
+('Power & Batteries', 'Power supplies, solar panels, battery modules', TRUE);
 
--- =====================================================
--- 3. Products (50+ rows)
---    Realistic IoT products with prices, brands, categories
--- =====================================================
+-- -----------------------------------------------------
+-- 3. PRODUCTS (28 products, 3-6 per category)
+-- -----------------------------------------------------
 INSERT INTO products (name, description, price, discount_price, stock, image, brand, stock_keeping_unit, is_featured, is_active, category_id) VALUES
-('Arduino Uno R3', 'Official Arduino Uno Rev3 – ATmega328P', 3200.00, 2900.00, 45, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Arduino', 'UNO-R3-01', TRUE, TRUE, 1),
-('Arduino Mega 2560', 'Larger memory, more I/O pins', 5500.00, 4990.00, 30, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Arduino', 'MEGA-2560', TRUE, TRUE, 1),
-('ESP32 Dev Board', 'WiFi+Bluetooth, dual-core', 1200.00, 1050.00, 100, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Espressif', 'ESP32-DEV', TRUE, TRUE, 2),
-('ESP8266 NodeMCU', 'Low-cost WiFi module', 800.00, 750.00, 80, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'NodeMCU', 'ESP8266-V3', TRUE, TRUE, 2),
-('Raspberry Pi 4 Model B 4GB', 'Single board computer, 1.5GHz', 10500.00, 9999.00, 15, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Raspberry Pi', 'RPI4-4GB', TRUE, TRUE, 3),
-('DHT11 Temperature Sensor', 'Digital temp & humidity', 350.00, 300.00, 200, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'AOSONG', 'DHT11', FALSE, TRUE, 25),
-('DHT22 Sensor', 'High precision temp/humidity', 800.00, 750.00, 120, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'AOSONG', 'DHT22', FALSE, TRUE, 25),
-('HC-SR04 Ultrasonic Sensor', 'Distance measurement sensor', 400.00, 350.00, 150, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'HC', 'HC-SR04', FALSE, TRUE, 4),
-('PIR Motion Sensor', 'Passive infrared motion detection', 300.00, 280.00, 180, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Generic', 'HC-SR501', FALSE, TRUE, 4),
-('SG90 Servo Motor', 'Micro servo 9g', 250.00, 220.00, 300, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Tower Pro', 'SG90', FALSE, TRUE, 29),
-('MG995 Servo', 'High torque metal gear', 650.00, 600.00, 90, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Tower Pro', 'MG995', FALSE, TRUE, 29),
-('L298N Motor Driver', 'Dual H-bridge for DC motors', 550.00, 500.00, 110, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'ST', 'L298N', FALSE, TRUE, 28),
-('16x2 LCD Display', 'Character LCD with I2C', 450.00, 400.00, 95, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'HD44780', 'LCD1602', FALSE, TRUE, 6),
-('0.96" OLED Display', '128x64 I2C OLED', 600.00, 550.00, 130, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'SSD1306', 'OLED-096', TRUE, TRUE, 6),
-('NeoPixel Ring 12 LED', 'RGB LED ring', 850.00, 800.00, 60, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Adafruit', 'WS2812-R12', FALSE, TRUE, 17),
-('LoRa SX1278 Module', 'Long range 433MHz', 1200.00, 1100.00, 45, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Ai-Thinker', 'SX1278', FALSE, TRUE, 7),
-('SIM800L GSM Module', '2G cellular module', 1800.00, 1650.00, 35, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'SIMCom', 'SIM800L', FALSE, TRUE, 7),
-('HC-05 Bluetooth Module', 'Bluetooth 2.0 module', 500.00, 450.00, 140, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'HC', 'HC-05', FALSE, TRUE, 7),
-('NEO-6M GPS Module', 'GPS receiver with antenna', 2200.00, 2000.00, 40, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'u-blox', 'NEO-6M', FALSE, TRUE, 22),
-('RC522 RFID Kit', 'RFID reader + 2 tags', 450.00, 420.00, 85, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Mifare', 'RC522', FALSE, TRUE, 21),
-('MPU6050 Accelerometer', '6-axis gyro + accelerometer', 550.00, 500.00, 110, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'InvenSense', 'MPU6050', FALSE, TRUE, 23),
-('MQ-135 Gas Sensor', 'Air quality sensor (CO2, smoke)', 750.00, 700.00, 70, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'MQ', 'MQ-135', FALSE, TRUE, 24),
-('ACS712 Current Sensor', '20A current sensor', 400.00, 380.00, 65, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Allegro', 'ACS712-20A', FALSE, TRUE, 27),
-('BMP280 Pressure Sensor', 'Barometric pressure + temp', 600.00, 550.00, 90, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Bosch', 'BMP280', FALSE, TRUE, 26),
-('Micro SD Card Module', 'SD card reader for data logging', 250.00, 230.00, 200, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Generic', 'SD-MOD', FALSE, TRUE, 39),
-('DS3231 RTC Module', 'Real time clock with battery', 450.00, 400.00, 95, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Maxim', 'DS3231', FALSE, TRUE, 38),
-('4-Channel Relay Module', '4 relays 5V', 600.00, 550.00, 75, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Songle', '4CH-RELAY', FALSE, TRUE, 16),
-('NodeMCU IoT Kit', 'ESP8266 based starter kit with sensors', 2500.00, 2200.00, 30, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'NodeMCU', 'KIT-ESP', TRUE, TRUE, 9),
-('Arduino Starter Kit', 'Official kit with Uno and components', 6500.00, 5999.00, 20, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Arduino', 'KIT-UNO', TRUE, TRUE, 9),
-('Breadboard 830 points', 'Solderless breadboard', 350.00, 300.00, 250, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Generic', 'BB-830', FALSE, TRUE, 12),
-('Jumper Wires (40pcs)', 'Male-to-female, male-to-male, female-to-female', 200.00, 180.00, 400, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Generic', 'JW-40', FALSE, TRUE, 12),
-('9V Battery with Clip', 'Rechargeable 9V battery', 300.00, 280.00, 150, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Energizer', '9V-CLIP', FALSE, TRUE, 35),
-('Solar Panel 5V 1W', 'Mini solar cell', 450.00, 400.00, 60, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Generic', 'SOL-5V-1W', FALSE, TRUE, 34),
-('CH340 USB to TTL', 'USB to serial converter', 300.00, 280.00, 120, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'WCH', 'CH340', FALSE, TRUE, 40),
-('FTDI USB to TTL', 'Reliable FTDI converter', 650.00, 600.00, 55, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'FTDI', 'FT232', FALSE, TRUE, 40),
-('ESP32-CAM', 'ESP32 with camera module', 1300.00, 1200.00, 45, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Espressif', 'ESP32-CAM', TRUE, TRUE, 2),
-('Raspberry Pi Camera', '5MP camera module for RPi', 1500.00, 1400.00, 30, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Raspberry Pi', 'RPI-CAM', FALSE, TRUE, 20),
-('BME280 Environmental Sensor', 'Temp, humidity, pressure', 900.00, 850.00, 70, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Bosch', 'BME280', FALSE, TRUE, 25),
-('MAX6675 Thermocouple', 'K-type thermocouple module', 800.00, 750.00, 40, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'MAX', 'MAX6675', FALSE, TRUE, 4),
-('Stepper Motor 28BYJ-48', '5V stepper with driver', 500.00, 450.00, 80, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Generic', '28BYJ-48', FALSE, TRUE, 30),
-('NEMA 17 Stepper', '42x42mm stepper motor', 1200.00, 1100.00, 50, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Generic', 'NEMA17', FALSE, TRUE, 30),
-('Water Pump 3-5V', 'Mini submersible pump', 350.00, 320.00, 60, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Generic', 'WATER-MINI', FALSE, TRUE, 32),
-('Logic Level Converter', 'Bi-directional 4-channel', 200.00, 180.00, 200, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Generic', 'LLC-4CH', FALSE, TRUE, 37),
-('APDS-9960 Gesture Sensor', 'Gesture, color, proximity', 900.00, 850.00, 25, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Avago', 'APDS9960', FALSE, TRUE, 44),
-('Flex Sensor 2.2"', 'Bend sensor for gloves', 650.00, 600.00, 35, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Spectra', 'FLEX-2.2', FALSE, TRUE, 45),
-('Robot Chassis Kit', '2WD smart car chassis', 1200.00, 1100.00, 30, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Generic', 'ROBO-2WD', FALSE, TRUE, 48),
-('Voice Recognition Module', 'V3.1 offline speech recognition', 1800.00, 1650.00, 20, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Elechouse', 'VR-V3', FALSE, TRUE, 43),
-('IN219 Current Sensor', 'High side current sensor', 500.00, 470.00, 45, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Texas', 'INA219', FALSE, TRUE, 27),
-('TP4056 Charger Module', '1A Li-ion charger', 150.00, 130.00, 300, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Generic', 'TP4056', FALSE, TRUE, 36),
-('18650 Battery', '3.7V 2000mAh Li-ion', 500.00, 450.00, 150, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Samsung', '18650-26H', FALSE, TRUE, 35),
-('ESP32-C3 Mini', 'RISC-V WiFi + BLE', 900.00, 850.00, 60, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Espressif', 'ESP32-C3', TRUE, TRUE, 2),
-('Raspberry Pi Pico W', 'RP2040 with WiFi', 1200.00, 1100.00, 55, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&auto=format', 'Raspberry Pi', 'PICO-W', TRUE, TRUE, 3);
+-- Arduino Boards (cat 1)
+('Arduino Uno R3', 'Official Arduino Uno Rev3 – ATmega328P', 3200.00, 2900.00, 45, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'Arduino', 'UNO-R3', TRUE, TRUE, 1),
+('Arduino Mega 2560', 'More memory and I/O pins', 5500.00, 4990.00, 30, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'Arduino', 'MEGA-2560', TRUE, TRUE, 1),
+('Arduino Nano', 'Compact breadboard-friendly board', 2500.00, 2300.00, 60, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'Arduino', 'NANO-V3', FALSE, TRUE, 1),
 
--- =====================================================
--- 4. Cart (60+ rows)
---    Some users have multiple items, random quantities
--- =====================================================
+-- ESP8266 & ESP32 (cat 2)
+('ESP32 Dev Board', 'Dual-core WiFi + Bluetooth', 1200.00, 1050.00, 100, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'Espressif', 'ESP32-DEV', TRUE, TRUE, 2),
+('ESP8266 NodeMCU', 'Low-cost WiFi module', 800.00, 750.00, 80, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'NodeMCU', 'ESP8266-V3', FALSE, TRUE, 2),
+('ESP32-CAM', 'ESP32 with camera module', 1300.00, 1200.00, 45, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'Espressif', 'ESP32-CAM', TRUE, TRUE, 2),
+
+-- Raspberry Pi (cat 3)
+('Raspberry Pi 4B 4GB', '1.5GHz quad-core, 4GB RAM', 10500.00, 9999.00, 15, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'Raspberry Pi', 'RPI4-4GB', TRUE, TRUE, 3),
+('Raspberry Pi Pico W', 'RP2040 with WiFi', 1200.00, 1100.00, 55, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'Raspberry Pi', 'PICO-W', FALSE, TRUE, 3),
+
+-- Sensors (cat 4)
+('DHT11 Temperature & Humidity', 'Digital sensor', 350.00, 300.00, 200, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'AOSONG', 'DHT11', FALSE, TRUE, 4),
+('DHT22 High Precision', 'Better accuracy', 800.00, 750.00, 120, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'AOSONG', 'DHT22', FALSE, TRUE, 4),
+('HC-SR04 Ultrasonic', 'Distance measurement', 400.00, 350.00, 150, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'HC', 'HC-SR04', FALSE, TRUE, 4),
+('PIR Motion Sensor', 'Passive infrared', 300.00, 280.00, 180, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'Generic', 'HC-SR501', FALSE, TRUE, 4),
+('MQ-135 Air Quality', 'CO2, smoke, benzene', 750.00, 700.00, 70, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'MQ', 'MQ-135', TRUE, TRUE, 4),
+
+-- Displays (cat 5)
+('16x2 LCD with I2C', 'Character display', 450.00, 400.00, 95, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'HD44780', 'LCD1602', FALSE, TRUE, 5),
+('0.96" OLED 128x64', 'I2C OLED', 600.00, 550.00, 130, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'SSD1306', 'OLED-096', TRUE, TRUE, 5),
+
+-- Motors & Drivers (cat 6)
+('SG90 Micro Servo', '9g servo', 250.00, 220.00, 300, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'Tower Pro', 'SG90', FALSE, TRUE, 6),
+('L298N Motor Driver', 'Dual H-bridge', 550.00, 500.00, 110, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'ST', 'L298N', FALSE, TRUE, 6),
+('28BYJ-48 Stepper + Driver', '5V stepper motor with ULN2003', 500.00, 450.00, 80, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'Generic', '28BYJ-48', FALSE, TRUE, 6),
+
+-- IoT Kits (cat 7)
+('NodeMCU IoT Starter Kit', 'ESP8266 + sensors + cables', 2500.00, 2200.00, 30, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'NodeMCU', 'KIT-ESP', TRUE, TRUE, 7),
+('Arduino Uno Ultimate Kit', 'Over 200 components', 6500.00, 5999.00, 20, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'Arduino', 'KIT-UNO', TRUE, TRUE, 7),
+
+-- Power & Batteries (cat 8)
+('18650 Li-ion Battery', '3.7V 2000mAh', 500.00, 450.00, 150, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'Samsung', '18650-26H', FALSE, TRUE, 8),
+('TP4056 Charger Module', '1A Li-ion charging', 150.00, 130.00, 300, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'Generic', 'TP4056', FALSE, TRUE, 8),
+('5V 1W Solar Panel', 'Mini solar cell', 450.00, 400.00, 60, 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600', 'Generic', 'SOL-5V-1W', FALSE, TRUE, 8);
+
+-- -----------------------------------------------------
+-- 4. CART (a few active carts)
+-- -----------------------------------------------------
 INSERT INTO cart (user_id, product_id, quantity) VALUES
-(2, 1, 2), (2, 5, 1), (3, 10, 1), (4, 15, 3), (5, 22, 1),
-(6, 8, 2), (7, 12, 1), (8, 18, 1), (9, 25, 2), (10, 30, 1),
-(11, 35, 1), (12, 40, 2), (13, 45, 1), (14, 50, 1), (15, 6, 3),
-(16, 11, 1), (17, 16, 2), (18, 21, 1), (19, 26, 1), (20, 31, 2),
-(21, 36, 1), (22, 41, 1), (23, 46, 2), (24, 3, 1), (25, 7, 1),
-(26, 13, 1), (27, 19, 1), (28, 23, 2), (29, 28, 1), (30, 33, 1),
-(31, 38, 1), (32, 43, 1), (33, 48, 2), (34, 2, 1), (35, 9, 1),
-(36, 14, 1), (37, 20, 1), (38, 24, 2), (39, 29, 1), (40, 34, 1),
-(41, 39, 1), (42, 44, 1), (43, 49, 1), (44, 4, 2), (45, 17, 1),
-(46, 27, 1), (47, 32, 1), (48, 37, 1), (49, 42, 1), (50, 47, 1),
-(51, 1, 1), (52, 5, 1), (2, 8, 1), (3, 11, 1), (4, 14, 2);
+(2, 1, 1),   -- Ram has Arduino Uno
+(2, 4, 2),   -- Ram also has ESP32
+(3, 10, 1),  -- Sita has DHT22
+(3, 14, 1),  -- Sita has OLED
+(4, 3, 1),   -- Hari has Arduino Nano
+(5, 8, 1),   -- Gita has Raspberry Pi 4B
+(6, 15, 3),  -- Bikram has SG90 servos
+(7, 18, 1);  -- Sunita has NodeMCU kit
 
--- =====================================================
--- 5. Promo Codes (50 rows)
--- =====================================================
+-- -----------------------------------------------------
+-- 5. PROMO CODES (5 active, 1 expired/inactive example)
+-- -----------------------------------------------------
 INSERT INTO promo_codes (code, discount_percent, expiry_date, is_active) VALUES
 ('WELCOME10', 10.00, '2026-12-31', TRUE),
-('SAVE20', 20.00, '2026-12-31', TRUE),
-('FLAT15', 15.00, '2026-06-30', TRUE),
-('NEOHUB5', 5.00, '2026-05-31', TRUE),
-('FESTIVAL25', 25.00, '2026-10-31', TRUE),
-('NEWUSER', 12.00, '2026-12-31', TRUE),
-('FIRSTORDER', 15.00, '2026-12-31', TRUE),
-('FREESHIP', 10.00, '2026-08-15', TRUE),
-('SUMMER20', 20.00, '2026-08-31', TRUE),
-('WINTER15', 15.00, '2027-01-31', TRUE),
-('HOLI10', 10.00, '2026-03-31', TRUE),
-('DASHAIN25', 25.00, '2026-11-15', TRUE),
-('TIHAR15', 15.00, '2026-11-15', TRUE),
-('XMAS20', 20.00, '2026-12-25', TRUE),
-('NEWYEAR10', 10.00, '2027-01-15', TRUE),
-('CODE10', 10.00, '2026-12-31', TRUE),
-('CODE15', 15.00, '2026-12-31', TRUE),
-('CODE20', 20.00, '2026-12-31', TRUE),
-('CODE25', 25.00, '2026-12-31', TRUE),
-('CODE30', 30.00, '2026-12-31', TRUE),
-('FLAT5', 5.00, '2026-12-31', TRUE),
-('FLAT8', 8.00, '2026-12-31', TRUE),
-('FLAT12', 12.00, '2026-12-31', TRUE),
-('FLAT18', 18.00, '2026-12-31', TRUE),
-('FLAT22', 22.00, '2026-12-31', TRUE),
-('WELCOME5', 5.00, '2026-12-31', TRUE),
-('WELCOME15', 15.00, '2026-12-31', TRUE),
-('WELCOME20', 20.00, '2026-12-31', TRUE),
-('SAVE5', 5.00, '2026-12-31', TRUE),
-('SAVE10', 10.00, '2026-12-31', TRUE),
-('SAVE15', 15.00, '2026-12-31', TRUE),
-('SAVE25', 25.00, '2026-12-31', TRUE),
-('SAVE30', 30.00, '2026-12-31', TRUE),
-('BIGSAVE', 30.00, '2026-12-31', TRUE),
-('MEGASAVE', 35.00, '2026-12-31', TRUE),
-('ULTRASAVE', 40.00, '2026-12-31', TRUE),
-('FLASH10', 10.00, '2026-12-31', TRUE),
-('FLASH15', 15.00, '2026-12-31', TRUE),
-('FLASH20', 20.00, '2026-12-31', TRUE),
-('FLASH25', 25.00, '2026-12-31', TRUE),
-('MONSOON10', 10.00, '2026-09-30', TRUE),
-('MONSOON15', 15.00, '2026-09-30', TRUE),
-('MONSOON20', 20.00, '2026-09-30', TRUE),
-('AUTUMN10', 10.00, '2026-11-30', TRUE),
-('AUTUMN15', 15.00, '2026-11-30', TRUE),
-('AUTUMN20', 20.00, '2026-11-30', TRUE),
-('SPRING10', 10.00, '2026-04-30', TRUE),
-('SPRING15', 15.00, '2026-04-30', TRUE),
-('SPRING20', 20.00, '2026-04-30', TRUE),
-('TEST50', 50.00, '2026-12-31', FALSE);  -- one inactive
+('SAVE20',   20.00, '2026-12-31', TRUE),
+('FLAT15',   15.00, '2026-06-30', TRUE),
+('NEOHUB5',   5.00, '2026-05-31', TRUE),
+('FESTIVAL25',25.00, '2026-10-31', TRUE),
+('EXPIRED50',50.00, '2025-01-01', FALSE);   -- expired example
 
--- =====================================================
--- 6. Orders (55 rows)
---    Each order belongs to a user, with random amounts and statuses
--- =====================================================
+-- -----------------------------------------------------
+-- 6. ORDERS (12 orders, varied statuses)
+-- -----------------------------------------------------
 INSERT INTO orders (sub_total_amount, shipping_charge, discount_amount, total_amount, promo_code_id, order_status, user_id, created_at) VALUES
-(3200.00, 100.00, 0.00, 3300.00, NULL, 'Delivered', 2, '2026-03-01 10:00:00'),
-(1200.00, 100.00, 120.00, 1180.00, 1, 'Delivered', 3, '2026-03-05 14:30:00'),
-(5500.00, 100.00, 550.00, 5050.00, 2, 'Delivered', 4, '2026-03-10 09:15:00'),
-(800.00, 100.00, 0.00, 900.00, NULL, 'Shipped', 5, '2026-03-12 16:45:00'),
-(10500.00, 100.00, 1050.00, 9550.00, 3, 'Processing', 6, '2026-03-15 11:20:00'),
-(350.00, 100.00, 0.00, 450.00, NULL, 'Pending', 7, '2026-03-18 13:10:00'),
-(400.00, 100.00, 40.00, 460.00, 4, 'Confirmed', 8, '2026-03-20 08:00:00'),
-(250.00, 100.00, 0.00, 350.00, NULL, 'Delivered', 9, '2026-03-22 17:30:00'),
-(1800.00, 100.00, 0.00, 1900.00, NULL, 'Shipped', 10, '2026-03-25 12:45:00'),
-(500.00, 100.00, 50.00, 550.00, 5, 'Delivered', 11, '2026-03-28 09:00:00'),
-(2200.00, 100.00, 0.00, 2300.00, NULL, 'Processing', 12, '2026-04-01 14:20:00'),
-(450.00, 100.00, 0.00, 550.00, NULL, 'Delivered', 13, '2026-04-02 10:30:00'),
-(600.00, 100.00, 90.00, 610.00, 6, 'Confirmed', 14, '2026-04-03 18:00:00'),
-(1200.00, 100.00, 0.00, 1300.00, NULL, 'Shipped', 15, '2026-04-04 11:15:00'),
-(2500.00, 100.00, 250.00, 2350.00, 7, 'Delivered', 16, '2026-04-05 13:40:00'),
-(6500.00, 100.00, 0.00, 6600.00, NULL, 'Pending', 17, '2026-04-06 09:55:00'),
-(350.00, 100.00, 0.00, 450.00, NULL, 'Cancelled', 18, '2026-04-07 16:10:00'),
-(200.00, 100.00, 20.00, 280.00, 1, 'Delivered', 19, '2026-04-08 08:25:00'),
-(300.00, 100.00, 0.00, 400.00, NULL, 'Shipped', 20, '2026-04-09 12:35:00'),
-(450.00, 100.00, 0.00, 550.00, NULL, 'Processing', 21, '2026-04-10 15:50:00'),
-(650.00, 100.00, 65.00, 685.00, 8, 'Delivered', 22, '2026-04-11 10:05:00'),
-(400.00, 100.00, 0.00, 500.00, NULL, 'Confirmed', 23, '2026-04-12 14:45:00'),
-(750.00, 100.00, 0.00, 850.00, NULL, 'Delivered', 24, '2026-04-13 11:30:00'),
-(550.00, 100.00, 55.00, 595.00, 9, 'Shipped', 25, '2026-04-14 09:20:00'),
-(250.00, 100.00, 0.00, 350.00, NULL, 'Pending', 2, '2026-04-15 17:00:00'),
-(3200.00, 100.00, 0.00, 3300.00, NULL, 'Delivered', 3, '2026-04-16 12:15:00'),
-(1200.00, 100.00, 120.00, 1180.00, 10, 'Processing', 4, '2026-04-17 08:40:00'),
-(5500.00, 100.00, 0.00, 5600.00, NULL, 'Shipped', 5, '2026-04-18 13:25:00'),
-(800.00, 100.00, 0.00, 900.00, NULL, 'Delivered', 6, '2026-04-19 10:10:00'),
-(10500.00, 100.00, 1050.00, 9550.00, 11, 'Confirmed', 7, '2026-04-20 16:35:00'),
-(350.00, 100.00, 0.00, 450.00, NULL, 'Delivered', 8, '2026-04-21 09:50:00'),
-(400.00, 100.00, 0.00, 500.00, NULL, 'Processing', 9, '2026-04-22 14:05:00'),
-(250.00, 100.00, 0.00, 350.00, NULL, 'Shipped', 10, '2026-04-23 11:45:00'),
-(1800.00, 100.00, 0.00, 1900.00, NULL, 'Delivered', 11, '2026-04-24 13:30:00'),
-(500.00, 100.00, 50.00, 550.00, 12, 'Pending', 12, '2026-04-25 17:20:00'),
-(2200.00, 100.00, 0.00, 2300.00, NULL, 'Confirmed', 13, '2026-04-26 08:15:00'),
-(450.00, 100.00, 0.00, 550.00, NULL, 'Delivered', 14, '2026-04-27 12:40:00'),
-(600.00, 100.00, 0.00, 700.00, NULL, 'Processing', 15, '2026-04-28 15:55:00'),
-(1200.00, 100.00, 0.00, 1300.00, NULL, 'Shipped', 16, '2026-04-29 09:35:00'),
-(2500.00, 100.00, 0.00, 2600.00, NULL, 'Delivered', 17, '2026-04-30 11:05:00'),
-(6500.00, 100.00, 0.00, 6600.00, NULL, 'Cancelled', 18, '2026-05-01 14:25:00'),
-(350.00, 100.00, 0.00, 450.00, NULL, 'Delivered', 19, '2026-05-02 10:50:00'),
-(200.00, 100.00, 0.00, 300.00, NULL, 'Processing', 20, '2026-05-03 13:10:00'),
-(300.00, 100.00, 0.00, 400.00, NULL, 'Shipped', 21, '2026-05-04 09:00:00'),
-(450.00, 100.00, 0.00, 550.00, NULL, 'Confirmed', 22, '2026-05-05 16:30:00'),
-(650.00, 100.00, 0.00, 750.00, NULL, 'Delivered', 23, '2026-05-06 11:45:00'),
-(400.00, 100.00, 0.00, 500.00, NULL, 'Pending', 24, '2026-05-07 14:20:00'),
-(750.00, 100.00, 0.00, 850.00, NULL, 'Processing', 25, '2026-05-08 12:15:00'),
-(550.00, 100.00, 0.00, 650.00, NULL, 'Shipped', 26, '2026-05-09 10:30:00'),
-(250.00, 100.00, 0.00, 350.00, NULL, 'Delivered', 27, '2026-05-10 15:50:00'),
-(3200.00, 100.00, 0.00, 3300.00, NULL, 'Processing', 28, '2026-05-11 08:40:00'),
-(1200.00, 100.00, 0.00, 1300.00, NULL, 'Confirmed', 29, '2026-05-12 13:25:00'),
-(5500.00, 100.00, 0.00, 5600.00, NULL, 'Shipped', 30, '2026-05-13 09:55:00'),
-(800.00, 100.00, 0.00, 900.00, NULL, 'Delivered', 31, '2026-05-14 11:20:00'),
-(10500.00, 100.00, 0.00, 10600.00, NULL, 'Pending', 32, '2026-05-15 14:45:00');
+(3200.00, 100.00, 0.00,   3300.00, NULL, 'Delivered', 2, '2026-03-01 10:00:00'),
+(2400.00, 100.00, 240.00, 2260.00, 1,   'Delivered', 3, '2026-03-10 14:30:00'),
+(350.00,  100.00, 0.00,   450.00,  NULL, 'Shipped',   4, '2026-03-15 09:15:00'),
+(10500.00,100.00, 1050.00,9550.00, 2,   'Processing',5, '2026-03-20 11:20:00'),
+(800.00,  100.00, 80.00,  820.00,  3,   'Confirmed', 6, '2026-03-25 16:45:00'),
+(550.00,  100.00, 0.00,   650.00,  NULL, 'Pending',   7, '2026-03-28 13:10:00'),
+(2500.00, 100.00, 250.00, 2350.00, 4,   'Delivered', 8, '2026-04-02 09:00:00'),
+(6500.00, 100.00, 0.00,   6600.00, NULL, 'Cancelled', 9, '2026-04-05 12:30:00'),
+(450.00,  100.00, 0.00,   550.00,  NULL, 'Delivered', 2, '2026-04-10 14:15:00'),
+(1200.00, 100.00, 120.00, 1180.00, 1,   'Shipped',   3, '2026-04-15 08:45:00'),
+(750.00,  100.00, 0.00,   850.00,  NULL, 'Processing',4, '2026-04-20 17:20:00'),
+(400.00,  100.00, 0.00,   500.00,  NULL, 'Pending',   5, '2026-04-25 11:00:00');
 
--- =====================================================
--- 7. Order Items (each order has 1-3 items, total > 100 rows)
---    We'll insert 3 items per order for first 30 orders, then 1-2 for the rest
--- =====================================================
+-- -----------------------------------------------------
+-- 7. ORDER ITEMS (matching each order)
+-- -----------------------------------------------------
 INSERT INTO order_items (order_id, product_id, quantity, unit_price) VALUES
--- Order 1
-(1, 1, 1, 3200.00), (1, 3, 1, 1200.00),
--- Order 2
-(2, 5, 1, 10500.00),
--- Order 3
-(3, 10, 2, 250.00), (3, 11, 1, 650.00),
--- Order 4
-(4, 15, 1, 2200.00),
--- Order 5
-(5, 20, 1, 550.00), (5, 21, 1, 750.00), (5, 22, 1, 400.00),
--- Order 6
-(6, 25, 2, 600.00),
--- Order 7
-(7, 30, 1, 200.00), (7, 31, 2, 300.00),
--- Order 8
-(8, 35, 1, 450.00),
--- Order 9
-(9, 40, 1, 1200.00), (9, 41, 1, 500.00),
--- Order 10
-(10, 45, 1, 900.00), (10, 46, 1, 650.00), (10, 47, 1, 1200.00),
--- Order 11
-(11, 50, 2, 450.00),
--- Order 12
-(12, 2, 1, 5500.00), (12, 4, 1, 800.00),
--- Order 13
-(13, 6, 1, 350.00), (13, 7, 1, 800.00), (13, 8, 1, 400.00),
--- Order 14
-(14, 12, 1, 550.00),
--- Order 15
-(15, 16, 2, 850.00), (15, 17, 1, 1200.00),
--- Order 16
-(16, 22, 1, 400.00), (16, 23, 1, 550.00), (16, 24, 1, 750.00),
--- Order 17
-(17, 27, 2, 250.00),
--- Order 18
-(18, 32, 1, 350.00), (18, 33, 1, 450.00),
--- Order 19
-(19, 37, 1, 900.00),
--- Order 20
-(20, 42, 1, 200.00), (20, 43, 1, 900.00),
--- Order 21
-(21, 48, 1, 1200.00), (21, 49, 1, 500.00), (21, 1, 1, 3200.00),
--- Order 22
-(22, 3, 2, 1200.00),
--- Order 23
-(23, 5, 1, 10500.00), (23, 9, 1, 300.00),
--- Order 24
-(24, 13, 1, 600.00), (24, 14, 2, 450.00),
--- Order 25
-(25, 18, 1, 500.00),
--- Order 26
-(26, 19, 1, 2200.00), (26, 26, 1, 450.00),
--- Order 27
-(27, 28, 1, 600.00), (27, 29, 1, 350.00), (27, 34, 1, 650.00),
--- Order 28
-(28, 36, 2, 200.00),
--- Order 29
-(29, 38, 1, 800.00), (29, 39, 1, 500.00),
--- Order 30
-(30, 44, 1, 200.00), (30, 1, 1, 3200.00), (30, 2, 1, 5500.00),
--- Orders 31-55 (single or double items)
-(31, 4, 1, 800.00),
-(32, 6, 2, 350.00),
-(33, 8, 1, 400.00), (33, 10, 1, 250.00),
-(34, 11, 1, 650.00),
-(35, 15, 1, 2200.00), (35, 17, 1, 1200.00),
-(36, 20, 1, 550.00),
-(37, 21, 1, 750.00), (37, 23, 1, 550.00),
-(38, 25, 1, 600.00),
-(39, 27, 2, 250.00),
-(40, 30, 1, 200.00), (40, 31, 1, 300.00),
-(41, 33, 1, 450.00),
-(42, 35, 1, 450.00), (42, 37, 1, 900.00),
-(43, 38, 1, 800.00),
-(44, 40, 1, 1200.00), (44, 42, 1, 200.00),
-(45, 44, 1, 200.00),
-(46, 46, 1, 650.00), (46, 48, 1, 1200.00),
-(47, 49, 2, 500.00),
-(48, 2, 1, 5500.00), (48, 5, 1, 10500.00),
-(49, 7, 1, 800.00),
-(50, 9, 1, 300.00), (50, 12, 2, 550.00),
-(51, 14, 1, 450.00),
-(52, 16, 1, 850.00), (52, 18, 1, 500.00),
-(53, 22, 1, 400.00),
-(54, 24, 1, 750.00), (54, 26, 1, 450.00),
-(55, 28, 1, 600.00);
+(1, 1, 1, 3200.00),                         -- Order1: Arduino Uno
+(2, 4, 2, 1200.00),                         -- Order2: ESP32 x2
+(3, 9, 1, 350.00),                          -- Order3: DHT11
+(4, 7, 1, 10500.00),                        -- Order4: Raspberry Pi 4B
+(5, 2, 1, 550.00), (5, 5, 1, 250.00),       -- Order5: Arduino Mega + SG90
+(6, 3, 1, 2500.00),                         -- Order6: Arduino Nano
+(7, 17, 1, 2500.00),                        -- Order7: NodeMCU IoT Kit
+(8, 18, 1, 6500.00),                        -- Order8: Arduino Ultimate Kit (cancelled)
+(9, 10, 1, 450.00),                         -- Order9: LCD display
+(10, 1, 1, 3200.00),                        -- Order10: Arduino Uno
+(11, 19, 2, 500.00),                        -- Order11: 18650 battery x2
+(12, 16, 1, 400.00);                        -- Order12: Ultrasonic sensor
 
--- =====================================================
--- 8. Payments (one per order, matching order count)
--- =====================================================
+-- -----------------------------------------------------
+-- 8. PAYMENTS (one per order)
+-- -----------------------------------------------------
 INSERT INTO payments (order_id, method, transaction_id, amount, status, paid_at) VALUES
-(1, 'CashOnDelivery', NULL, 3300.00, 'Completed', '2026-03-01 12:00:00'),
-(2, 'Khalti', 'KHALTIXYZ123', 1180.00, 'Completed', '2026-03-05 15:30:00'),
-(3, 'CashOnDelivery', NULL, 5050.00, 'Completed', '2026-03-10 10:00:00'),
-(4, 'CashOnDelivery', NULL, 900.00, 'Completed', '2026-03-12 18:00:00'),
-(5, 'Khalti', 'KHALTIXYZ456', 9550.00, 'Completed', '2026-03-15 12:00:00'),
-(6, 'CashOnDelivery', NULL, 450.00, 'Pending', NULL),
-(7, 'Khalti', 'KHALTIXYZ789', 460.00, 'Completed', '2026-03-20 09:00:00'),
-(8, 'CashOnDelivery', NULL, 350.00, 'Completed', '2026-03-22 18:30:00'),
-(9, 'CashOnDelivery', NULL, 1900.00, 'Completed', '2026-03-25 13:30:00'),
-(10, 'Khalti', 'KHALTIXYZ101', 550.00, 'Completed', '2026-03-28 10:00:00'),
-(11, 'CashOnDelivery', NULL, 2300.00, 'Pending', NULL),
-(12, 'CashOnDelivery', NULL, 550.00, 'Completed', '2026-04-02 11:00:00'),
-(13, 'Khalti', 'KHALTIXYZ102', 610.00, 'Completed', '2026-04-03 19:00:00'),
-(14, 'CashOnDelivery', NULL, 1300.00, 'Completed', '2026-04-04 12:00:00'),
-(15, 'Khalti', 'KHALTIXYZ103', 2350.00, 'Completed', '2026-04-05 14:30:00'),
-(16, 'CashOnDelivery', NULL, 6600.00, 'Pending', NULL),
-(17, 'CashOnDelivery', NULL, 450.00, 'Failed', NULL),
-(18, 'Khalti', 'KHALTIXYZ104', 280.00, 'Completed', '2026-04-08 09:30:00'),
-(19, 'CashOnDelivery', NULL, 400.00, 'Completed', '2026-04-09 13:00:00'),
-(20, 'CashOnDelivery', NULL, 550.00, 'Pending', NULL),
-(21, 'Khalti', 'KHALTIXYZ105', 685.00, 'Completed', '2026-04-11 11:00:00'),
-(22, 'CashOnDelivery', NULL, 500.00, 'Completed', '2026-04-12 15:30:00'),
-(23, 'CashOnDelivery', NULL, 850.00, 'Completed', '2026-04-13 12:00:00'),
-(24, 'Khalti', 'KHALTIXYZ106', 595.00, 'Completed', '2026-04-14 10:00:00'),
-(25, 'CashOnDelivery', NULL, 350.00, 'Pending', NULL),
-(26, 'CashOnDelivery', NULL, 3300.00, 'Completed', '2026-04-16 13:00:00'),
-(27, 'Khalti', 'KHALTIXYZ107', 1180.00, 'Completed', '2026-04-17 09:30:00'),
-(28, 'CashOnDelivery', NULL, 5600.00, 'Completed', '2026-04-18 14:00:00'),
-(29, 'CashOnDelivery', NULL, 900.00, 'Completed', '2026-04-19 11:00:00'),
-(30, 'Khalti', 'KHALTIXYZ108', 9550.00, 'Completed', '2026-04-20 17:00:00'),
-(31, 'CashOnDelivery', NULL, 450.00, 'Completed', '2026-04-21 10:30:00'),
-(32, 'CashOnDelivery', NULL, 500.00, 'Pending', NULL),
-(33, 'CashOnDelivery', NULL, 350.00, 'Completed', '2026-04-23 12:30:00'),
-(34, 'CashOnDelivery', NULL, 1900.00, 'Completed', '2026-04-24 14:00:00'),
-(35, 'Khalti', 'KHALTIXYZ109', 550.00, 'Pending', NULL),
-(36, 'CashOnDelivery', NULL, 2300.00, 'Completed', '2026-04-26 09:00:00'),
-(37, 'CashOnDelivery', NULL, 550.00, 'Completed', '2026-04-27 13:30:00'),
-(38, 'CashOnDelivery', NULL, 700.00, 'Pending', NULL),
-(39, 'CashOnDelivery', NULL, 1300.00, 'Completed', '2026-04-29 10:00:00'),
-(40, 'CashOnDelivery', NULL, 2600.00, 'Completed', '2026-04-30 12:00:00'),
-(41, 'Khalti', 'KHALTIXYZ110', 6600.00, 'Failed', NULL),
-(42, 'CashOnDelivery', NULL, 450.00, 'Completed', '2026-05-02 11:30:00'),
-(43, 'CashOnDelivery', NULL, 300.00, 'Pending', NULL),
-(44, 'CashOnDelivery', NULL, 400.00, 'Completed', '2026-05-04 10:00:00'),
-(45, 'CashOnDelivery', NULL, 550.00, 'Completed', '2026-05-05 17:00:00'),
-(46, 'CashOnDelivery', NULL, 750.00, 'Completed', '2026-05-06 12:30:00'),
-(47, 'CashOnDelivery', NULL, 500.00, 'Pending', NULL),
-(48, 'CashOnDelivery', NULL, 850.00, 'Pending', NULL),
-(49, 'CashOnDelivery', NULL, 650.00, 'Completed', '2026-05-09 11:00:00'),
-(50, 'CashOnDelivery', NULL, 350.00, 'Completed', '2026-05-10 16:30:00'),
-(51, 'Khalti', 'KHALTIXYZ111', 3300.00, 'Pending', NULL),
-(52, 'CashOnDelivery', NULL, 1300.00, 'Completed', '2026-05-12 14:00:00'),
-(53, 'CashOnDelivery', NULL, 5600.00, 'Pending', NULL),
-(54, 'CashOnDelivery', NULL, 900.00, 'Completed', '2026-05-14 12:00:00'),
-(55, 'CashOnDelivery', NULL, 10600.00, 'Pending', NULL);
+(1,  'CashOnDelivery', NULL,          3300.00, 'Completed', '2026-03-01 12:00:00'),
+(2,  'Khalti',         'KHALTIXYZ001',2260.00, 'Completed', '2026-03-10 15:00:00'),
+(3,  'CashOnDelivery', NULL,          450.00,  'Pending',   NULL),
+(4,  'Khalti',         'KHALTIXYZ002',9550.00, 'Completed', '2026-03-20 12:00:00'),
+(5,  'CashOnDelivery', NULL,          820.00,  'Completed', '2026-03-25 17:30:00'),
+(6,  'CashOnDelivery', NULL,          650.00,  'Pending',   NULL),
+(7,  'Khalti',         'KHALTIXYZ003',2350.00, 'Completed', '2026-04-02 10:00:00'),
+(8,  'CashOnDelivery', NULL,          6600.00, 'Failed',    NULL),          -- cancelled order
+(9,  'CashOnDelivery', NULL,          550.00,  'Completed', '2026-04-10 15:00:00'),
+(10, 'Khalti',         'KHALTIXYZ004',1180.00, 'Completed', '2026-04-15 09:30:00'),
+(11, 'CashOnDelivery', NULL,          850.00,  'Pending',   NULL),
+(12, 'CashOnDelivery', NULL,          500.00,  'Pending',   NULL);

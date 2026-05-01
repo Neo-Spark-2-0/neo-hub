@@ -1,6 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%--    importing libraries --%>
 
+    <!-- htmx: https://htmx.org/ -->
+    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V" crossorigin="anonymous"></script>
+
     <%--     tailwind css--%>
     <script src="https://cdn.tailwindcss.com"></script>
     <%--    tailwind config--%>

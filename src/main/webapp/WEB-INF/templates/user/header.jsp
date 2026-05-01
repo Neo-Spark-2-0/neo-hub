@@ -29,6 +29,11 @@
                ${param.activePage eq 'about' ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'}">
                 About Us
             </a>
+            <a href="${pageContext.request.contextPath}/contact"
+               class="px-3 py-1.5 rounded-lg font-medium transition
+               ${param.activePage eq 'contact' ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'}">
+                Contact Us
+            </a>
         </nav>
 
         <!-- right section icons  -->
@@ -162,6 +167,12 @@
                ${param.activePage eq 'about' ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'}">
                 <i class="fa fa-circle-info mr-2 text-xs"></i>About Us
             </a>
+            <a href="${pageContext.request.contextPath}/contact"
+               class="px-3 py-2 rounded-lg font-medium transition-colors
+               ${param.activePage eq 'contact' ? 'bg-gray-900 text-white' : 'text-gray-600 hover:bg-gray-100'}">
+                <i class="fa fa-phone mr-2 text-xs"></i>Contact Us
+            </a>
+
             <c:if test="${not empty sessionScope.user}">
                 <div class="h-[0.5px] bg-gray-200 my-1"></div>
                 <a href="${pageContext.request.contextPath}/cart"
