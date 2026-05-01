@@ -5,7 +5,6 @@ import java.io.IOException;
 import com.neospark.neohub.dao.UserDao;
 import com.neospark.neohub.dao.UserDaoImpl;
 import com.neospark.neohub.model.User;
-import com.neospark.neohub.utils.ImageUploadUtil;
 import com.neospark.neohub.utils.PasswordUtil;
 import com.neospark.neohub.utils.SessionUtil;
 import com.neospark.neohub.utils.ValidationUtil;

@@ -3,32 +3,83 @@ package com.neospark.neohub.utils;
 import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
+import jakarta.servlet.http.Part;
+
 
 public class ImageUploadUtil {
-    // private static final long   MAX_SIZE   = 2 * 1024 * 1024; // 2 MB
-    // private static final String UPLOAD_DIR = "uploads/profiles";
 
-    // public static String uploadProfileImage(Part filePart, String appRealPath) throws IOException {
-    //     if (filePart == null || filePart.getSize() == 0) return null;
 
-    //     if (filePart.getSize() > MAX_SIZE) {
-    //         throw new IOException("File size exceeds 2MB limit.");
-    //     }
+    private static final String BASE_UPLOAD_DIR =
+            System.getProperty("user.home") + File.separator + "neohub-uploads";
 
-    //     String contentType = filePart.getContentType();
-    //     if (!contentType.startsWith("image/")) {
-    //         throw new IOException("Only image files are allowed.");
-    //     }
+    private static final String[] ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"};
 
-    //     String originalName = filePart.getSubmittedFileName();
-    //     String extension    = originalName.substring(originalName.lastIndexOf('.'));
-    //     String fileName     = UUID.randomUUID() + extension;
+    public static String uploadImage(Part part, String folder) throws IOException {
 
-    //     File uploadDir = new File(appRealPath + File.separator + UPLOAD_DIR);
-    //     if (!uploadDir.exists()) uploadDir.mkdirs();
+        if (part == null || part.getSize() == 0) {
+            return null;
+        }
 
-    //     filePart.write(uploadDir.getAbsolutePath() + File.separator + fileName);
+        String originalName = getSubmittedFileName(part);
+        if (originalName == null || originalName.isEmpty()) {
+            return null;
+        }
 
-    //     return UPLOAD_DIR + "/" + fileName; // relative path stored in DB
-    // }
+        String extension = getExtension(originalName).toLowerCase();
+        if (!isAllowedExtension(extension)) {
+            System.out.println("ImageUploadUtil: rejected extension " + extension);
+            return null;
+        }
+
+        // Create upload directory if it doesn't exist
+        String uploadPath = BASE_UPLOAD_DIR + File.separator + folder;
+        File uploadDir = new File(uploadPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+
+        String uniqueName = UUID.randomUUID().toString() + extension;
+
+        part.write(uploadPath + File.separator + uniqueName);
+
+        return folder + "/" + uniqueName;
+    }
+
+    public static void deleteImage(String imagePath) {
+        if (imagePath == null || imagePath.isEmpty()) {
+            return;
+        }
+
+        if (imagePath.startsWith("static/") || imagePath.startsWith("default")) {
+            return;
+        }
+        File file = new File(BASE_UPLOAD_DIR + File.separator + imagePath.replace("/", File.separator));
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
+    private static boolean isAllowedExtension(String extension) {
+        for (String allowed : ALLOWED_EXTENSIONS) {
+            if (allowed.equals(extension)) return true;
+        }
+        return false;
+    }
+
+    private static String getSubmittedFileName(Part part) {
+        String header = part.getHeader("content-disposition");
+        if (header == null) return null;
+        for (String token : header.split(";")) {
+            token = token.trim();
+            if (token.startsWith("filename")) {
+                return token.substring(token.indexOf('=') + 1).trim().replace("\"", "");
+            }
+        }
+        return null;
+    }
+
+    private static String getExtension(String filename) {
+        int dot = filename.lastIndexOf('.');
+        return (dot >= 0) ? filename.substring(dot) : ".jpg";
+    }
 }
