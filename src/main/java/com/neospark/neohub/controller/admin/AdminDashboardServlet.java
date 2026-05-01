@@ -14,7 +14,6 @@ import com.neospark.neohub.dao.CategoryDaoImpl;
 import com.neospark.neohub.model.User;
 import com.neospark.neohub.model.Order;
 import com.neospark.neohub.model.Product;
-import com.neospark.neohub.utils.SessionUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
