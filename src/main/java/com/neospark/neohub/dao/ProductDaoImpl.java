@@ -231,6 +231,41 @@ public class ProductDaoImpl implements ProductDao {
         return 0;
     }
 
+    @Override
+    public int getProductCount(String keyword, int categoryId) {
+    StringBuilder sql = new StringBuilder(
+        "SELECT COUNT(*) FROM products WHERE is_active = TRUE"
+    );
+    if (keyword != null && !keyword.isEmpty()) {
+        sql.append(" AND (name LIKE ? OR description LIKE ?)");
+    }
+    if (categoryId > 0) {
+        sql.append(" AND category_id = ?");
+    }
+    Connection connection = null;
+    try {
+        connection = DatabaseConnection.getConnection();
+        PreparedStatement ps = connection.prepareStatement(sql.toString());
+        int index = 1;
+        if (keyword != null && !keyword.isEmpty()) {
+            String search = "%" + keyword + "%";
+            ps.setString(index++, search);
+            ps.setString(index++, search);
+        }
+        if (categoryId > 0) {
+            ps.setInt(index, categoryId);
+        }
+        ResultSet rs = ps.executeQuery();
+        if (rs.next()) return rs.getInt(1);
+    } catch (SQLException e) {
+        System.out.println("Error getting product count: " + e.getMessage());
+    } finally {
+        DatabaseConnection.closeConnection(connection);
+    }
+    return 0;
+}
+        
+
 
     @Override
     public List<Product> getLowStockProducts(int threshold) {
