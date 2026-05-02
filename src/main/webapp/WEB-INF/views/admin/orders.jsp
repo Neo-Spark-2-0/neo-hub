@@ -35,22 +35,26 @@
                         <c:forEach var="o" items="${orderList}">
                             <tr class="hover:bg-secondary/30 transition-colors">
                                 <td class="px-6 py-4">
-                                    <div class="font-bold text-accent">#${o.orderNumber}</div>
+                                   
+                                    <div class="font-bold text-accent">#${o.id}</div>
                                     <div class="text-[10px] text-gray-400 font-medium">
-                                        <fmt:formatDate value="${java.util.Date.from(o.createdAt.atZone(java.time.ZoneId.systemDefault()).toInstant())}" pattern="MMM dd, hh:mm a"/>
+                                       
+                                        <fmt:formatDate value="${o.createdAt}" pattern="MMM dd, hh:mm a"/>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 text-gray-600 font-medium">${o.userName}</td>
+                                <td class="px-6 py-4 text-gray-600 font-medium">${o.userFullName}</td>
                                 <td class="px-6 py-4 font-bold text-accent">Rs. ${o.totalAmount}</td>
                                 <td class="px-6 py-4 text-center">
-                                    <span class="px-2 py-1 rounded-lg text-[10px] font-bold uppercase ${o.paymentStatus eq 'PAID' ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'}">
+                                    
+                                    <span class="px-2 py-1 rounded-lg text-[10px] font-bold uppercase ${o.paymentStatus eq 'Completed' ? 'bg-success/10 text-success' : 'bg-warning/10 text-warning'}">
                                         ${o.paymentStatus}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 text-center">
+                                   
                                     <span class="px-2 py-1 rounded-lg text-[10px] font-bold uppercase 
-                                        ${o.orderStatus eq 'DELIVERED' ? 'bg-success text-white' : 
-                                          o.orderStatus eq 'CANCELLED' ? 'bg-danger text-white' : 'bg-info/10 text-info'}">
+                                        ${o.orderStatus eq 'Delivered' ? 'bg-success text-white' : 
+                                        o.orderStatus eq 'Cancelled' ? 'bg-danger text-white' : 'bg-info/10 text-info'}">
                                         ${o.orderStatus}
                                     </span>
                                 </td>

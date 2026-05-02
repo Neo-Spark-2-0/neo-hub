@@ -128,21 +128,28 @@
                                 <tbody class="divide-y divide-secondary text-sm">
                                     <c:forEach var="order" items="${recentOrders}">
                                         <tr class="hover:bg-secondary/50 transition-colors">
-                                            <td class="px-6 py-4 font-bold text-accent">#${order.orderNumber}</td>
-                                            <td class="px-6 py-4 text-gray-600">${order.userName}</td>
+                                            
+                                            <td class="px-6 py-4 font-bold text-accent">#${order.id}</td>
+                                            
+                                            
+                                            <td class="px-6 py-4 text-gray-600">${order.userFullName}</td>
+                                            
                                             <td class="px-6 py-4 font-bold text-accent">Rs. ${order.totalAmount}</td>
                                             <td class="px-6 py-4">
+                                               
                                                 <span class="px-2 py-1 text-[10px] font-bold rounded-lg uppercase
-                                                    ${order.orderStatus eq 'DELIVERED' ? 'bg-success/10 text-success' : 
-                                                      order.orderStatus eq 'CANCELLED' ? 'bg-danger/10 text-danger' : 'bg-gray-100 text-gray-500'}">
+                                                    ${order.orderStatus eq 'Delivered' ? 'bg-success/10 text-success' : 
+                                                    order.orderStatus eq 'Cancelled' ? 'bg-danger/10 text-danger' : 'bg-gray-100 text-gray-500'}">
                                                     ${order.orderStatus}
                                                 </span>
                                             </td>
                                             <td class="px-6 py-4 text-xs text-gray-400">
-                                                <fmt:formatDate value="${order.orderDate}" pattern="MMM dd, yyyy"/>
+                                                
+                                                <fmt:formatDate value="${order.createdAt}" pattern="MMM dd, yyyy"/>
                                             </td>
                                         </tr>
                                     </c:forEach>
+
                                 </tbody>
                             </table>
                         </div>
