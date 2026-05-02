@@ -33,6 +33,7 @@ public class AdminDashboardServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
+        System.out.println("AdminDashboardServlet: Handling GET request for /admin/dashboard");        
         // Set Attributes - Stats
         req.setAttribute("totalUsers", userDao.getTotalUserCount());
         req.setAttribute("totalProducts", productDao.getTotalProductCount());

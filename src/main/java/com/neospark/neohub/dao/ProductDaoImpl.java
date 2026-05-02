@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,10 +16,8 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public boolean addProduct(Product product) {
         String sql = "INSERT INTO products (name, description, price, discount_price, stock, image, brand, stock_keeping_unit, is_featured, is_active, category_id) " + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, product.getName());
             ps.setString(2, product.getDescription());
             ps.setDouble(3, product.getPrice());
@@ -35,18 +34,14 @@ public class ProductDaoImpl implements ProductDao {
         } catch (SQLException e) {
             System.out.println("Error adding product: " + e.getMessage());
             return false;
-        } finally {
-            DatabaseConnection.closeConnection(connection);
         }
     }
 
     @Override
     public boolean updateProduct(Product product) {
         String sql = "UPDATE products SET name=?, description=?, price=?, discount_price=?, stock=?, brand=?, stock_keeping_unit=?, is_featured=?, is_active=?, category_id=? WHERE id=?";
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, product.getName());
             ps.setString(2, product.getDescription());
             ps.setDouble(3, product.getPrice());
@@ -63,18 +58,14 @@ public class ProductDaoImpl implements ProductDao {
         } catch (SQLException e) {
             System.out.println("Error updating product: " + e.getMessage());
             return false;
-        } finally {
-            DatabaseConnection.closeConnection(connection);
         }
     }
 
     @Override
     public boolean updateProductImage(int id, String imagePath) {
         String sql = "UPDATE products SET image=? WHERE id=?";
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, imagePath);
             ps.setInt(2, id);
             int rowsAffected = ps.executeUpdate();
@@ -82,36 +73,28 @@ public class ProductDaoImpl implements ProductDao {
         } catch (SQLException e) {
             System.out.println("Error updating product image: " + e.getMessage());
             return false;
-        } finally {
-            DatabaseConnection.closeConnection(connection);
         }
     }
 
     @Override
     public boolean deleteProduct(int id) {
         String sql = "DELETE FROM products WHERE id=?";
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
             System.out.println("Error deleting product: " + e.getMessage());
             return false;
-        } finally {
-            DatabaseConnection.closeConnection(connection);
         }
     }
 
     @Override
     public Product getProductById(int id) {
         String sql = "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.id = ?";
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -119,8 +102,6 @@ public class ProductDaoImpl implements ProductDao {
             }
         } catch (SQLException e) {
             System.out.println("Error getting product by ID: " + e.getMessage());
-        } finally {
-            DatabaseConnection.closeConnection(connection);
         }
         return null;
     }
@@ -129,18 +110,14 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> getAllProducts() {
         String sql = "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id ORDER BY products.created_at DESC";
         List<Product> products = new ArrayList<>();
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
+        try (Connection conn = DatabaseConnection.getConnection();
+            Statement statement = conn.createStatement();
+            ResultSet rs = statement.executeQuery(sql)) {
             while (rs.next()) {
                 products.add(mapProduct(rs));
             }
         } catch (SQLException e) {
             System.out.println("Error getting all products: " + e.getMessage());
-        } finally {
-            DatabaseConnection.closeConnection(connection);
         }
         return products;
     }
@@ -150,10 +127,8 @@ public class ProductDaoImpl implements ProductDao {
         String sql = "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.category_id = ? AND products.is_active = TRUE ORDER BY products.created_at DESC";
 
         List<Product> products = new ArrayList<>();
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, categoryId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -161,8 +136,6 @@ public class ProductDaoImpl implements ProductDao {
             }
         } catch (SQLException e) {
             System.out.println("Error getting products by category: " + e.getMessage());
-        } finally {
-            DatabaseConnection.closeConnection(connection);
         }
         return products;
     }
@@ -172,18 +145,14 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> getFeaturedProducts() {
         String sql = "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.is_featured = TRUE AND products.is_active = TRUE ORDER BY products.created_at DESC";
         List<Product> products = new ArrayList<>();
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement statement = conn.createStatement();
+             ResultSet rs = statement.executeQuery(sql)) {
             while (rs.next()) {
                 products.add(mapProduct(rs));
             }
         } catch (SQLException e) {
             System.out.println("Error getting featured products: " + e.getMessage());
-        } finally {
-            DatabaseConnection.closeConnection(connection);
         }
         return products;
     }
@@ -193,10 +162,8 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> searchProducts(String keyword) {
         String sql = "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.is_active = TRUE AND (products.name LIKE ? OR products.description LIKE ? OR products.brand LIKE ?) ORDER BY products.name ASC";
         List<Product> products = new ArrayList<>();
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             String searchTerm = "%" + keyword + "%";
             ps.setString(1, searchTerm);
             ps.setString(2, searchTerm);
@@ -207,8 +174,6 @@ public class ProductDaoImpl implements ProductDao {
             }
         } catch (SQLException e) {
             System.out.println("Error searching products: " + e.getMessage());
-        } finally {
-            DatabaseConnection.closeConnection(connection);
         }
         return products;
     }
@@ -217,64 +182,59 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public int getTotalProductCount() {
         String sql = "SELECT COUNT(*) FROM products";
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement statement = conn.createStatement();
+             ResultSet rs = statement.executeQuery(sql)) {
             if (rs.next()) return rs.getInt(1);
         } catch (SQLException e) {
             System.out.println("Error getting total product count: " + e.getMessage());
-        } finally {
-            DatabaseConnection.closeConnection(connection);
         }
         return 0;
     }
 
+
+    // needs review
     @Override
-    public int getProductCount(String keyword, int categoryId) {
+    public int getProductCount(String keyword, int categoryId, Double minPrice, Double maxPrice) {
     StringBuilder sql = new StringBuilder(
         "SELECT COUNT(*) FROM products WHERE is_active = TRUE"
     );
-    if (keyword != null && !keyword.isEmpty()) {
+    if (keyword != null && !keyword.isEmpty())
         sql.append(" AND (name LIKE ? OR description LIKE ?)");
-    }
-    if (categoryId > 0) {
+    if (categoryId > 0)
         sql.append(" AND category_id = ?");
-    }
-    Connection connection = null;
-    try {
-        connection = DatabaseConnection.getConnection();
-        PreparedStatement ps = connection.prepareStatement(sql.toString());
+    if (minPrice != null)
+        sql.append(" AND price >= ?");
+    if (maxPrice != null)
+        sql.append(" AND price <= ?");
+
+    try (Connection conn = DatabaseConnection.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql.toString())) {
         int index = 1;
         if (keyword != null && !keyword.isEmpty()) {
             String search = "%" + keyword + "%";
             ps.setString(index++, search);
             ps.setString(index++, search);
         }
-        if (categoryId > 0) {
-            ps.setInt(index, categoryId);
-        }
+        if (categoryId > 0)  ps.setInt(index++, categoryId);  // ← index++ fixed
+        if (minPrice != null) ps.setDouble(index++, minPrice);
+        if (maxPrice != null) ps.setDouble(index++, maxPrice);
+
         ResultSet rs = ps.executeQuery();
         if (rs.next()) return rs.getInt(1);
     } catch (SQLException e) {
         System.out.println("Error getting product count: " + e.getMessage());
-    } finally {
-        DatabaseConnection.closeConnection(connection);
     }
     return 0;
 }
-        
 
 
     @Override
     public List<Product> getLowStockProducts(int threshold) {
         String sql = "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.stock <= ? AND products.is_active = TRUE ORDER BY products.stock ASC";
         List<Product> products = new ArrayList<>();
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, threshold);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -282,8 +242,6 @@ public class ProductDaoImpl implements ProductDao {
             }
         } catch (SQLException e) {
             System.out.println("Error getting low stock products: " + e.getMessage());
-        } finally {
-            DatabaseConnection.closeConnection(connection);
         }
         return products;
     }
@@ -292,10 +250,8 @@ public class ProductDaoImpl implements ProductDao {
     public List<Product> getRecentProducts(int limit) {
         String sql = "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.is_active = TRUE ORDER BY products.created_at DESC LIMIT ?";
         List<Product> products = new ArrayList<>();
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, limit);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -303,8 +259,6 @@ public class ProductDaoImpl implements ProductDao {
             }
         } catch (SQLException e) {
             System.out.println("Error getting recent products: " + e.getMessage());
-        } finally {
-            DatabaseConnection.closeConnection(connection);
         }
         return products;
     }
@@ -312,10 +266,8 @@ public class ProductDaoImpl implements ProductDao {
     @Override
     public boolean updateStock(int productId, int quantity) {
         String sql = "UPDATE products SET stock = stock - ? WHERE id = ? AND stock >= ?";
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, quantity);
             ps.setInt(2, productId);
             ps.setInt(3, quantity);
@@ -324,18 +276,14 @@ public class ProductDaoImpl implements ProductDao {
         } catch (SQLException e) {
             System.out.println("Error updating stock: " + e.getMessage());
             return false;
-        } finally {
-            DatabaseConnection.closeConnection(connection);
         }
     }
 
     @Override
     public boolean updateFeaturedStatus(int id, boolean isFeatured) {
         String sql = "UPDATE products SET is_featured=? WHERE id=?";
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setBoolean(1, isFeatured);
             ps.setInt(2, id);
             int rowsAffected = ps.executeUpdate();
@@ -343,18 +291,14 @@ public class ProductDaoImpl implements ProductDao {
         } catch (SQLException e) {
             System.out.println("Error updating featured status: " + e.getMessage());
             return false;
-        } finally {
-            DatabaseConnection.closeConnection(connection);
         }
     }
 
     @Override
     public boolean updateActiveStatus(int id, boolean isActive) {
         String sql = "UPDATE products SET is_active=? WHERE id=?";
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setBoolean(1, isActive);
             ps.setInt(2, id);
             int rowsAffected = ps.executeUpdate();
@@ -362,51 +306,56 @@ public class ProductDaoImpl implements ProductDao {
         } catch (SQLException e) {
             System.out.println("Error updating active status: " + e.getMessage());
             return false;
-        } finally {
-            DatabaseConnection.closeConnection(connection);
         }
     }
 
     // needs review
-    @Override
-    public List<Product> getProductsPaginated(int offset, int limit, String keyword, int categoryId) {
-        StringBuilder sql = new StringBuilder(
-            "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.is_active = TRUE"
-        );
+@Override
+public List<Product> getProductsPaginated(int offset, int limit, String keyword, int categoryId, String sortBy, Double minPrice, Double maxPrice) {
+    StringBuilder sql = new StringBuilder(
+        "SELECT products.*, categories.name AS category_name FROM products " +
+        "LEFT JOIN categories ON products.category_id = categories.id " +
+        "WHERE products.is_active = TRUE"
+    );
 
+    if (keyword != null && !keyword.isEmpty())
+        sql.append(" AND (products.name LIKE ? OR products.description LIKE ?)");
+    if (categoryId > 0)
+        sql.append(" AND products.category_id = ?");
+    if (minPrice != null)
+        sql.append(" AND products.price >= ?");
+    if (maxPrice != null)
+        sql.append(" AND products.price <= ?");
+
+    switch (sortBy != null ? sortBy : "newest") {
+        case "price_asc"  -> sql.append(" ORDER BY products.price ASC");
+        case "price_desc" -> sql.append(" ORDER BY products.price DESC");
+        case "name_asc"   -> sql.append(" ORDER BY products.name ASC");
+        default           -> sql.append(" ORDER BY products.created_at DESC");
+    }
+
+    sql.append(" LIMIT ? OFFSET ?");
+
+    List<Product> products = new ArrayList<>();
+    try (Connection connection = DatabaseConnection.getConnection();
+         PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+        int index = 1;
         if (keyword != null && !keyword.isEmpty()) {
-            sql.append(" AND (products.name LIKE ? OR products.description LIKE ?)");
+            String search = "%" + keyword + "%";
+            ps.setString(index++, search);
+            ps.setString(index++, search);
         }
-        if (categoryId > 0) {
-            sql.append(" AND products.category_id = ?");
-        }
-        sql.append(" ORDER BY products.created_at DESC LIMIT ? OFFSET ?");
+        if (categoryId > 0)  ps.setInt(index++, categoryId);
+        if (minPrice != null) ps.setDouble(index++, minPrice);
+        if (maxPrice != null) ps.setDouble(index++, maxPrice);
+        ps.setInt(index++, limit);
+        ps.setInt(index, offset);
 
-        List<Product> products = new ArrayList<>();
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql.toString());
-            int index = 1;
-            if (keyword != null && !keyword.isEmpty()) {
-                String search = "%" + keyword + "%";
-                ps.setString(index++, search);
-                ps.setString(index++, search);
-            }
-            if (categoryId > 0) {
-                ps.setInt(index++, categoryId);
-            }
-            ps.setInt(index++, limit);
-            ps.setInt(index, offset);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                products.add(mapProduct(rs));
-            }
-        } catch (SQLException e) {
-            System.out.println("Error getting paginated products: " + e.getMessage());
-        } finally {
-            DatabaseConnection.closeConnection(connection);
-        }
+        ResultSet rs = ps.executeQuery();
+        while (rs.next()) products.add(mapProduct(rs));
+    } catch (SQLException e) {
+        System.out.println("Error getting paginated products: " + e.getMessage());
+    }
         return products;
     }
 
@@ -437,10 +386,8 @@ public class ProductDaoImpl implements ProductDao {
         }
 
         List<Product> products = new ArrayList<>();
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql.toString());
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql.toString())) {
             int index = 1;
             if (categoryId != null){
                 ps.setInt(index++, categoryId);
@@ -457,8 +404,6 @@ public class ProductDaoImpl implements ProductDao {
             }
         } catch (SQLException e) {
             System.out.println("Error filtering products: " + e.getMessage());
-        } finally {
-            DatabaseConnection.closeConnection(connection);
         }
         return products;
     }
@@ -468,10 +413,8 @@ public class ProductDaoImpl implements ProductDao {
     public List<Object[]> getTopSellingProducts(int limit) {
         String sql = "SELECT products.name, SUM(order_items.quantity) AS total_sold FROM order_items JOIN products ON order_items.product_id = products.id GROUP BY products.id, products.name ORDER BY total_sold DESC LIMIT ?";
         List<Object[]> result = new ArrayList<>();
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, limit);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -479,8 +422,6 @@ public class ProductDaoImpl implements ProductDao {
             }
         } catch (SQLException e) {
             System.out.println("Error getting top selling products: " + e.getMessage());
-        } finally {
-            DatabaseConnection.closeConnection(connection);
         }
         return result;
     }
@@ -489,18 +430,14 @@ public class ProductDaoImpl implements ProductDao {
     public List<Object[]> getSalesByCategory() {
         String sql = "SELECT categories.name, SUM(order_items.quantity) AS total_sold FROM order_items JOIN products ON order_items.product_id = products.id JOIN categories ON products.category_id = categories.id GROUP BY categories.id, categories.name ORDER BY total_sold DESC";
         List<Object[]> result = new ArrayList<>();
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
+        try (Connection connection = DatabaseConnection.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sql)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 result.add(new Object[]{rs.getString("name"), rs.getInt("total_sold")});
             }
         } catch (SQLException e) {
             System.out.println("Error getting sales by category: " + e.getMessage());
-        } finally {
-            DatabaseConnection.closeConnection(connection);
         }
         return result;
     }

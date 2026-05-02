@@ -108,7 +108,7 @@ public class AdminProductServlet extends HttpServlet {
 
         int offset = (page - 1) * PAGE_SIZE;
 
-        List<Product> products = productDao.getProductsPaginated(offset, PAGE_SIZE, keyword, categoryId);
+        List<Product> products = productDao.getProductsPaginated(offset, PAGE_SIZE, keyword, categoryId, null, null, null);
         int totalProducts = productDao.getTotalProductCount();
 
         int totalPages = (int) Math.ceil((double) totalProducts / PAGE_SIZE);

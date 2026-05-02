@@ -64,6 +64,17 @@ uri="jakarta.tags.fmt" %>
               Arduino, ESP32, sensors, modules and ready-made IoT project kits —
               all in one place.
             </p>
+            <!-- add this inside the hero's left column (the div with class "flex-1 text-center md:text-left") -->
+          <form action="${pageContext.request.contextPath}/products" method="get" class="mt-6 mb-4">
+              <div class="flex items-center max-w-md mx-auto md:mx-0">
+                  <input type="text" name="keyword" placeholder="Search products "
+                        class="w-full px-4 py-2 text-sm text-accent bg-white rounded border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/50">
+
+                  <button type="submit" class="bg-white text-accent px-4 py-2 rounded text-sm font-semibold hover:opacity-80 transition ml-2">
+                      <i class="fa-solid fa-magnifying-glass"></i>
+                  </button>
+              </div>
+          </form>
             <div
               class="flex flex-col sm:flex-row gap-3 justify-center md:justify-start"
             >
@@ -198,8 +209,9 @@ uri="jakarta.tags.fmt" %>
               >
                 <c:choose>
                   <c:when test="${not empty category.image}">
+<%--                    src="${pageContext.request.contextPath}/uploads/${category.image}"--%>
                     <img
-                      src="${pageContext.request.contextPath}/${category.image}"
+                      src="${category.image}"
                       alt="${category.name}"
                       class="w-full h-full object-cover rounded-xl"
                     />
@@ -346,11 +358,9 @@ uri="jakarta.tags.fmt" %>
 
 
       <!-- promo banner  -->
-      <section class="w-[90vw] mx-auto py-10">
-        <div
-          class="bg-accent rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden "
-        >
-        <!-- circle which appears on the top right corner of the banner -->
+       <c:if test="${empty sessionScope.user}">
+         <div class="bg-accent rounded-3xl p-8 w-[90vw] mx-auto md:p-12 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+           <!-- circle which appears on the top right corner of the banner -->
           <div
             class="absolute right-0 top-0 w-[100px] h-[100px] rounded-full bg-white/5"
           ></div>
@@ -382,6 +392,7 @@ uri="jakarta.tags.fmt" %>
           </div>
         </div>
       </section>
+      </c:if>
 
 
 
