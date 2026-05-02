@@ -13,7 +13,7 @@
     </c:if>
 </div>
 
-<!-- Empty state -->
+<!-- when no products are found -->
 <c:if test="${empty products}">
     <div class="flex flex-col items-center justify-center py-20 text-center">
         <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
@@ -36,34 +36,40 @@
         <c:forEach var="product" items="${products}">
             <div class="bg-primary border border-gray-200 rounded-2xl overflow-hidden hover:shadow-md hover:border-gray-300 transition-all flex flex-col group">
 
-                <!-- Image -->
+               <!-- image  -->
                 <a href="${pageContext.request.contextPath}/product-detail?id=${product.id}"
-                   class="block relative w-full aspect-square overflow-hidden bg-secondary flex-shrink-0">
+                   class="block relative w-full aspect-square overflow-hidden bg-secondary">
 
-                    <%--
-                        Image fallback chain:
-                        1. Try uploads path
-                        2. onerror falls back to /products/product-fallback.jpg
-                    --%>
-                    <img src="${pageContext.request.contextPath}/uploads/${product.image}"
-                         alt="<c:out value='${product.name}'/>"
-                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                         onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/products/product-fallback.jpg'">
 
-                    <c:if test="${product.stock == 0}">
-                        <span class="absolute top-3 left-3 bg-red-500 text-white text-xs font-semibold px-2.5 py-1 rounded-full">
-                            Out of Stock
-                        </span>
-                    </c:if>
+        <c:choose>
+            <c:when test="${not empty product.image}">
+                <img src="${pageContext.request.contextPath}/uploads/${product.image}"
+                    alt="<c:out value='${product.name}'/>"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            </c:when>
+            <c:otherwise>
+                <img src="${pageContext.request.contextPath}/static/images/product-fallback.jpg"
+                    alt="No image available"
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+            </c:otherwise>
+        </c:choose>
 
-                    <!-- Low stock badge (1-5, only if in stock) -->
+
+                    
+            <c:if test="${product.stock == 0}">
+            <span class="absolute top-3 left-3 bg-red-500 text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+                Out of Stock
+            </span>
+            </c:if>
+
+                    <!-- low stock badge -->
                     <c:if test="${product.stock > 0 && product.stock <= 5}">
                         <span class="absolute top-3 left-3 bg-yellow-500 text-white text-xs font-semibold px-2.5 py-1 rounded-full">
                             Only ${product.stock} left!
                         </span>
                     </c:if>
 
-                    <!-- Sale badge -->
+                    <!-- sale  -->
                     <c:if test="${product.discountPrice > 0}">
                         <span class="absolute top-3 right-3 bg-accent text-white text-xs font-semibold px-2.5 py-1 rounded-full">
                             SALE
@@ -71,7 +77,7 @@
                     </c:if>
                 </a>
 
-                <!-- Info -->
+                <!-- other information -->
                 <div class="p-4 flex flex-col gap-1 flex-1">
 
                     <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">
@@ -79,13 +85,13 @@
                     </p>
 
                     <a href="${pageContext.request.contextPath}/product-detail?id=${product.id}">
-                        <h4 class="text-sm font-semibold text-accent leading-snug line-clamp-2 hover:underline">
+                        <h4 class="text-sm font-semibold text-accent hover:underline">
                             <c:out value="${product.name}"/>
                         </h4>
                     </a>
 
-                    <!-- Price -->
-                    <div class="mt-1 flex items-baseline gap-2">
+                    <!-- pricing -->
+                    <div class="mt-1 flex gap-2">
                         <c:choose>
                             <c:when test="${product.discountPrice > 0}">
                                 <span class="text-base font-bold text-accent">
@@ -103,10 +109,9 @@
                         </c:choose>
                     </div>
 
-                    <!-- Add to Cart area — HTMX swaps this div -->
+                    <!-- add to cart  -->
                     <div class="mt-3" id="cartArea-${product.id}">
                         <c:choose>
-
                             <c:when test="${product.stock == 0}">
                                 <button disabled
                                         class="w-full bg-gray-100 text-gray-400 text-xs font-semibold py-2.5 rounded-xl cursor-not-allowed">
@@ -130,7 +135,7 @@
                             <c:otherwise>
                                 <a href="${pageContext.request.contextPath}/login"
                                    class="block w-full text-center bg-accent text-white text-xs font-semibold py-2.5 rounded-xl hover:opacity-90 transition">
-                                    <i class="fa-solid fa-cart-plus mr-1"></i> Login to Buy
+                                    <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
                                 </a>
                             </c:otherwise>
                         </c:choose>
@@ -160,7 +165,7 @@
                 </c:otherwise>
             </c:choose>
 
-            <!-- Page numbers — max 5 around current -->
+        
             <c:forEach begin="1" end="${totalPages}" var="i">
                 <c:if test="${i >= currentPage - 2 && i <= currentPage + 2}">
                     <c:choose>

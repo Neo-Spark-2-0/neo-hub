@@ -19,12 +19,10 @@
 
 <main class="w-[90vw] mx-auto py-10 pb-28">
 
-    <!-- Page Title -->
-    <div class="mb-6">
+    <!-- <div class="mb-6">
         <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">Browse</p>
         <h1 class="text-2xl md:text-3xl font-bold text-accent">Products</h1>
 
-        <!-- Active filter chips -->
         <c:if test="${categoryId > 0 || not empty keyword}">
             <div class="flex items-center gap-2 mt-2 flex-wrap">
                 <span class="text-sm text-gray-500">Showing:</span>
@@ -48,15 +46,13 @@
                    class="text-xs text-gray-400 hover:text-red-500 transition underline">Clear</a>
             </div>
         </c:if>
-    </div>
+    </div> -->
 
     <div class="flex flex-col lg:flex-row gap-8">
 
-        <!-- ═══════════════════
-             SIDEBAR
-        ═══════════════════ -->
-        <aside class="w-full lg:w-60 flex-shrink-0">
-            <div class="bg-primary border border-gray-200 rounded-2xl p-5 lg:sticky lg:top-4">
+        
+        <aside class="w-full lg:w-60">
+            <div class="bg-primary border border-gray-200 rounded-2xl p-5">
 
                 <h3 class="text-sm font-bold text-accent mb-4">Filters</h3>
 
@@ -90,11 +86,11 @@
                             hx-include="#filterForm"
                             hx-vals='{"partial":"true"}'
                             hx-push-url="false"
-                            hx-indicator="#loadingSpinner"
                         />
                     </div>
 
-                    <!-- Category — auto triggers partial load -->
+
+                    <!-- category filter  -->
                     <div class="mb-4">
                         <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Category</label>
                         <div class="flex flex-col gap-2 max-h-48 overflow-y-auto pr-1">
@@ -107,10 +103,10 @@
                                        hx-swap="innerHTML"
                                        hx-include="#filterForm"
                                        hx-vals='{"partial":"true"}'
-                                       hx-push-url="false"
-                                       hx-indicator="#loadingSpinner">
+                                       hx-push-url="false">
                                 <span class="text-sm text-gray-600">All Categories</span>
                             </label>
+
                             <c:forEach var="cat" items="${categories}">
                                 <label class="flex items-center gap-2 cursor-pointer">
                                     <input type="radio" name="categoryId" value="${cat.id}"
@@ -121,29 +117,28 @@
                                            hx-swap="innerHTML"
                                            hx-include="#filterForm"
                                            hx-vals='{"partial":"true"}'
-                                           hx-push-url="false"
-                                           hx-indicator="#loadingSpinner">
+                                           hx-push-url="false">
                                     <span class="text-sm text-gray-600"><c:out value="${cat.name}"/></span>
                                 </label>
                             </c:forEach>
                         </div>
                     </div>
 
-                    <!-- Price Range — only triggers on Apply button submit -->
+                    <!-- price range filter -->
                     <div class="mb-4">
                         <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Price (Rs.)</label>
                         <div class="flex gap-2 items-center">
                             <input type="number" name="minPrice" value="${minPrice}"
                                    placeholder="Min" min="0"
                                    class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-accent">
-                            <span class="text-gray-400 text-xs flex-shrink-0">–</span>
+                            <span class="text-gray-400 text-xs">–</span>
                             <input type="number" name="maxPrice" value="${maxPrice}"
                                    placeholder="Max" min="0"
                                    class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-accent">
                         </div>
                     </div>
 
-                    <!-- Sort — auto triggers partial load -->
+                    <!-- sort  -->
                     <div class="mb-5">
                         <label class="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2 block">Sort By</label>
                         <select name="sortBy"
@@ -154,16 +149,16 @@
                                 hx-swap="innerHTML"
                                 hx-include="#filterForm"
                                 hx-vals='{"partial":"true"}'
-                                hx-push-url="false"
-                                hx-indicator="#loadingSpinner">
-                            <option value="newest"     ${sortBy eq 'newest'     || empty sortBy ? 'selected' : ''}>Newest First</option>
-                            <option value="price_asc"  ${sortBy eq 'price_asc'  ? 'selected' : ''}>Price: Low to High</option>
+                                hx-push-url="false">
+
+                            <option value="newest" ${sortBy eq 'newest' || empty sortBy ? 'selected' : ''}>Newest First</option>
+                            <option value="price_asc" ${sortBy eq 'price_asc'  ? 'selected' : ''}>Price: Low to High</option>
                             <option value="price_desc" ${sortBy eq 'price_desc' ? 'selected' : ''}>Price: High to Low</option>
                             <option value="name_asc"   ${sortBy eq 'name_asc'   ? 'selected' : ''}>Name A–Z</option>
                         </select>
                     </div>
 
-                    <!-- Apply — full page form submit (updates URL properly) -->
+                    <!-- submit button which reloads whole page -->
                     <button type="submit"
                             class="w-full bg-accent text-white text-sm font-semibold py-2.5 rounded-xl hover:opacity-90 transition">
                         Apply Filters
@@ -177,17 +172,9 @@
             </div>
         </aside>
 
-        <!-- ═══════════════════
-             PRODUCT GRID
-        ═══════════════════ -->
+
+        <!-- product grid  -->
         <div class="flex-1 min-w-0">
-
-            <!-- Loading spinner — shown during HTMX requests -->
-            <div id="loadingSpinner"
-                 class="htmx-indicator flex items-center justify-center py-10">
-                <div class="w-8 h-8 border-4 border-accent border-t-transparent rounded-full animate-spin"></div>
-            </div>
-
             <div id="product-section">
                 <jsp:include page="/WEB-INF/views/user/components/product-grid.jsp" />
             </div>
@@ -197,7 +184,7 @@
 </main>
 
 <!-- Sticky Cart Bar — hidden until item added -->
-<div id="cartBar"
+<!-- <div id="cartBar"
      class="fixed bottom-0 left-0 right-0 bg-primary border-t border-gray-200 shadow-lg z-50 px-4 py-3"
      style="display:none">
     <div class="max-w-5xl mx-auto flex items-center justify-between gap-4">
@@ -215,7 +202,7 @@
             View Cart &amp; Checkout <i class="fa-solid fa-arrow-right ml-1 text-xs"></i>
         </a>
     </div>
-</div>
+</div> -->
 
 <jsp:include page="/WEB-INF/templates/user/footer.jsp" />
 

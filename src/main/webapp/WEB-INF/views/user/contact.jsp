@@ -38,7 +38,7 @@
           "
         ></div>
 
-        <div class="relative text-center md:text-left">
+        <div class="flex-1 relative text-center md:text-left">
           <span
             class="inline-block text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4 bg-white/10 px-3 py-1 rounded-full"
           >
@@ -59,7 +59,7 @@
           </p>
         </div>
 
-        <!-- decorative icon -->
+
         <div
           class="relative w-36 h-36 md:w-48 md:h-48 bg-white/10 rounded-full border border-white/20 flex items-center justify-center"
         >
