@@ -9,7 +9,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import java.io.File;
 import java.io.IOException;
 
 @WebServlet("/admin/categories")
@@ -72,12 +71,10 @@ switch (action != null ? action : "") {
                     if (id <= 0) {
                         req.getSession().setAttribute("error", "Invalid category ID.");
                     } else {
-                        // Delete image file before removing from DB
+                       
                         Category cat = categoryDao.getCategoryById(id);
                         if (cat != null && cat.getImage() != null && !cat.getImage().isEmpty()) {
-                            String filePath = getServletContext().getRealPath("/" + cat.getImage());
-                            File file = new File(filePath);
-                            if (file.exists()) file.delete();
+                            ImageUploadUtil.deleteImage(cat.getImage());
                         }
                         if (categoryDao.deleteCategory(id)) {
                             req.getSession().setAttribute("success", "Category deleted successfully.");

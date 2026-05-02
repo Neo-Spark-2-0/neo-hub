@@ -192,7 +192,7 @@ public class User {
 
     //Added:check admin role
      public boolean isAdmin() {
-        return "admin".equalsIgnoreCase(role);
+        return "ADMIN".equalsIgnoreCase(role);
         
     }
 

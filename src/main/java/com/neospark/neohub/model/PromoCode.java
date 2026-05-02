@@ -81,6 +81,10 @@ public class PromoCode {
         this.updatedAt = updatedAt;
     }
 
+    public String getExpiryDateFormatted() {
+        return expiryDate != null ? expiryDate.toString() : "";
+    }
+
     @Override
     public String toString() {
         return "PromoCode{" +
