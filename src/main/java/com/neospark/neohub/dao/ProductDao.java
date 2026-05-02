@@ -17,7 +17,7 @@ public interface ProductDao {
     
     List<Product> getRecentProducts(int limit);
     int getTotalProductCount();
-    int getProductCount(String keyword, int categoryId, Double minPrice, Double maxPrice);
+    int getProductCount(String keyword, int categoryId, Double minPrice, Double maxPrice, boolean onlyActive);
     List<Product> getLowStockProducts(int limit);
     Product getProductById(int id);
     List<Product> getAllProducts();
@@ -25,7 +25,7 @@ public interface ProductDao {
     List<Product> getFeaturedProducts();
     List<Product> searchProducts(String keyword);
     List<Product> getProductsByFilter(Integer categoryId, Double minPrice, Double maxPrice, String sortBy);
-    List<Product> getProductsPaginated(int offset, int limit, String keyword, int categoryId, String sortBy, Double minPrice, Double maxPrice);
+    List<Product> getProductsPaginated(int offset, int limit, String keyword, int categoryId, String sortBy, Double minPrice, Double maxPrice, boolean onlyActive);
     List<Object[]> getSalesByCategory();
     List<Object[]> getTopSellingProducts(int limit);
 }

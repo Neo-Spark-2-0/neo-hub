@@ -195,9 +195,10 @@ public class ProductDaoImpl implements ProductDao {
 
     // needs review
     @Override
-    public int getProductCount(String keyword, int categoryId, Double minPrice, Double maxPrice) {
+    //Note: set onlyActive true for user to see active products only, false for admin to see all products
+    public int getProductCount(String keyword, int categoryId, Double minPrice, Double maxPrice, boolean onlyActive) {
     StringBuilder sql = new StringBuilder(
-        "SELECT COUNT(*) FROM products WHERE is_active = TRUE"
+        "SELECT COUNT(*) FROM products WHERE 1=1 "
     );
     if (keyword != null && !keyword.isEmpty())
         sql.append(" AND (name LIKE ? OR description LIKE ?)");
@@ -207,6 +208,8 @@ public class ProductDaoImpl implements ProductDao {
         sql.append(" AND price >= ?");
     if (maxPrice != null)
         sql.append(" AND price <= ?");
+    if (onlyActive)
+        sql.append(" AND is_active = TRUE");
 
     try (Connection conn = DatabaseConnection.getConnection();
          PreparedStatement ps = conn.prepareStatement(sql.toString())) {
@@ -311,11 +314,12 @@ public class ProductDaoImpl implements ProductDao {
 
     // needs review
 @Override
-public List<Product> getProductsPaginated(int offset, int limit, String keyword, int categoryId, String sortBy, Double minPrice, Double maxPrice) {
+//Note: set onlyActive true for user to see active products only, false for admin to see all products
+public List<Product> getProductsPaginated(int offset, int limit, String keyword, int categoryId, String sortBy, Double minPrice, Double maxPrice, boolean onlyActive) {
     StringBuilder sql = new StringBuilder(
         "SELECT products.*, categories.name AS category_name FROM products " +
         "LEFT JOIN categories ON products.category_id = categories.id " +
-        "WHERE products.is_active = TRUE"
+        "WHERE 1=1 "
     );
 
     if (keyword != null && !keyword.isEmpty())
@@ -326,6 +330,8 @@ public List<Product> getProductsPaginated(int offset, int limit, String keyword,
         sql.append(" AND products.price >= ?");
     if (maxPrice != null)
         sql.append(" AND products.price <= ?");
+    if (onlyActive)
+        sql.append(" AND products.is_active = TRUE");
 
     switch (sortBy != null ? sortBy : "newest") {
         case "price_asc"  -> sql.append(" ORDER BY products.price ASC");

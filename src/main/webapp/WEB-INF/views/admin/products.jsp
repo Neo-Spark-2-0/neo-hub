@@ -115,7 +115,7 @@
                                     <td class="px-6 py-4">
                                         <div class="font-bold text-accent leading-tight">${p.name}</div>
                                         <div class="flex items-center gap-2 mt-1">
-                                            <span class="text-[9px] font-bold bg-info/10 text-info px-1.5 py-0.5 rounded uppercase leading-none">${p.sku}</span>
+                                            <span class="text-[9px] font-bold bg-info/10 text-info px-1.5 py-0.5 rounded uppercase leading-none">${p.stockKeepingUnit}</span>
                                             <span class="text-[10px] text-gray-400 leading-none">${p.brand}</span>
                                         </div>
                                     </td>
