@@ -41,11 +41,11 @@ public class AdminDashboardServlet extends HttpServlet {
         req.setAttribute("totalRevenue", orderDao.getTotalRevenue());
 
         // Set Attributes - Order Status
-        req.setAttribute("pendingOrders", orderDao.getOrdersByStatus("PENDING"));
-        req.setAttribute("processingOrders", orderDao.getOrdersByStatus("PROCESSING"));
-        req.setAttribute("shippedOrders", orderDao.getOrdersByStatus("SHIPPED"));
-        req.setAttribute("deliveredOrders", orderDao.getOrdersByStatus("DELIVERED"));
-        req.setAttribute("cancelledOrders", orderDao.getOrdersByStatus("CANCELLED"));
+        req.setAttribute("pendingOrders", orderDao.getOrderCountByStatus("Pending"));
+        req.setAttribute("processingOrders", orderDao.getOrderCountByStatus("Processing"));
+        req.setAttribute("shippedOrders", orderDao.getOrderCountByStatus("Shipped"));
+        req.setAttribute("deliveredOrders", orderDao.getOrderCountByStatus("Delivered"));
+        req.setAttribute("cancelledOrders", orderDao.getOrderCountByStatus("Cancelled"));
 
         // Recent Data (latest 5)
         List<Order> recentOrders = orderDao.getRecentOrders(5);

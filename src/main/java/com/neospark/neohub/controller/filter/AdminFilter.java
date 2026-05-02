@@ -26,7 +26,7 @@
 //
 //        User user = (User) SessionUtil.getAttribute(req, "user");
 //
-    //    if (user == null || !user.isAdmin()) {
+//    if (user == null || !user.isAdmin()) {
 //            resp.sendRedirect(req.getContextPath() + "/login");
 //            return;
 //        }
