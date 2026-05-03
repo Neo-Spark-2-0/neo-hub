@@ -13,10 +13,9 @@ import java.util.List;
 @WebServlet("/checkout")
 public class CheckoutServlet extends HttpServlet {
 
-    private final CartDao      cartDao      = new CartDaoImpl();
+    private final CartDao cartDao = new CartDaoImpl();
     private final PromoCodeDao promoCodeDao = new PromoCodeDaoImpl();
 
-    // ── GET: show checkout page or remove promo ──
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -34,7 +33,6 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
 
-        // Remove promo code if requested
         if ("true".equals(request.getParameter("removePromo"))) {
             request.getSession().removeAttribute("appliedPromoCode");
             response.sendRedirect(request.getContextPath() + "/checkout");
@@ -46,7 +44,6 @@ public class CheckoutServlet extends HttpServlet {
                 .forward(request, response);
     }
 
-    // ── POST: apply promo code ──
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -70,7 +67,6 @@ public class CheckoutServlet extends HttpServlet {
             } else if (promoCode.getExpiryDate().isBefore(LocalDate.now())) {
                 request.setAttribute("promoError", "This promo code has expired.");
             } else {
-                // Valid — save to session
                 request.getSession().setAttribute("appliedPromoCode", promoCode);
                 request.setAttribute("promoSuccess",
                         promoCode.getDiscountPercent() + "% discount applied successfully!");
@@ -82,7 +78,6 @@ public class CheckoutServlet extends HttpServlet {
                 .forward(request, response);
     }
 
-    // ── Shared helper — calculates totals and sets request attributes ──
     private void buildCheckoutAttributes(HttpServletRequest request, User user, List<Cart> cartItems) {
         double subTotal = cartItems.stream()
                 .mapToDouble(item -> (item.getProductDiscountPrice() > 0

@@ -209,17 +209,18 @@ uri="jakarta.tags.fmt" %>
               >
                 <c:choose>
                   <c:when test="${not empty category.image}">
-<%--                    src="${pageContext.request.contextPath}/uploads/${category.image}"--%>
                     <img
-                      src="${category.image}"
+                      src="${pageContext.request.contextPath}/uploads/${category.image}"
                       alt="${category.name}"
                       class="w-full h-full object-cover rounded-xl"
                     />
                   </c:when>
                   <c:otherwise>
-                    <i
-                      class="fa-solid fa-layer-group text-2xl text-gray-400 hover:text-accent transition-colors"
-                    ></i>
+                    <img
+                      src="${pageContext.request.contextPath}/static/images/category-fallback.jpg"
+                      alt="${category.name}"
+                      class="w-full h-full object-cover rounded-xl"
+                    />
                   </c:otherwise>
                 </c:choose>
               </div>
@@ -272,16 +273,26 @@ uri="jakarta.tags.fmt" %>
                 class="bg-secondary border border-gray-100 rounded-2xl overflow-hidden hover:shadow-lg hover:border-gray-300 transition-all duration-200 flex flex-col"
               >
                 <!-- image -->
+
                 <div
                   class="relative w-full aspect-square overflow-hidden bg-white"
                 >
-                    <!-- src="${pageContext.request.contextPath}/${product.image}" -->
-
-                  <img
-                    src="${product.image}"
-                    alt="<c:out value='${product.name}'/>"
-                    class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                  />
+                <c:choose>
+                  <c:when test="${not empty product.image}">
+                <img
+                  src="${pageContext.request.contextPath}/uploads/${product.image}"
+                  alt="<c:out value='${product.name}'/>"
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+                </c:when>
+                <c:otherwise>
+                <img
+                  src="${pageContext.request.contextPath}/static/images/product-fallback.jpg"
+                  alt="<c:out value='${product.name}'/>"
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+                </c:otherwise>
+              </c:choose>
 
                   <c:if test="${product.stock == 0}">
                     <span
@@ -428,12 +439,23 @@ uri="jakarta.tags.fmt" %>
               <div
                 class="relative w-full aspect-square overflow-hidden bg-secondary"
               >
-              <!-- src="${pageContext.request.contextPath}/${product.image}" -->
+
+              <c:choose>
+                  <c:when test="${not empty product.image}">
                 <img
-                  src="${product.image}"
+                  src="${pageContext.request.contextPath}/uploads/${product.image}"
                   alt="<c:out value='${product.name}'/>"
                   class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                 />
+                </c:when>
+                <c:otherwise>
+                <img
+                  src="${pageContext.request.contextPath}/static/images/product-fallback.jpg"
+                  alt="<c:out value='${product.name}'/>"
+                  class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+                </c:otherwise>
+              </c:choose>
 
                 <span
                   class="absolute top-3 left-3 bg-info text-white text-[10px] font-semibold px-2.5 py-1 rounded-full"

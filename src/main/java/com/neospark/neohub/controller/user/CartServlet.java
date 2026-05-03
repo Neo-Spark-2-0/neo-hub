@@ -15,10 +15,9 @@ import java.util.List;
 @WebServlet("/cart")
 public class CartServlet extends HttpServlet {
 
-    private final CartDao    cartDao    = new CartDaoImpl();
+    private final CartDao cartDao = new CartDaoImpl();
     private final ProductDao productDao = new ProductDaoImpl();
 
-    // ── GET: view cart page ──
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -26,25 +25,23 @@ public class CartServlet extends HttpServlet {
         User user = (User) request.getSession().getAttribute("user");
         List<Cart> cartItems = cartDao.getCartByUser(user.getId());
 
-        double grandTotal = cartItems.stream()
-                .mapToDouble(item -> (item.getProductDiscountPrice() > 0
-                        ? item.getProductDiscountPrice()
-                        : item.getProductPrice()) * item.getQuantity())
-                .sum();
+        double grandTotal = 0.0;
+        for (Cart item : cartItems) {
+            double price = (item.getProductDiscountPrice() > 0) ? item.getProductDiscountPrice() : item.getProductPrice();
+            grandTotal += price * item.getQuantity();
+}
 
         request.setAttribute("cartItems",  cartItems);
         request.setAttribute("grandTotal", grandTotal);
 
-        request.getRequestDispatcher("/WEB-INF/views/user/cart.jsp")
-                .forward(request, response);
+        request.getRequestDispatcher("/WEB-INF/views/user/cart.jsp").forward(request, response);
     }
 
-    // ── POST: add, update, remove ──
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        User   user   = (User) request.getSession().getAttribute("user");
+        User user = (User) request.getSession().getAttribute("user");
         String action = request.getParameter("action");
         boolean isHtmx = "true".equals(request.getHeader("HX-Request"));
 

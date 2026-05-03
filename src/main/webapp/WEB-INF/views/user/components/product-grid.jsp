@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 
-<!-- Results count -->
+<!-- page and product details top -->
 <div class="flex items-center justify-between mb-5">
     <p class="text-sm text-gray-500">
         <strong class="text-accent">${totalProducts}</strong>
@@ -30,29 +30,29 @@
     </div>
 </c:if>
 
-<!-- Product Grid -->
+<!-- products -->
 <c:if test="${not empty products}">
     <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-        <c:forEach var="product" items="${products}">
+    <c:forEach var="product" items="${products}">
             <div class="bg-primary border border-gray-200 rounded-2xl overflow-hidden hover:shadow-md hover:border-gray-300 transition-all flex flex-col group">
 
                <!-- image  -->
-                <a href="${pageContext.request.contextPath}/product-detail?id=${product.id}"
+            <a href="${pageContext.request.contextPath}/product-detail?id=${product.id}"
                    class="block relative w-full aspect-square overflow-hidden bg-secondary">
 
 
-        <c:choose>
-            <c:when test="${not empty product.image}">
-                <img src="${pageContext.request.contextPath}/uploads/${product.image}"
-                    alt="<c:out value='${product.name}'/>"
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-            </c:when>
-            <c:otherwise>
-                <img src="${pageContext.request.contextPath}/static/images/product-fallback.jpg"
-                    alt="No image available"
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
-            </c:otherwise>
-        </c:choose>
+                <c:choose>
+                    <c:when test="${not empty product.image}">
+                        <img src="${pageContext.request.contextPath}/uploads/${product.image}"
+                            alt="<c:out value='${product.name}'/>"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    </c:when>
+                    <c:otherwise>
+                        <img src="${pageContext.request.contextPath}/static/images/product-fallback.jpg"
+                            alt="No image available"
+                            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
+                    </c:otherwise>
+                </c:choose>
 
 
                     
@@ -63,19 +63,19 @@
             </c:if>
 
                     <!-- low stock badge -->
-                    <c:if test="${product.stock > 0 && product.stock <= 5}">
-                        <span class="absolute top-3 left-3 bg-yellow-500 text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+                <c:if test="${product.stock > 0 && product.stock <= 5}">
+                    <span class="absolute top-3 left-3 bg-yellow-500 text-white text-xs font-semibold px-2.5 py-1 rounded-full">
                             Only ${product.stock} left!
-                        </span>
-                    </c:if>
+                    </span>
+                </c:if>
 
-                    <!-- sale  -->
-                    <c:if test="${product.discountPrice > 0}">
+                <!-- sale  -->
+                <c:if test="${product.discountPrice > 0}">
                         <span class="absolute top-3 right-3 bg-accent text-white text-xs font-semibold px-2.5 py-1 rounded-full">
                             SALE
                         </span>
-                    </c:if>
-                </a>
+                </c:if>
+            </a>
 
                 <!-- other information -->
                 <div class="p-4 flex flex-col gap-1 flex-1">
@@ -126,7 +126,6 @@
                                     hx-vals='{"action":"add","productId":"${product.id}","quantity":"1"}'
                                     hx-target="#cartArea-${product.id}"
                                     hx-swap="innerHTML"
-                                    hx-on::after-request="onCartAdded(event)"
                                     class="w-full bg-accent text-white text-xs font-semibold py-2.5 rounded-xl hover:opacity-90 transition active:scale-95">
                                     <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
                                 </button>
@@ -135,7 +134,7 @@
                             <c:otherwise>
                                 <a href="${pageContext.request.contextPath}/login"
                                    class="block w-full text-center bg-accent text-white text-xs font-semibold py-2.5 rounded-xl hover:opacity-90 transition">
-                                    <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
+                                    <i class="fa-solid fa-cart-plus mr-1"></i> Login to Buy
                                 </a>
                             </c:otherwise>
                         </c:choose>
@@ -146,7 +145,7 @@
         </c:forEach>
     </div>
 
-    <!-- Pagination -->
+    <!-- pagination -->
     <c:if test="${totalPages > 1}">
         <div class="flex items-center justify-center gap-2 mt-10 flex-wrap">
 

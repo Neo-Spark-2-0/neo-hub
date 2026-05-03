@@ -328,10 +328,10 @@ public List<Product> getProductsPaginated(int offset, int limit, String keyword,
         sql.append(" AND products.price <= ?");
 
     switch (sortBy != null ? sortBy : "newest") {
-        case "price_asc"  -> sql.append(" ORDER BY products.price ASC");
+        case "price_asc" -> sql.append(" ORDER BY products.price ASC");
         case "price_desc" -> sql.append(" ORDER BY products.price DESC");
-        case "name_asc"   -> sql.append(" ORDER BY products.name ASC");
-        default           -> sql.append(" ORDER BY products.created_at DESC");
+        case "name_asc" -> sql.append(" ORDER BY products.name ASC");
+        default -> sql.append(" ORDER BY products.created_at DESC");
     }
 
     sql.append(" LIMIT ? OFFSET ?");

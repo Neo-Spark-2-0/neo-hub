@@ -89,19 +89,13 @@
                 <!-- Cart -->
             <div id="cartArea-${product.id}">
                 <c:if test="${product.stock > 0}">
-                    <div class="flex items-center gap-4 mb-4">
-                        <label class="text-sm font-medium text-gray-700">Quantity:</label>
-                        <input type="number" id="qty-${product.id}" value="1" min="1" max="${product.stock}"
-                            class="w-20 px-3 py-2 border border-gray-300 rounded-lg text-center focus:outline-none focus:border-accent">
-                    </div>
                     <button
                         hx-post="${pageContext.request.contextPath}/cart"
-                        hx-vals='{"action":"add","productId":"${product.id}","quantity": document.getElementById("qty-${product.id}").value}'
+                        hx-vals='{"action":"add","productId":"${product.id}","quantity":"1"}'
                         hx-target="#cartArea-${product.id}"
                         hx-swap="innerHTML"
-                        hx-on::after-request="onCartAdded(event)"
                         class="bg-accent text-white px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition w-full md:w-auto">
-                        <i class="fa-solid fa-cart-plus mr-2"></i> Add to Cart
+                        <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
                     </button>
                 </c:if>
             </div>
