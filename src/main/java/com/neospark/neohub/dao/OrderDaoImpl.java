@@ -293,10 +293,10 @@ public class OrderDaoImpl implements OrderDao {
 
     private String buildAddress(String street, String city, String district, String province) {
         StringBuilder sb = new StringBuilder();
-        if (street   != null && !street.isEmpty())   sb.append(street).append(", ");
-        if (city     != null && !city.isEmpty())     sb.append(city).append(", ");
-        if (district != null && !district.isEmpty()) sb.append(district).append(", ");
         if (province != null && !province.isEmpty()) sb.append(province);
+        if (district != null && !district.isEmpty()) sb.append(district).append(", ");
+        if (city     != null && !city.isEmpty())     sb.append(city).append(", ");
+        if (street   != null && !street.isEmpty())   sb.append(street).append(", ");
         return sb.toString().replaceAll(",\\s*$", "");
 }
     

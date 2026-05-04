@@ -100,7 +100,6 @@
                 </c:if>
             </div>
 
-                <!-- SKU -->
                 <c:if test="${not empty product.stockKeepingUnit}">
                     <p class="text-xs text-gray-400 mt-4">SKU: <c:out value="${product.stockKeepingUnit}"/></p>
                 </c:if>

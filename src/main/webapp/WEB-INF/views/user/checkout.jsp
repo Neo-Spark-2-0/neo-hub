@@ -32,9 +32,6 @@
 
     <div class="flex flex-col lg:flex-row gap-8">
 
-        <!-- ════════════════════════════════
-             LEFT — DELIVERY + PAYMENT
-        ════════════════════════════════ -->
         <div class="flex-1 flex flex-col gap-5">
 
             <!-- Delivery Address -->
@@ -200,9 +197,6 @@
 
         </div>
 
-        <!-- ════════════════════════════════
-             RIGHT — ORDER SUMMARY
-        ════════════════════════════════ -->
         <div class="w-full lg:w-80 flex-shrink-0">
             <div class="bg-primary border border-gray-200 rounded-2xl p-6 sticky top-4">
                 <h3 class="text-sm font-bold text-accent mb-5">Order Summary</h3>

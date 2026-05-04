@@ -131,14 +131,7 @@ public class CartServlet extends HttpServlet {
         }
     }
 
-    // ─────────────────────────────────────────────
-    // HTML fragment builders
-    // ─────────────────────────────────────────────
 
-    /**
-     * Returns the quantity +/- control HTML after product is added to cart.
-     * HTMX swaps this into #cartArea-{productId}
-     */
     private String buildQtyControlHtml(int productId, int qty, int maxStock, String contextPath) {
         return
             "<div class='flex items-center justify-between gap-1 border border-accent rounded-xl px-2 py-1'>" +
@@ -166,9 +159,7 @@ public class CartServlet extends HttpServlet {
             "</div>";
     }
 
-    /**
-     * Returns the original Add to Cart button if quantity goes back to 0.
-     */
+
     private String buildAddToCartHtml(int productId, String contextPath) {
         return
             "<button " +
@@ -176,7 +167,6 @@ public class CartServlet extends HttpServlet {
                 "hx-vals='{\"action\":\"add\",\"productId\":\"" + productId + "\",\"quantity\":\"1\"}' " +
                 "hx-target='#cartArea-" + productId + "' " +
                 "hx-swap='innerHTML' " +
-                "hx-on::after-request='onCartAdded(event)' " +
                 "class='w-full bg-accent text-white text-xs font-semibold py-2.5 rounded-xl hover:opacity-90 transition active:scale-95'>" +
                 "<i class='fa-solid fa-cart-plus mr-1'></i> Add to Cart" +
             "</button>";

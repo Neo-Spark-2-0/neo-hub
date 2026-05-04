@@ -117,7 +117,7 @@
                                class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                                 <i class="fa fa-user text-xs text-gray-400 w-4 text-center"></i> Profile
                             </a>
-                            <a href="${pageContext.request.contextPath}/orders"
+                            <a href="${pageContext.request.contextPath}/order-history"
                                class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                                 <i class="fa fa-box text-xs text-gray-400 w-4 text-center"></i> My Orders
                             </a>
@@ -179,7 +179,7 @@
                    class="px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium">
                     <i class="fa fa-cart-shopping mr-2 text-xs"></i>Cart
                 </a>
-                <a href="${pageContext.request.contextPath}/orders"
+                <a href="${pageContext.request.contextPath}/order-history"
                    class="px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100 font-medium">
                     <i class="fa fa-bag-shopping mr-2 text-xs"></i>My Orders
                 </a>

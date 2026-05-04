@@ -13,6 +13,8 @@ public class Payment {
     private Timestamp createdAt;
     private Timestamp updated_at;
 
+    public Payment() {}
+
     public Payment(Timestamp createdAt, int id, int orderId, String method, String transactionId, double amount, String status, Timestamp paidAt, Timestamp updated_at) {
         this.createdAt = createdAt;
         this.id = id;
