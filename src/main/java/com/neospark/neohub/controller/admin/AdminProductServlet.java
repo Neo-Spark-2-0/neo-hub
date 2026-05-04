@@ -9,6 +9,7 @@ import com.neospark.neohub.dao.ProductDaoImpl;
 import com.neospark.neohub.dao.CategoryDao;
 import com.neospark.neohub.dao.CategoryDaoImpl;
 import com.neospark.neohub.model.Product;
+import com.neospark.neohub.utils.ImageUploadUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -167,7 +168,7 @@ public class AdminProductServlet extends HttpServlet {
                 insertProduct(req, resp);
             } else if ("update".equals(action)) {
                 updateProduct(req, resp);
-            } else if ("delete".equals(action)) {  // 🔥 MOVE DELETE TO POST!
+            } else if ("delete".equals(action)) {  
                 deleteProduct(req, resp);
             }
         } catch (Exception e) {
@@ -296,21 +297,12 @@ public class AdminProductServlet extends HttpServlet {
         // Image Handling
         Part filePart = req.getPart("image");
 
-        if (filePart != null && filePart.getSize() > 0) {
-            String fileName = System.currentTimeMillis() + "_" + filePart.getSubmittedFileName();
-            String uploadPath = getServletContext().getRealPath("/uploads");
+        String newImagePath = ImageUploadUtil.uploadImage(filePart, "products");
 
-            File dir = new File(uploadPath);
-            if (!dir.exists()) dir.mkdirs();
-
-            String filePath = uploadPath + File.separator + fileName;
-            filePart.write(filePath);
-
-            product.setImage("uploads/" + fileName);
-
+        if (newImagePath != null) {
+            product.setImage(newImagePath);
         } else if (existing != null) {
-            // KEEP OLD IMAGE if no new upload
-            product.setImage(existing.getImage());
+            product.setImage(existing.getImage()); // Don't lose the old image if no new one is uploaded
         }
 
         return product;
