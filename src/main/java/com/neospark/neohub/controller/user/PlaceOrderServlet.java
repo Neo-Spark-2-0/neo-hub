@@ -35,14 +35,14 @@ public class PlaceOrderServlet extends HttpServlet {
 
         String paymentMethod = request.getParameter("paymentMethod"); // COD or KHALTI
 
-        // ── 1. Get cart ──
+
         List<Cart> cartItems = cartDao.getCartByUser(user.getId());
         if (cartItems.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/cart?error=empty");
             return;
         }
 
-        // ── 2. Calculate pricing ──
+
         double subTotal = 0.0;
         for (Cart item : cartItems) {
             double price = item.getProductDiscountPrice() > 0
@@ -62,7 +62,6 @@ public class PlaceOrderServlet extends HttpServlet {
 
         double total = subTotal + shipping - discount;
 
-        // ── 3. Create order ──
         Order order = new Order();
         order.setUserId(user.getId());
         order.setSubTotalAmount(subTotal);
@@ -78,7 +77,6 @@ public class PlaceOrderServlet extends HttpServlet {
             return;
         }
 
-        // Get the new order ID (most recent order for this user)
         List<Order> userOrders = orderDao.getOrdersByUser(user.getId());
         int orderId = -1;
         if (userOrders != null && !userOrders.isEmpty()) {
@@ -88,7 +86,6 @@ public class PlaceOrderServlet extends HttpServlet {
             return;
         }
 
-        // ── 4. Insert order items + reduce stock ──
         List<OrderItem> orderItems = new ArrayList<>();
         for (Cart item : cartItems) {
             OrderItem oi = new OrderItem();
@@ -99,17 +96,14 @@ public class PlaceOrderServlet extends HttpServlet {
                     ? item.getProductDiscountPrice() : item.getProductPrice();
             oi.setUnitPrice(unitPrice);
             orderItems.add(oi);
-            
-            // Reduce stock
+
             boolean stockUpdated = productDao.updateStock(item.getProductId(), item.getQuantity());
             if (!stockUpdated) {
-                // If stock update fails, continue (should handle but log)
                 System.out.println("Warning: Could not update stock for product " + item.getProductId());
             }
         }
         orderItemDao.addOrderItems(orderItems);
 
-        // ── 5. Create payment record ──
         Payment payment = new Payment();
         payment.setOrderId(orderId);
         payment.setMethod(paymentMethod);
@@ -117,28 +111,18 @@ public class PlaceOrderServlet extends HttpServlet {
         payment.setStatus("Pending");
         paymentDao.createPayment(payment);
 
-        // ── 6. Clear cart and promo ──
         cartDao.clearCart(user.getId());
         session.removeAttribute("appliedPromoCode");
         
-        // Update cart count in session (if you maintain one)
-        // session.setAttribute("cartCount", 0);
-
-        // ── 7. Route by payment method ──
         if ("KHALTI".equalsIgnoreCase(paymentMethod)) {
-            // Redirect to Khalti payment page
             response.sendRedirect(request.getContextPath() + "/khalti/initiate?orderId=" + orderId);
         } else {
-            // COD — confirm order immediately
             orderDao.updateOrderStatus(orderId, "Confirmed");
             
-            // Update payment status to Completed for COD
             paymentDao.updatePaymentStatus(orderId, "Completed", null);
-
-            // Build delivery address from user profile
             String address = buildAddress(user);
 
-            // Send confirmation email (run in background to not slow response)
+
             final String toEmail = user.getEmail();
             final String name = user.getFullName();
             final int finalOrderId = orderId;

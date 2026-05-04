@@ -87,7 +87,6 @@ public class CartServlet extends HttpServlet {
                 int maxStock = product.getStock();
                 String contextPath = request.getContextPath();
 
-                // Return HTML fragment — HTMX swaps this into #cartArea-{productId}
                 response.setContentType("text/html;charset=UTF-8");
                 response.setStatus(HttpServletResponse.SC_OK);
                 PrintWriter out = response.getWriter();
@@ -102,7 +101,6 @@ public class CartServlet extends HttpServlet {
                 cartDao.removeFromCart(user.getId(), productId);
 
                 if (isHtmx) {
-                    // Return the original "Add to Cart" button HTML
                     response.setContentType("text/html;charset=UTF-8");
                     response.setStatus(HttpServletResponse.SC_OK);
                     PrintWriter out = response.getWriter();
