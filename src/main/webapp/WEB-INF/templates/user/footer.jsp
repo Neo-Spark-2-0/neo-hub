@@ -5,7 +5,7 @@
 
         <div class="flex flex-col md:flex-row justify-between gap-8">
 
-            <%-- Brand — takes left half --%>
+
             <div class="flex flex-col gap-2 w-full md:w-1/2 max-w-xs">
                 <img src="${pageContext.request.contextPath}/static/images/neo-hub-logo.png"
                      alt="NEO-HUB" class="w-20" />
@@ -15,7 +15,7 @@
                 </p>
             </div>
 
-            <%-- Link columns — start from right half with even spacing --%>
+
             <div class="flex flex-col md:flex-row md:w-1/2 justify-between gap-10 text-sm">
 
                 <div class="flex flex-col gap-2">
