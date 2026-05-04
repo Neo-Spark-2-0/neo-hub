@@ -5,21 +5,21 @@
 
         <div class="flex flex-col md:flex-row justify-between gap-8">
 
-            <%-- Brand --%>
-            <div class="flex flex-col gap-2 max-w-xs">
+
+            <div class="flex flex-col gap-2 w-full md:w-1/2 max-w-xs">
                 <img src="${pageContext.request.contextPath}/static/images/neo-hub-logo.png"
-                     alt="NEO-HUB" class= "w-20" />
+                     alt="NEO-HUB" class="w-20" />
                 <p class="text-xs text-gray-400">
                     IoT Equipment &amp; Project Marketplace.<br/>
                     Arduino, sensors, modules and ready-made IoT kits.
                 </p>
             </div>
 
-            <%-- Link columns --%>
-            <div class="flex flex-col md:flex-row gap-10 text-sm">
+
+            <div class="flex flex-col md:flex-row md:w-1/2 justify-between gap-10 text-sm">
 
                 <div class="flex flex-col gap-2">
-                    <p class="text-xs font-semibold uppercase text-accent mb-1 tracking-wider">Shop</p>
+                    <p class="text-xs font-bold uppercase text-gray-900 mb-1 tracking-wider">Shop</p>
                     <a href="${pageContext.request.contextPath}/products"
                        class="text-gray-500 hover:text-accent hover:translate-x-0.5 transition-all duration-200">All Products</a>
                     <a href="${pageContext.request.contextPath}/products?category=boards"
@@ -31,7 +31,7 @@
                 </div>
 
                 <div class="flex flex-col gap-2">
-                    <p class="text-xs font-semibold uppercase text-accent mb-1 tracking-wider">Account</p>
+                    <p class="text-xs font-bold uppercase text-gray-900 mb-1 tracking-wider">Account</p>
                     <a href="${pageContext.request.contextPath}/profile"
                        class="text-gray-500 hover:text-accent hover:translate-x-0.5 transition-all duration-200">Profile</a>
                     <a href="${pageContext.request.contextPath}/orders"
@@ -41,7 +41,7 @@
                 </div>
 
                 <div class="flex flex-col gap-2">
-                    <p class="text-xs font-semibold uppercase text-accent mb-1 tracking-wider">Company</p>
+                    <p class="text-xs font-bold uppercase text-gray-900 mb-1 tracking-wider">Company</p>
                     <a href="${pageContext.request.contextPath}/about"
                        class="text-gray-500 hover:text-accent hover:translate-x-0.5 transition-all duration-200">About Us</a>
                     <a href="${pageContext.request.contextPath}/contact"
@@ -55,7 +55,7 @@
 
         <div class="flex flex-col md:flex-row items-center justify-between gap-2">
             <p class="text-xs text-gray-400">&copy; 2026 NEO-HUB. All rights reserved.</p>
-            <p class="text-xs text-gray-400">Designed &amp; Developed by <span class="text-accent font-medium">NEO-SPARK Team</span></p>
+            <p class="text-xs text-gray-400">Designed &amp; Developed by <span class="font-bold text-gray-900">NEO-SPARK Team</span></p>
         </div>
 
     </div>
