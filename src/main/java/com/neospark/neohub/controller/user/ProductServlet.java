@@ -93,9 +93,9 @@ public class ProductServlet extends HttpServlet {
             // if offset if 1, then it will skip 1 and start from 2 
             int offset = (page - 1) * PAGE_SIZE;
 
-            List<Product>  products = productDao.getProductsPaginated(offset, PAGE_SIZE, keyword, categoryId, sortBy, minPrice, maxPrice);
+            List<Product>  products = productDao.getProductsPaginated(offset, PAGE_SIZE, keyword, categoryId, sortBy, minPrice, maxPrice,false);
 
-            int totalProducts = productDao.getProductCount(keyword, categoryId, minPrice, maxPrice);
+            int totalProducts = productDao.getProductCount(keyword, categoryId, minPrice, maxPrice,false);
 
             int totalPages = totalProducts / PAGE_SIZE;
             if (totalProducts % PAGE_SIZE != 0) {
