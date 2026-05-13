@@ -2,7 +2,9 @@ package com.neospark.neohub.controller.user;
 
 import com.neospark.neohub.dao.*;
 import com.neospark.neohub.model.*;
+import com.neospark.neohub.utils.SessionUtil;
 
+import jakarta.mail.Session;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -34,7 +36,7 @@ public class CheckoutServlet extends HttpServlet {
         }
 
         if ("true".equals(request.getParameter("removePromo"))) {
-            request.getSession().removeAttribute("appliedPromoCode");
+            SessionUtil.removeAttribute(request, "appliedPromoCode");
             response.sendRedirect(request.getContextPath() + "/checkout");
             return;
         }
@@ -67,7 +69,7 @@ public class CheckoutServlet extends HttpServlet {
             } else if (promoCode.getExpiryDate().isBefore(LocalDate.now())) {
                 request.setAttribute("promoError", "This promo code has expired.");
             } else {
-                request.getSession().setAttribute("appliedPromoCode", promoCode);
+                SessionUtil.setAttribute(request, "appliedPromoCode", promoCode);
                 request.setAttribute("promoSuccess",
                         promoCode.getDiscountPercent() + "% discount applied successfully!");
             }
@@ -86,11 +88,11 @@ public class CheckoutServlet extends HttpServlet {
         }
         double shippingCharge = 100.00;
         double discountAmount = 0.0;
-        PromoCode promoCode = (PromoCode) request.getSession().getAttribute("appliedPromoCode");
-    
+        PromoCode promoCode = (PromoCode) SessionUtil.getAttribute(request, "appliedPromoCode");
+    // validating promocode right or wrong because it should be checked before applying discount everytime
         if (promoCode != null) {
             if (!promoCode.isActive() || promoCode.getExpiryDate().isBefore(LocalDate.now())) {
-                request.getSession().removeAttribute("appliedPromoCode");
+                SessionUtil.removeAttribute(request, "appliedPromoCode");
                 promoCode = null;
             }
         }

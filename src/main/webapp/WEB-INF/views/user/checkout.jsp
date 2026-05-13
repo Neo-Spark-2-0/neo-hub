@@ -45,6 +45,9 @@
                                     <c:if test="${not empty user.city}">${user.city}, </c:if>
                                     <c:if test="${not empty user.district}">${user.district}, </c:if>
                                     <c:if test="${not empty user.province}">${user.province}</c:if>
+                                    <br>
+                                    Near:
+                                    <c:if test="${not empty user.landmark}">${user.landmark}</c:if>
                                 </p>
                             </div>
                         </div>

@@ -109,6 +109,20 @@ public class CartDaoImpl implements CartDao {
             return false;
         }
     }
+    @Override
+    public int getCartQuantity(int userId, int productId) {
+        String sql = "SELECT quantity FROM cart WHERE user_id = ? AND product_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, productId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getInt("quantity");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0; 
+    }
 
 
 

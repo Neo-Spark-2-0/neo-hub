@@ -25,6 +25,29 @@ public class CartServlet extends HttpServlet {
         User user = (User) request.getSession().getAttribute("user");
         List<Cart> cartItems = cartDao.getCartByUser(user.getId());
 
+
+// this block of code i ve add because if user added some product to cart and after that product got out of stock or deleted by admin then also the stock not updated in cart 
+        boolean adjusted = false;
+        for (Cart item : cartItems) {
+        Product product = productDao.getProductById(item.getProductId());
+        if (product == null || !product.isActive()) {
+            cartDao.removeFromCart(user.getId(), item.getProductId());
+            adjusted = true;
+            continue;
+        }
+        int currentStock = product.getStock();
+        if (item.getQuantity() > currentStock) {
+            if (currentStock <= 0) {
+                cartDao.removeFromCart(user.getId(), item.getProductId());
+            } else {
+                cartDao.updateQuantity(user.getId(), item.getProductId(), currentStock);
+            }
+            adjusted = true;
+        }
+    }
+
+
+
         double grandTotal = 0.0;
         for (Cart item : cartItems) {
             double price = (item.getProductDiscountPrice() > 0) ? item.getProductDiscountPrice() : item.getProductPrice();
@@ -68,6 +91,16 @@ public class CartServlet extends HttpServlet {
                     response.setStatus(422);
                 } else {
                     response.sendRedirect(request.getContextPath() + "/product-detail?id=" + productId + "&error=outofstock");
+                }
+                return;
+            }
+            int currentCartQty = cartDao.getCartQuantity(user.getId(), productId);
+            int newTotalQty = currentCartQty + quantity;
+            if (newTotalQty > product.getStock()) {
+                if (isHtmx) {
+                    response.setStatus(422);
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/product-detail?id=" + productId + "&error=exceedsstock");
                 }
                 return;
             }

@@ -11,4 +11,5 @@ public interface CartDao {
     int getCartItemCount(int userId);
     boolean removeFromCart(int userId, int productId);
     boolean clearCart(int userId);
+    int getCartQuantity(int userId, int productId);
 }
