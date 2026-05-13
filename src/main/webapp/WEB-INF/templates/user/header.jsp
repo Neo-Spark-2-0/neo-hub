@@ -117,10 +117,12 @@
                                class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                                 <i class="fa fa-user text-xs text-gray-400 w-4 text-center"></i> Profile
                             </a>
-                            <a href="${pageContext.request.contextPath}/order-history"
+                            <c:if test="${sessionScope.user.role eq 'USER'}">
+                                <a href="${pageContext.request.contextPath}/order-history"
                                class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors">
                                 <i class="fa fa-box text-xs text-gray-400 w-4 text-center"></i> My Orders
                             </a>
+                            </c:if>
                             <div class="h-[0.5px] bg-gray-200 my-1"></div>
                             <a href="#"
                                class="flex items-center gap-2 px-4 py-2 text-sm text-danger hover:bg-red-50 transition-colors"

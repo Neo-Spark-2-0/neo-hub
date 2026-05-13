@@ -22,19 +22,17 @@
                     <p class="text-xs font-bold uppercase text-gray-900 mb-1 tracking-wider">Shop</p>
                     <a href="${pageContext.request.contextPath}/products"
                        class="text-gray-500 hover:text-accent hover:translate-x-0.5 transition-all duration-200">All Products</a>
-                    <a href="${pageContext.request.contextPath}/products?category=boards"
-                       class="text-gray-500 hover:text-accent hover:translate-x-0.5 transition-all duration-200">Boards</a>
-                    <a href="${pageContext.request.contextPath}/products?category=sensors"
-                       class="text-gray-500 hover:text-accent hover:translate-x-0.5 transition-all duration-200">Sensors</a>
-                    <a href="${pageContext.request.contextPath}/products?category=kits"
-                       class="text-gray-500 hover:text-accent hover:translate-x-0.5 transition-all duration-200">IoT Kits</a>
+                    <a href="${pageContext.request.contextPath}/products?sortBy=newest"
+                       class="text-gray-500 hover:text-accent hover:translate-x-0.5 transition-all duration-200">Newest</a>
+                    <a href="${pageContext.request.contextPath}/products?featured=true"
+                       class="text-gray-500 hover:text-accent hover:translate-x-0.5 transition-all duration-200">Featured</a>
                 </div>
 
                 <div class="flex flex-col gap-2">
                     <p class="text-xs font-bold uppercase text-gray-900 mb-1 tracking-wider">Account</p>
                     <a href="${pageContext.request.contextPath}/profile"
                        class="text-gray-500 hover:text-accent hover:translate-x-0.5 transition-all duration-200">Profile</a>
-                    <a href="${pageContext.request.contextPath}/orders"
+                    <a href="${pageContext.request.contextPath}/order-history"
                        class="text-gray-500 hover:text-accent hover:translate-x-0.5 transition-all duration-200">My Orders</a>
                     <a href="${pageContext.request.contextPath}/cart"
                        class="text-gray-500 hover:text-accent hover:translate-x-0.5 transition-all duration-200">Cart</a>

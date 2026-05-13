@@ -32,7 +32,7 @@
             </c:when>
             <c:otherwise>
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <!-- Cart items table (spans 2 cols) -->
+                    <!-- main  cart items table  -->
                     <div class="lg:col-span-2 bg-white rounded-2xl border border-gray-200 overflow-hidden">
                         <div class="overflow-x-auto">
                             <table class="w-full text-sm">
@@ -96,8 +96,8 @@
                         </div>
                     </div>
 
-                    <!-- Order summary (sidebar) -->
-                    <div class="bg-white rounded-2xl border border-gray-200 p-6 h-fit sticky top-4">
+                    <!-- right section for summary and checkout  -->
+                    <div class="bg-white rounded-2xl border border-gray-200 p-6">
                         <h2 class="text-lg font-bold text-accent mb-4">Order Summary</h2>
                         <div class="space-y-3 text-sm">
                             <div class="flex justify-between">
@@ -132,5 +132,40 @@
     </main>
 
     <jsp:include page="/WEB-INF/templates/user/footer.jsp" />
+    <script>
+    window.addEventListener('load', () => {
+        const params = new URLSearchParams(window.location.search);
+
+        if (params.has('success')) {
+            const successType = params.get('success');
+            let message = '';
+            if (successType === 'added' || successType === 'updated') {
+                message = 'Cart updated successfully!';
+            } else if (successType === 'removed') {
+                message = 'Item removed from cart.';
+            } else {
+                message = 'Cart updated successfully!';
+            }
+            showToast(message, 'success');
+        }
+
+        if (params.has('error')) {
+            const messages = {
+                empty: 'Quantity cannot be empty.',
+                invalid: 'Please enter a valid number.',
+                stock: 'Quantity exceeds available stock.',
+                product: 'Product no longer exists.',
+                notfound: 'Product no longer exists.'
+            };
+            const error = params.get('error');
+            showToast(messages[error] || 'An error occurred.', 'error');
+        }
+
+        // removing param from url
+        if (params.toString()) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    });
+</script>
 </body>
 </html>

@@ -14,27 +14,14 @@
 <main class="w-[90vw] mx-auto py-10">
 
     <div class="mb-6">
-        <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">Step 2 of 2</p>
         <h1 class="text-2xl md:text-3xl font-bold text-accent">Checkout</h1>
     </div>
-
-    <!-- Error from promo -->
-    <c:if test="${not empty promoError}">
-        <div class="mb-4 bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-xl">
-            <i class="fa-solid fa-circle-exclamation mr-2"></i>${promoError}
-        </div>
-    </c:if>
-    <c:if test="${not empty promoSuccess}">
-        <div class="mb-4 bg-green-50 border border-green-200 text-green-600 text-sm px-4 py-3 rounded-xl">
-            <i class="fa-solid fa-circle-check mr-2"></i>${promoSuccess}
-        </div>
-    </c:if>
 
     <div class="flex flex-col lg:flex-row gap-8">
 
         <div class="flex-1 flex flex-col gap-5">
 
-            <!-- Delivery Address -->
+            <!-- address section -->
             <div class="bg-primary border border-gray-200 rounded-2xl p-6">
                 <div class="flex items-center justify-between mb-4">
                     <h3 class="text-sm font-bold text-accent">Delivery Address</h3>
@@ -45,9 +32,9 @@
                 </div>
 
                 <c:choose>
-                    <c:when test="${not empty user.street || not empty user.city}">
+                    <c:when test="${not empty user.street || not empty user.city || not empty user.district || not empty user.province}">
                         <div class="flex items-start gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                            <div class="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center  mt-0.5">
                                 <i class="fa-solid fa-location-dot text-accent text-sm"></i>
                             </div>
                             <div>
@@ -77,7 +64,7 @@
                 </c:choose>
             </div>
 
-            <!-- Promo Code -->
+            <!-- promo code section -->
             <div class="bg-primary border border-gray-200 rounded-2xl p-6">
                 <h3 class="text-sm font-bold text-accent mb-4">Promo Code</h3>
                 <form action="${pageContext.request.contextPath}/checkout" method="post"
@@ -111,7 +98,7 @@
                 </c:if>
             </div>
 
-            <!-- Payment Method -->
+            <!-- payment method section -->
             <div class="bg-primary border border-gray-200 rounded-2xl p-6">
                 <h3 class="text-sm font-bold text-accent mb-4">Payment Method</h3>
 
@@ -121,39 +108,32 @@
 
                     <div class="flex flex-col gap-3">
 
-                        <!-- Cash on Delivery -->
-                        <label class="flex items-center gap-4 border border-gray-200 rounded-xl p-4 cursor-pointer hover:border-accent transition has-[:checked]:border-accent has-[:checked]:bg-accent/5"
+                        <!-- cash -->
+                        <label class="flex items-center gap-4 border border-gray-200 rounded-xl p-4 cursor-pointer hover:border-accent transition"
                                id="codLabel">
                             <input type="radio" name="paymentMethod" value="COD"
                                    id="codRadio" checked
-                                   class="accent-accent"
-                                   onchange="togglePaymentUI()">
+                                   class="accent-accent">
                             <div class="flex items-center gap-3 flex-1">
-                                <div class="w-9 h-9 rounded-xl bg-gray-100 flex items-center justify-center">
-                                    <i class="fa-solid fa-money-bill-wave text-green-600 text-sm"></i>
+                                <div class="w-9 h-9 rounded-xl bg-green-50 flex justify-center items-center">
+                                    <i class="fa-solid fa-money-bill text-green-600"></i>
                                 </div>
                                 <div>
                                     <p class="text-sm font-semibold text-accent">Cash on Delivery</p>
-                                    <p class="text-xs text-gray-400">Pay when your order arrives</p>
+                                    <p class="text-xs text-gray-400">Pay with cash upon delivery</p>
                                 </div>
                             </div>
                         </label>
 
-                        <!-- Khalti -->
-                        <label class="flex items-center gap-4 border border-gray-200 rounded-xl p-4 cursor-pointer hover:border-accent transition has-[:checked]:border-accent has-[:checked]:bg-accent/5"
+                        <!-- khalti -->
+                        <label class="flex items-center gap-4 border border-gray-200 rounded-xl p-4 cursor-pointer hover:border-accent transition"
                                id="khaltiLabel">
                             <input type="radio" name="paymentMethod" value="KHALTI"
                                    id="khaltiRadio"
-                                   class="accent-accent"
-                                   onchange="togglePaymentUI()">
+                                   class="accent-accent">
                             <div class="flex items-center gap-3 flex-1">
-                                <div class="w-9 h-9 rounded-xl bg-purple-50 flex items-center justify-center">
-                                    <!-- Khalti purple icon -->
-                                    <svg width="20" height="20" viewBox="0 0 40 40" fill="none">
-                                        <rect width="40" height="40" rx="8" fill="#5C2D91"/>
-                                        <text x="50%" y="55%" dominant-baseline="middle" text-anchor="middle"
-                                              fill="white" font-size="18" font-weight="bold">K</text>
-                                    </svg>
+                            <div class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center">
+                                <i class="fa-solid fa-paper-plane text-[#DC0019]"></i>
                                 </div>
                                 <div>
                                     <p class="text-sm font-semibold text-accent">Khalti Wallet</p>
@@ -161,30 +141,15 @@
                                 </div>
                             </div>
                         </label>
-
                     </div>
 
-                    <!-- Khalti info box — shown when Khalti selected -->
-                    <div id="khaltiInfo"
-                         class="hidden mt-4 bg-purple-50 border border-purple-200 rounded-xl p-4">
-                        <div class="flex items-start gap-3">
-                            <i class="fa-solid fa-circle-info text-purple-500 mt-0.5"></i>
-                            <div>
-                                <p class="text-sm font-semibold text-purple-700">Pay via Khalti</p>
-                                <p class="text-xs text-purple-600 mt-1">
-                                    You will be redirected to Khalti's secure payment page.
-                                    After payment, you'll be brought back here automatically.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Place Order Button -->
+                    <!-- place order button -->
                     <button type="submit"
-                            id="placeOrderBtn"
+                            id="placeOrderButton"
                             class="mt-5 w-full bg-accent text-white text-sm font-bold py-3.5 rounded-xl hover:opacity-90 transition flex items-center justify-center gap-2">
                         <i class="fa-solid fa-lock text-xs"></i>
-                        <span id="btnText">Place Order — Rs. <fmt:formatNumber value="${total}" pattern="#,##0.00"/></span>
+                        <span id="btnText">Place Order - Rs. <fmt:formatNumber value="${total}" pattern="#,##0.00"/></span>
                     </button>
 
                     <p class="text-center text-xs text-gray-400 mt-3">
@@ -197,23 +162,34 @@
 
         </div>
 
-        <div class="w-full lg:w-80 flex-shrink-0">
-            <div class="bg-primary border border-gray-200 rounded-2xl p-6 sticky top-4">
+
+
+        <!-- summary order -->
+        <div class="w-full lg:w-80 ">
+            <div class="bg-primary border border-gray-200 rounded-2xl p-6">
                 <h3 class="text-sm font-bold text-accent mb-5">Order Summary</h3>
 
-                <!-- Cart Items -->
+                <!-- items -->
                 <div class="flex flex-col gap-4 mb-5">
                     <c:forEach var="item" items="${cartItems}">
                         <div class="flex items-center gap-3">
-                            <img src="${pageContext.request.contextPath}/uploads/${item.productImage}"
-                                 alt="${item.productName}"
-                                 class="w-12 h-12 rounded-xl object-cover border border-gray-100 flex-shrink-0"
-                                 onerror="this.src='${pageContext.request.contextPath}/static/images/placeholder.png'">
+                            <c:choose>
+                                <c:when test="${not empty item.productImage}">
+                                    <img src="${pageContext.request.contextPath}/uploads/${item.productImage}"
+                                    alt="${item.productName}"
+                                    class="w-12 h-12 rounded-xl object-cover border border-gray-100">
+                                </c:when>
+                                <c:otherwise>
+                                    <img src="${pageContext.request.contextPath}/static/images/product-fallback.jpg"
+                                    alt="${item.productName}"
+                                    class="w-12 h-12 rounded-xl object-cover border border-gray-100">
+                                </c:otherwise>
+                            </c:choose>
                             <div class="flex-1 min-w-0">
                                 <p class="text-xs font-semibold text-accent truncate">${item.productName}</p>
                                 <p class="text-xs text-gray-400 mt-0.5">Qty: ${item.quantity}</p>
                             </div>
-                            <span class="text-xs font-bold text-accent flex-shrink-0">
+                            <span class="text-xs font-bold text-accent ">
                                 Rs. <fmt:formatNumber value="${item.productDiscountPrice > 0 ? item.productDiscountPrice * item.quantity : item.productPrice * item.quantity}" pattern="#,##0"/>
                             </span>
                         </div>
@@ -233,7 +209,7 @@
                         <div class="flex justify-between text-sm">
                             <span class="text-green-600">Discount (${sessionScope.appliedPromoCode.discountPercent}%)</span>
                             <span class="font-medium text-green-600">
-                                - Rs. <fmt:formatNumber value="${subTotal * sessionScope.appliedPromoCode.discountPercent / 100}" pattern="#,##0.00"/>
+                                Rs. <fmt:formatNumber value="${subTotal * sessionScope.appliedPromoCode.discountPercent / 100}" pattern="#,##0.00"/>
                             </span>
                         </div>
                     </c:if>
@@ -243,7 +219,7 @@
                     </div>
                 </div>
 
-                <!-- Back to Cart -->
+                <!-- back -->
                 <a href="${pageContext.request.contextPath}/cart"
                    class="mt-5 w-full block text-center text-sm text-gray-400 hover:text-accent transition py-2 border border-gray-200 rounded-xl">
                     <i class="fa-solid fa-arrow-left mr-1 text-xs"></i> Back to Cart
@@ -256,22 +232,15 @@
 
 <jsp:include page="/WEB-INF/templates/user/footer.jsp" />
 
+
 <script>
-function togglePaymentUI() {
-    const khaltiSelected = document.getElementById('khaltiRadio').checked;
-    const khaltiInfo     = document.getElementById('khaltiInfo');
-    const btnText        = document.getElementById('btnText');
-    const total          = '<fmt:formatNumber value="${total}" pattern="#,##0.00"/>';
+        <c:if test="${not empty promoError}">
+            showToast('<c:out value="${promoError}"/>', 'error');
+        </c:if>
 
-    if (khaltiSelected) {
-        khaltiInfo.classList.remove('hidden');
-        btnText.textContent = 'Pay with Khalti — Rs. ' + total;
-    } else {
-        khaltiInfo.classList.add('hidden');
-        btnText.textContent = 'Place Order — Rs. ' + total;
-    }
-}
+        <c:if test="${not empty promoSuccess}">
+            showToast('<c:out value="${promoSuccess}"/>', 'success');
+        </c:if>
 </script>
-
 </body>
 </html>

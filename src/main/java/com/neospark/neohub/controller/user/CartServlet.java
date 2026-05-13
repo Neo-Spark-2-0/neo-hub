@@ -29,9 +29,9 @@ public class CartServlet extends HttpServlet {
         for (Cart item : cartItems) {
             double price = (item.getProductDiscountPrice() > 0) ? item.getProductDiscountPrice() : item.getProductPrice();
             grandTotal += price * item.getQuantity();
-}
+        }
 
-        request.setAttribute("cartItems",  cartItems);
+        request.setAttribute("cartItems", cartItems);
         request.setAttribute("grandTotal", grandTotal);
 
         request.getRequestDispatcher("/WEB-INF/views/user/cart.jsp").forward(request, response);
@@ -55,13 +55,16 @@ public class CartServlet extends HttpServlet {
 
         if ("add".equals(action)) {
             int quantity = 1;
-            try { quantity = Integer.parseInt(request.getParameter("quantity")); } catch (NumberFormatException ignored) {}
+            try {
+                quantity = Integer.parseInt(request.getParameter("quantity"));
+            } catch (NumberFormatException e) {
+                // default is already set to 1
+            }
 
             Product product = productDao.getProductById(productId);
 
             if (product == null || !product.isActive() || product.getStock() < quantity) {
                 if (isHtmx) {
-                    // Return 422 — HTMX treats non-2xx as failed, JS shows error toast
                     response.setStatus(422);
                 } else {
                     response.sendRedirect(request.getContextPath() + "/product-detail?id=" + productId + "&error=outofstock");
@@ -76,13 +79,14 @@ public class CartServlet extends HttpServlet {
             cartDao.addToCart(cart);
 
             if (isHtmx) {
-                // Get current quantity in cart to show correct number
                 List<Cart> userCart = cartDao.getCartByUser(user.getId());
-                int currentQty = userCart.stream()
-                        .filter(c -> c.getProductId() == productId)
-                        .mapToInt(Cart::getQuantity)
-                        .findFirst()
-                        .orElse(quantity);
+                int currentQty = quantity;
+                for (Cart item : userCart) {
+                    if (item.getProductId() == productId) {
+                        currentQty = item.getQuantity();
+                        break;
+                    }
+                }
 
                 int maxStock = product.getStock();
                 String contextPath = request.getContextPath();
@@ -96,39 +100,79 @@ public class CartServlet extends HttpServlet {
             }
 
         } else if ("update".equals(action)) {
-            int quantity = Integer.parseInt(request.getParameter("quantity"));
-            if (quantity <= 0) {
-                cartDao.removeFromCart(user.getId(), productId);
+            String quantityParam = request.getParameter("quantity");
 
+            if (quantityParam == null || quantityParam.trim().isEmpty()) {
+                if (isHtmx) {
+                    response.setStatus(422);
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/cart?error=empty");
+                }
+                return;
+            }
+
+            int quantity;
+            try {
+                quantity = Integer.parseInt(quantityParam);
+            } catch (NumberFormatException e) {
+                if (isHtmx) {
+                    response.setStatus(422);
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/cart?error=invalid");
+                }
+                return;
+            }
+
+            // getting product to check stock 
+            Product product = productDao.getProductById(productId);
+            if (product == null) {
+                cartDao.removeFromCart(user.getId(), productId);
                 if (isHtmx) {
                     response.setContentType("text/html;charset=UTF-8");
-                    response.setStatus(HttpServletResponse.SC_OK);
                     PrintWriter out = response.getWriter();
                     out.println(buildAddToCartHtml(productId, request.getContextPath()));
                 } else {
-                    response.sendRedirect(request.getContextPath() + "/cart");
+                    response.sendRedirect(request.getContextPath() + "/cart?error=notfound");
                 }
-            } else {
-                cartDao.updateQuantity(user.getId(), productId, quantity);
+                return;
+            }
 
+            // validating quantity
+            if (quantity <= 0) {
+                cartDao.removeFromCart(user.getId(), productId);
                 if (isHtmx) {
-                    Product product = productDao.getProductById(productId);
-                    int maxStock = product != null ? product.getStock() : 99;
                     response.setContentType("text/html;charset=UTF-8");
-                    response.setStatus(HttpServletResponse.SC_OK);
                     PrintWriter out = response.getWriter();
-                    out.println(buildQtyControlHtml(productId, quantity, maxStock, request.getContextPath()));
+                    out.println(buildAddToCartHtml(productId, request.getContextPath()));
                 } else {
-                    response.sendRedirect(request.getContextPath() + "/cart");
+                    response.sendRedirect(request.getContextPath() + "/cart?error=notfound");
                 }
+                return;
+            }
+            if (quantity > product.getStock()) {
+                if (isHtmx) {
+                    response.setStatus(422);
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/cart?error=stock");
+                }
+                return;
+            }
+            cartDao.updateQuantity(user.getId(), productId, quantity);
+
+            if (isHtmx) {
+                int maxStock = product.getStock();
+                response.setContentType("text/html;charset=UTF-8");
+                PrintWriter out = response.getWriter();
+                out.println(buildQtyControlHtml(productId, quantity, maxStock, request.getContextPath()));
+            } else {
+                response.sendRedirect(request.getContextPath() + "/cart?success=updated");
             }
 
         } else if ("remove".equals(action)) {
             cartDao.removeFromCart(user.getId(), productId);
-            response.sendRedirect(request.getContextPath() + "/cart");
+            response.sendRedirect(request.getContextPath() + "/cart?success=removed");
         }
     }
-
 
     private String buildQtyControlHtml(int productId, int qty, int maxStock, String contextPath) {
         return
@@ -138,7 +182,6 @@ public class CartServlet extends HttpServlet {
                     "hx-vals='{\"action\":\"update\",\"productId\":\"" + productId + "\",\"quantity\":\"" + (qty - 1) + "\"}' " +
                     "hx-target='#cartArea-" + productId + "' " +
                     "hx-swap='innerHTML' " +
-                    "hx-on::after-request='onCartAdded(event)' " +
                     "class='w-7 h-7 rounded-lg bg-gray-100 text-accent font-bold text-base hover:bg-gray-200 transition flex items-center justify-center'>" +
                     "−" +
                 "</button>" +
@@ -149,14 +192,12 @@ public class CartServlet extends HttpServlet {
                     "hx-vals='{\"action\":\"update\",\"productId\":\"" + productId + "\",\"quantity\":\"" + (qty + 1) + "\"}' " +
                     "hx-target='#cartArea-" + productId + "' " +
                     "hx-swap='innerHTML' " +
-                    "hx-on::after-request='onCartAdded(event)' " +
                     "class='w-7 h-7 rounded-lg bg-accent text-white font-bold text-base hover:opacity-90 transition flex items-center justify-center" +
                     (qty >= maxStock ? " opacity-40 cursor-not-allowed" : "") + "'>" +
                     "+" +
                 "</button>" +
             "</div>";
     }
-
 
     private String buildAddToCartHtml(int productId, String contextPath) {
         return

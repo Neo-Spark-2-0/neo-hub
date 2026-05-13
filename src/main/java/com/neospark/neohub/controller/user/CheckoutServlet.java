@@ -79,27 +79,32 @@ public class CheckoutServlet extends HttpServlet {
     }
 
     private void buildCheckoutAttributes(HttpServletRequest request, User user, List<Cart> cartItems) {
-        double subTotal = cartItems.stream()
-                .mapToDouble(item -> (item.getProductDiscountPrice() > 0
-                        ? item.getProductDiscountPrice()
-                        : item.getProductPrice()) * item.getQuantity())
-                .sum();
-
+        double subTotal = 0.0;
+        for (Cart item : cartItems) {
+            double price = item.getProductDiscountPrice() > 0 ? item.getProductDiscountPrice() : item.getProductPrice();
+            subTotal += price * item.getQuantity();
+        }
         double shippingCharge = 100.00;
         double discountAmount = 0.0;
-
         PromoCode promoCode = (PromoCode) request.getSession().getAttribute("appliedPromoCode");
+    
+        if (promoCode != null) {
+            if (!promoCode.isActive() || promoCode.getExpiryDate().isBefore(LocalDate.now())) {
+                request.getSession().removeAttribute("appliedPromoCode");
+                promoCode = null;
+            }
+        }
         if (promoCode != null) {
             discountAmount = subTotal * (promoCode.getDiscountPercent() / 100);
         }
 
         double total = subTotal + shippingCharge - discountAmount;
 
-        request.setAttribute("cartItems",      cartItems);
-        request.setAttribute("subTotal",       subTotal);
+        request.setAttribute("cartItems", cartItems);
+        request.setAttribute("subTotal", subTotal);
         request.setAttribute("shippingCharge", shippingCharge);
         request.setAttribute("discountAmount", discountAmount);
-        request.setAttribute("total",          total);
-        request.setAttribute("user",           user);
+        request.setAttribute("total", total);
+        request.setAttribute("user", user);
     }
 }
