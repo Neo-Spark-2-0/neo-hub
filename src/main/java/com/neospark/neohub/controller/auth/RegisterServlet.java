@@ -8,6 +8,7 @@ import com.neospark.neohub.dao.UserDaoImpl;
 import com.neospark.neohub.model.User;
 import com.neospark.neohub.utils.EmailService;
 import com.neospark.neohub.utils.PasswordUtil;
+import com.neospark.neohub.utils.SessionUtil;
 import com.neospark.neohub.utils.ValidationUtil;
 
 import jakarta.servlet.ServletException;
@@ -15,6 +16,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
@@ -84,7 +86,9 @@ public class RegisterServlet extends HttpServlet {
         String token = UUID.randomUUID().toString();
         userDao.saveEmailToken(email, token);  
         EmailService.sendVerificationEmail(email, fullName, token);
-        request.setAttribute("success", "Registration successful! Please check your email to verify your account.");
-        request.getRequestDispatcher("/WEB-INF/views/user/registration.jsp").forward(request, response);
+
+        // storing flash message in session to show in login page
+        SessionUtil.setAttribute(request, "registerSuccessFlashMessage", "Registration successful! Please verify your Email.");
+        response.sendRedirect(request.getContextPath() + "/login");
     }
 }

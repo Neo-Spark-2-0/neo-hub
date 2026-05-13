@@ -58,7 +58,7 @@
               <a href="${pageContext.request.contextPath}/profile"
                    class="px-3 py-2 rounded-lg font-medium bg-gray-900 text-white">Profile</a>
             <c:if test="${user.role ne 'ADMIN'}">
-              <a href="${pageContext.request.contextPath}/orders"
+              <a href="${pageContext.request.contextPath}/order-history"
                    class="px-3 py-2 rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">Orders</a>
             </c:if>
             <div class="w-full h-[0.5px] bg-gray-300 my-2"></div>

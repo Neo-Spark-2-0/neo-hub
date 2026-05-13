@@ -1,6 +1,5 @@
 package com.neospark.neohub.utils;
 
-
 public class EmailTemplate {
 
     private static String baseTemplate(String content) {
@@ -24,7 +23,7 @@ public class EmailTemplate {
                     }
                     .wrap {
                         max-width: 580px;
-                        width: 100%;
+                        width: 100%%;
                         margin: 40px auto;
                         background: #ffffff;
                         border: 1px solid #e0e0e0;
@@ -104,8 +103,8 @@ public class EmailTemplate {
                         display: inline-block;
                         margin-top: 24px;
                         padding: 11px 24px;
-                        background: #1a1a1a;
-                        color: #ffffff;
+                        background: #1a1a1a !important;
+                        color: #ffffff !important;
                         text-decoration: none;
                         border-radius: 4px;
                         font-size: 13px;
@@ -136,7 +135,7 @@ public class EmailTemplate {
                     /* mobile screen */
                     @media only screen and (max-width: 600px) {
                         .wrap {
-                            width: 100% !important;
+                            width: 100%% !important;
                             margin: 0 !important;
                             border-radius: 0 !important;
                         }
@@ -185,7 +184,7 @@ public class EmailTemplate {
             <h2>Verify your email address</h2>
             <p>Hi %s, thank you for creating a NEO-HUB account. Please confirm your email address by clicking the button below.</p>
             <p>This link will expire in <strong>24 hours</strong>.</p>
-            <a href="%s" class="btn">Verify Email</a>
+            <a href="%s" class="btn" style="background:#1a1a1a;color:#ffffff;text-decoration:none;">Verify Email</a>
             <hr class="divider"/>
             <p class="note">If you did not create an account, you can safely ignore this email.</p>
         """.formatted(name, verifyLink);
@@ -203,7 +202,7 @@ public class EmailTemplate {
                 <div class="info-row"><span class="info-label">Payment Status</span><span class="badge">Received</span></div>
             </div>
             <p>You can view and track your order from the Order History section of your account.</p>
-            <a href="http://localhost:8080/NEO-HUB/orders" class="btn">Track Order</a>
+            <a href="http://localhost:8080/NEO-HUB/order-history" class="btn" style="background:#1a1a1a;color:#ffffff;text-decoration:none;">Track Order</a>
         """.formatted(name, orderId, total);
         return baseTemplate(content);
     }
@@ -214,7 +213,7 @@ public class EmailTemplate {
             <h2>Reset your password</h2>
             <p>Hi %s, we received a request to reset your NEO-HUB account password. Click the button below to proceed.</p>
             <p>This link will expire in <strong>1 hour</strong>.</p>
-            <a href="%s" class="btn">Reset Password</a>
+            <a href="%s" class="btn" style="background:#1a1a1a;color:#ffffff;text-decoration:none;">Reset Password</a>
             <hr class="divider"/>
             <p class="note">If you did not request a password reset, you can safely ignore this email. Your password will not change.</p>
         """.formatted(name, resetLink);

@@ -70,9 +70,18 @@
 
 
 <script>
-        <c:if test="${not empty error}">
-            showToast("<c:out value='${error}' />", "error");
-        </c:if>
+    // error from login form or servlet
+    <c:if test="${not empty error}">
+        showToast("<c:out value='${error}' />", "error");
+    </c:if>
+
+    // flash message from servlet
+    <c:if test="${not empty sessionScope.registerSuccessFlashMessage}">
+        showToast("${sessionScope.registerSuccessFlashMessage}", "success");
+        <%
+            session.removeAttribute("registerSuccessFlashMessage");
+        %>
+    </c:if>
 </script>
 </body>
 </html>

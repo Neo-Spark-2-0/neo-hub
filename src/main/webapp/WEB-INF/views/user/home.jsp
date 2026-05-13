@@ -614,6 +614,14 @@ uri="jakarta.tags.fmt" %>
       <c:if test="${not empty success}">
           showToast("<c:out value='${success}'/>", "success");
       </c:if>
+
+        // flash message from servlet
+    <c:if test="${not empty sessionScope.loginSuccessFlashMessage}">
+        showToast("${sessionScope.loginSuccessFlashMessage}", "success");
+        <%
+            session.removeAttribute("loginSuccessFlashMessage");
+        %>
+    </c:if>
     </script>
   </body>
 </html>

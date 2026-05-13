@@ -59,7 +59,8 @@ public class LoginServlet extends HttpServlet {
         SessionUtil.setAttribute(req, "user", user);
         CookieUtil.addCookie(resp, "email", user.getEmail(), 7 * 24 * 60 * 60);
 
-        
+        // storing flash message in session to show in login page
+        SessionUtil.setAttribute(req, "loginSuccessFlashMessage", "Login successful! Welcome back.");
         resp.sendRedirect(req.getContextPath() + "/");
 
     }
