@@ -120,9 +120,9 @@
                                                  class="w-12 h-12 object-cover rounded-lg"/>
                                         </c:when>
                                         <c:otherwise>
-                                            <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center">
-                                                <i class="fa-solid fa-box text-gray-400"></i>
-                                            </div>
+                                           <img src="${pageContext.request.contextPath}/static/images/product-fallback.jpg" 
+                                                 alt="${item.productName}" 
+                                                 class="w-12 h-12 object-cover rounded-lg"/>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>

@@ -1,14 +1,20 @@
 package com.neospark.neohub.controller.user;
  
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.neospark.neohub.dao.CartDaoImpl;
 import com.neospark.neohub.dao.CategoryDao;
 import com.neospark.neohub.dao.CategoryDaoImpl;
 import com.neospark.neohub.dao.ProductDao;
 import com.neospark.neohub.dao.ProductDaoImpl;
+import com.neospark.neohub.model.Cart;
 import com.neospark.neohub.model.Category;
 import com.neospark.neohub.model.Product;
+import com.neospark.neohub.model.User;
+import com.neospark.neohub.utils.SessionUtil;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -103,7 +109,18 @@ public class ProductServlet extends HttpServlet {
             }
 
             List<Category> categories = categoryDao.getActiveCategories();
+            
 
+            // to show quantity of each product if alreayd added to cart prevously
+            Map<Integer, Integer> cartMap = new HashMap<>();
+            User user = (User) SessionUtil.getAttribute(request, "user");
+            if (user != null) {
+                List<Cart> cartItems = new CartDaoImpl().getCartByUser(user.getId());
+                for (Cart item : cartItems) {
+                    cartMap.put(item.getProductId(), item.getQuantity());
+                }
+            }
+            request.setAttribute("cartMap", cartMap);
             request.setAttribute("products", products);
             request.setAttribute("categories", categories);
             request.setAttribute("keyword", keyword);

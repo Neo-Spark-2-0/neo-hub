@@ -111,31 +111,60 @@
 
                     <!-- add to cart  -->
                     <div class="mt-3" id="cartArea-${product.id}">
+                        <c:set var="cartQty" value="${cartMap[product.id]}" />
                         <c:choose>
-                            <c:when test="${product.stock == 0}">
-                                <button disabled
+                            <%-- items already added to cart --%>
+                            <c:when test="${not empty sessionScope.user && cartQty != null && cartQty > 0}">
+                                <div class="flex items-center justify-between gap-1 border border-accent rounded-xl px-2 py-1">
+                                    <button 
+                                        hx-post="${pageContext.request.contextPath}/cart"
+                                        hx-vals='{"action":"update","productId":"${product.id}","quantity":"${cartQty - 1}"}'
+                                        hx-target="#cartArea-${product.id}"
+                                        hx-swap="innerHTML"
+                                        class="w-7 h-7 rounded-lg bg-gray-100 text-accent font-bold text-base hover:bg-gray-200 transition flex items-center justify-center">
+                                        −
+                                    </button>
+                                    <span class="text-xs font-bold text-accent px-1">${cartQty} in cart</span>
+                                    <button 
+                                        hx-post="${pageContext.request.contextPath}/cart"
+                                        hx-vals='{"action":"update","productId":"${product.id}","quantity":"${cartQty + 1}"}'
+                                        hx-target="#cartArea-${product.id}"
+                                        hx-swap="innerHTML"
+                                        ${cartQty >= product.stock ? 'disabled' : ''}
+                                        class="w-7 h-7 rounded-lg bg-accent text-white font-bold text-base hover:opacity-90 transition flex items-center justify-center${cartQty >= product.stock ? ' opacity-40 cursor-not-allowed' : ''}">
+                                        +
+                                    </button>
+                                </div>
+                            </c:when>
+
+                            <%-- item not in cart --%>
+                            <c:when test="${product.stock > 0}">
+                                <c:choose>
+                                    <c:when test="${not empty sessionScope.user}">
+                                        <button 
+                                            hx-post="${pageContext.request.contextPath}/cart"
+                                            hx-vals='{"action":"add","productId":"${product.id}","quantity":"1"}'
+                                            hx-target="#cartArea-${product.id}"
+                                            hx-swap="innerHTML"
+                                            class="w-full bg-accent text-white text-xs font-semibold py-2.5 rounded-xl hover:opacity-90 transition active:scale-95">
+                                            <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
+                                        </button>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="${pageContext.request.contextPath}/login" 
+                                        class="block w-full text-center bg-accent text-white text-xs font-semibold py-2.5 rounded-xl hover:opacity-90 transition">
+                                            <i class="fa-solid fa-cart-plus mr-1"></i> Login to Buy
+                                        </a>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:when>
+
+                            <%-- no stock --%>
+                            <c:otherwise>
+                                <button disabled 
                                         class="w-full bg-gray-100 text-gray-400 text-xs font-semibold py-2.5 rounded-xl cursor-not-allowed">
                                     Out of Stock
                                 </button>
-                            </c:when>
-
-            
-                            <c:when test="${not empty sessionScope.user}">
-                                <button
-                                    hx-post="${pageContext.request.contextPath}/cart"
-                                    hx-vals='{"action":"add","productId":"${product.id}","quantity":"1"}'
-                                    hx-target="#cartArea-${product.id}"
-                                    hx-swap="innerHTML"
-                                    class="w-full bg-accent text-white text-xs font-semibold py-2.5 rounded-xl hover:opacity-90 transition active:scale-95">
-                                    <i class="fa-solid fa-cart-plus mr-1"></i> Add to Cart
-                                </button>
-                            </c:when>
-
-                            <c:otherwise>
-                                <a href="${pageContext.request.contextPath}/login"
-                                   class="block w-full text-center bg-accent text-white text-xs font-semibold py-2.5 rounded-xl hover:opacity-90 transition">
-                                    <i class="fa-solid fa-cart-plus mr-1"></i> Login to Buy
-                                </a>
                             </c:otherwise>
                         </c:choose>
                     </div>
