@@ -271,9 +271,7 @@
                     required
                     placeholder="Write your message here..."
                     class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-gray-400 transition resize-none"
-                  >
-                  <c:out value='${param.message}'/></textarea
-                  >
+                  ><c:out value='${param.message}'/></textarea>
                 </div>
 
                 <div class="flex justify-end">
@@ -315,13 +313,16 @@
 
     <jsp:include page="/WEB-INF/templates/user/footer.jsp" />
 
-    <script>
-      <c:if test="${not empty contactSuccess}">
-          showToast("<c:out value='${contactSuccess}'/>", "success");
-      </c:if>
-      <c:if test="${not empty contactError}">
-          showToast("<c:out value='${contactError}'/>", "error");
-      </c:if>
-    </script>
+<script>
+    <c:if test="${not empty contactError}">
+        showToast("<c:out value='${contactError}'/>", "error");
+    </c:if>
+    
+    // flash messages from session and remove them
+    <c:if test="${not empty sessionScope.contactSuccess}">
+        showToast("<c:out value='${sessionScope.contactSuccess}'/>", "success");
+        <c:remove var="contactSuccess" scope="session" />
+    </c:if>
+</script>
   </body>
 </html>

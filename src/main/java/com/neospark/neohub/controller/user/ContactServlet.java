@@ -55,12 +55,12 @@ public class ContactServlet extends HttpServlet{
         contactMsg.setMessage(message.trim());
 
         boolean saved = contactDao.saveMessage(contactMsg);
-
         if (saved) {
-            req.setAttribute("contactSuccess", "Your message has been sent! We'll get back to you soon.");
+            SessionUtil.setAttribute(req, "contactSuccess", "Your message has been sent!");
+            resp.sendRedirect(req.getContextPath() + "/contact");
         } else {
             req.setAttribute("contactError", "Something went wrong. Please try again.");
+            req.getRequestDispatcher("/WEB-INF/views/user/contact.jsp").forward(req, resp);
         }
-        req.getRequestDispatcher("/WEB-INF/views/user/contact.jsp").forward(req, resp);
     }
 }
