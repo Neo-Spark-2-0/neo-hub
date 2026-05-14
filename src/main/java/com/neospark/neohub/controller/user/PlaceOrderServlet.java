@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-// ... (package and imports remain the same) ...
 @WebServlet("/place-order")
 public class PlaceOrderServlet extends HttpServlet {
 
@@ -34,15 +33,16 @@ public class PlaceOrderServlet extends HttpServlet {
             return;
         }
 
-        String paymentMethod = request.getParameter("paymentMethod"); // COD or KHALTI
+        String paymentMethod = request.getParameter("paymentMethod");
 
+        
         List<Cart> cartItems = cartDao.getCartByUser(user.getId());
-        if (cartItems.isEmpty()) {
+        if (cartItems == null || cartItems.isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/cart?error=empty");
             return;
         }
 
-        // --- Validate stock before creating order ---
+        // validating stock again before placing order
         for (Cart item : cartItems) {
             Product product = productDao.getProductById(item.getProductId());
             if (product == null || !product.isActive() || product.getStock() < item.getQuantity()) {
@@ -51,11 +51,15 @@ public class PlaceOrderServlet extends HttpServlet {
             }
         }
 
-        // --- Calculate totals ---
+        // total
         double subTotal = 0.0;
         for (Cart item : cartItems) {
-            double price = item.getProductDiscountPrice() > 0
-                    ? item.getProductDiscountPrice() : item.getProductPrice();
+            double price = 0.0;
+            if (item.getProductDiscountPrice() > 0) {
+                price = item.getProductDiscountPrice();
+            } else {
+                price = item.getProductPrice();
+            }
             subTotal += price * item.getQuantity();
         }
 
@@ -71,7 +75,8 @@ public class PlaceOrderServlet extends HttpServlet {
 
         double total = subTotal + shipping - discount;
 
-        // --- Create order (status = Pending) ---
+
+        // Creating order before payment because we need order id for both COD and Khalti to link order items and payment
         Order order = new Order();
         order.setUserId(user.getId());
         order.setSubTotalAmount(subTotal);
@@ -87,29 +92,36 @@ public class PlaceOrderServlet extends HttpServlet {
             return;
         }
 
-        // --- Get generated order ID ---
+        // getting users orders and picking order id for most recent order
         List<Order> userOrders = orderDao.getOrdersByUser(user.getId());
-        int orderId = (userOrders != null && !userOrders.isEmpty()) ? userOrders.get(0).getId() : -1;
+        int orderId = -1;
+        if (userOrders != null && !userOrders.isEmpty()) {
+            orderId = userOrders.get(0).getId();
+        }
         if (orderId == -1) {
             response.sendRedirect(request.getContextPath() + "/checkout?error=orderfailed");
             return;
         }
 
-        // --- Insert order items (without reducing stock) ---
+        // inserting order items but stock reduced and cart is cleared only after payment success 
         List<OrderItem> orderItems = new ArrayList<>();
         for (Cart item : cartItems) {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrderId(orderId);
             orderItem.setProductId(item.getProductId());
             orderItem.setQuantity(item.getQuantity());
-            double unitPrice = item.getProductDiscountPrice() > 0
-                    ? item.getProductDiscountPrice() : item.getProductPrice();
-            orderItem.setUnitPrice(unitPrice);
             orderItems.add(orderItem);
+            double unitPrice = 0.0; 
+            if (item.getProductDiscountPrice() > 0) {
+                unitPrice = item.getProductDiscountPrice();
+            } else {
+                unitPrice = item.getProductPrice();
+            }
+            orderItem.setUnitPrice(unitPrice);
         }
         orderItemDao.addOrderItems(orderItems);
 
-        // --- Create payment record (status = Pending) ---
+        // creating payment record
         Payment payment = new Payment();
         payment.setOrderId(orderId);
         payment.setMethod(paymentMethod);
@@ -117,28 +129,37 @@ public class PlaceOrderServlet extends HttpServlet {
         payment.setStatus("Pending");
         paymentDao.createPayment(payment);
 
-        // --- Clear promo from session (but NOT cart yet for Khalti) ---
+        // removing promocode after order placed
         SessionUtil.removeAttribute(request, "appliedPromoCode");
 
-        // --- Route based on payment method ---
+
+        // handling khalti and cash on delivery
         if ("KHALTI".equalsIgnoreCase(paymentMethod)) {
-            // Forward to Khalti initiation servlet
+            // in khalti stock and cart not cleared here because if payment failed it will be bad 
+            // it will be cleared in KhaltiPaymentServlet after payment success 
             request.setAttribute("orderId", orderId);
             request.getRequestDispatcher("/khalti/initiate").forward(request, response);
+
         } else {
-            // COD: reduce stock and clear cart immediately
             for (Cart item : cartItems) {
                 productDao.updateStock(item.getProductId(), item.getQuantity());
             }
             cartDao.clearCart(user.getId());
             orderDao.updateOrderStatus(orderId, "Confirmed");
             paymentDao.updatePaymentStatus(orderId, "Completed", null);
+
+            // sending mail 
             try {
-                EmailService.sendOrderConfirmationEmail(user.getEmail(), user.getFullName(),
-                        String.valueOf(orderId), String.format("%.2f", total));
+                EmailService.sendOrderConfirmationEmail(
+                        user.getEmail(),
+                        user.getFullName(),
+                        String.valueOf(orderId),
+                        String.format("%.2f", total)
+                );
             } catch (Exception e) {
-                System.out.println("Email sending failed: " + e.getMessage());
+                System.err.println("Order confirmation email failed for order " + orderId + ": " + e.getMessage());
             }
+
             response.sendRedirect(request.getContextPath() + "/order-success?orderId=" + orderId);
         }
     }

@@ -19,20 +19,19 @@ import java.util.List;
 @WebServlet("/order-success")
 public class OrderSuccessServlet extends HttpServlet {
 
-    private final OrderDao     orderDao     = new OrderDaoImpl();
+    private final OrderDao orderDao = new OrderDaoImpl();
     private final OrderItemDao orderItemDao = new OrderItemDaoImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-
         User user = (User) SessionUtil.getAttribute(request, "user");
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-
+        
         String idParam = request.getParameter("orderId");
 
         if (idParam == null || idParam.isEmpty()) {

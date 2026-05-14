@@ -57,7 +57,7 @@
                         <span class="text-gray-500">Payment Method:</span>
                         <c:choose>
                             <c:when test="${order.paymentMethod == 'Khalti'}">
-                                <span class="font-medium text-purple-600"><i class="fa-solid fa-wallet mr-1"></i> Khalti</span>
+                                <span class="font-medium text-red-600"><i class="fa-solid fa-paper-plane text-[#DC0019]"></i></i> Khalti</span>
                             </c:when>
                             <c:otherwise>
                                 <span class="font-medium text-green-600"><i class="fa-solid fa-money-bill-wave mr-1"></i> Cash on Delivery</span>

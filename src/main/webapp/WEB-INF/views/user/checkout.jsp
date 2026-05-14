@@ -114,7 +114,7 @@
                         <!-- cash -->
                         <label class="flex items-center gap-4 border border-gray-200 rounded-xl p-4 cursor-pointer hover:border-accent transition"
                                id="codLabel">
-                            <input type="radio" name="paymentMethod" value="COD"
+                            <input type="radio" name="paymentMethod" value="CashOnDelivery"
                                    id="codRadio" checked
                                    class="accent-accent">
                             <div class="flex items-center gap-3 flex-1">
@@ -244,6 +244,17 @@
         <c:if test="${not empty promoSuccess}">
             showToast('<c:out value="${promoSuccess}"/>', 'success');
         </c:if>
+
+        
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('error')) {
+            const messages = {
+                orderfailed: 'Failed to create order. Please try again.',
+            };
+        const error = params.get('error');
+        showToast(messages[error] || 'An error occurred.', 'error');
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
 </script>
 </body>
 </html>

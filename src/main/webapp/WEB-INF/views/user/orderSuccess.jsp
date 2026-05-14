@@ -17,10 +17,10 @@
     </jsp:include>
 
     <main class="w-[90vw] mx-auto my-10 md:my-20">
-        <div class="max-w-2xl mx-auto">
-            <!-- Success Card -->
+        <div class="max-w-[100%] lg:max-w-[60vw] mx-auto">
             <div class="bg-white rounded-2xl border border-gray-200 p-8 text-center">
-                <!-- Success Icon -->
+
+                <!-- icon tick  -->
                 <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
                     <i class="fa-solid fa-check text-green-600 text-3xl"></i>
                 </div>
@@ -28,7 +28,7 @@
                 <h1 class="text-2xl md:text-3xl font-bold text-accent mb-2">Order Placed Successfully!</h1>
                 <p class="text-gray-500 mb-6">Thank you for your purchase. Your order has been received.</p>
 
-                <!-- Order Info Box -->
+                <!--order id, delivery box -->
                 <div class="bg-gray-50 rounded-xl p-6 mb-6 text-left">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
@@ -40,7 +40,7 @@
                             <p class="text-lg font-semibold">
                                 <c:choose>
                                     <c:when test="${order.paymentMethod == 'Khalti'}">
-                                        <span class="text-purple-600"><i class="fa-solid fa-wallet mr-1"></i> Khalti Wallet</span>
+                                        <span class="text-red-600"><i class="fa-solid fa-paper-plane text-[#DC0019]"></i>  Khalti Wallet</span>
                                     </c:when>
                                     <c:otherwise>
                                         <span class="text-green-600"><i class="fa-solid fa-money-bill-wave mr-1"></i> Cash on Delivery</span>
@@ -52,9 +52,6 @@
                             <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Order Status</p>
                             <p class="text-lg font-semibold">
                                 <c:choose>
-                                    <c:when test="${order.orderStatus == 'Pending'}">
-                                        <span class="text-yellow-600"><i class="fa-solid fa-clock mr-1"></i> Pending</span>
-                                    </c:when>
                                     <c:when test="${order.orderStatus == 'Confirmed'}">
                                         <span class="text-green-600"><i class="fa-solid fa-circle-check mr-1"></i> Confirmed</span>
                                     </c:when>
@@ -71,7 +68,7 @@
                     </div>
                 </div>
 
-                <!-- Order Items Table -->
+                <!-- ordered items -->
                 <div class="border-t border-gray-200 pt-6 mb-6">
                     <h3 class="text-lg font-semibold text-accent mb-4 text-left">Order Items</h3>
                     <div class="overflow-x-auto">
@@ -102,7 +99,7 @@
                     </div>
                 </div>
 
-                <!-- Action Buttons -->
+                <!-- buttons -->
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
                     <a href="${pageContext.request.contextPath}/order-history" 
                        class="inline-flex items-center justify-center gap-2 bg-accent text-white px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition">

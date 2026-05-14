@@ -7,27 +7,36 @@ import com.neospark.neohub.utils.SessionUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
+
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.List;
 
+// Reusing same servlet for initiate and verification
 @WebServlet({"/khalti/initiate", "/khalti/verify"})
 public class KhaltiPaymentServlet extends HttpServlet {
 
-    // Use your actual Khalti secret key (test or live)
-    private static final String KHALTI_SECRET_KEY = "a215fd035f654fe8bb9cb1ded2ea1c86"; 
+    private static final String KHALTI_SECRET_KEY   = "a215fd035f654fe8bb9cb1ded2ea1c86";
     private static final String KHALTI_INITIATE_URL = "https://a.khalti.com/api/v2/epayment/initiate/";
     private static final String KHALTI_LOOKUP_URL   = "https://a.khalti.com/api/v2/epayment/lookup/";
 
-    private final OrderDao orderDao = new OrderDaoImpl();
-    private final PaymentDao paymentDao = new PaymentDaoImpl();
-    private final ProductDao productDao = new ProductDaoImpl();
-    private final CartDao cartDao = new CartDaoImpl();
+    // Single shared HttpClient — thread-safe, reuse across requests
+    private final HttpClient httpClient = HttpClient.newHttpClient();
+
+    private final OrderDao     orderDao     = new OrderDaoImpl();
+    private final PaymentDao   paymentDao   = new PaymentDaoImpl();
+    private final ProductDao   productDao   = new ProductDaoImpl();
+    private final CartDao      cartDao      = new CartDaoImpl();
     private final OrderItemDao orderItemDao = new OrderItemDaoImpl();
 
-    // -------------------- POST: Initiate Khalti Payment --------------------
+    // =========================================================================
+    // POST /khalti/initiate — forwarded here by PlaceOrderServlet
+    // =========================================================================
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -38,11 +47,12 @@ public class KhaltiPaymentServlet extends HttpServlet {
             return;
         }
 
-        // ---- FIX: Read orderId from request attribute (set by PlaceOrderServlet) OR parameter ----
-        String orderIdParam = (String) request.getAttribute("orderId");
-        if (orderIdParam == null || orderIdParam.trim().isEmpty()) {
-            orderIdParam = request.getParameter("orderId");
-        }
+        // PlaceOrderServlet sets orderId as Integer attribute — use String.valueOf() to avoid ClassCastException
+        Object orderIdAttr  = request.getAttribute("orderId");
+        String orderIdParam = (orderIdAttr != null)
+                ? String.valueOf(orderIdAttr)
+                : request.getParameter("orderId");
+
         if (orderIdParam == null || orderIdParam.trim().isEmpty()) {
             response.sendRedirect(request.getContextPath() + "/checkout?error=missing_order");
             return;
@@ -50,184 +60,201 @@ public class KhaltiPaymentServlet extends HttpServlet {
 
         int orderId;
         try {
-            orderId = Integer.parseInt(orderIdParam);
+            orderId = Integer.parseInt(orderIdParam.trim());
         } catch (NumberFormatException e) {
             response.sendRedirect(request.getContextPath() + "/checkout?error=invalid_order");
             return;
         }
 
+        // Security: verify order belongs to the logged-in user
         Order order = orderDao.getOrderById(orderId);
         if (order == null || order.getUserId() != user.getId()) {
             response.sendRedirect(request.getContextPath() + "/home");
             return;
         }
 
-        // Convert amount to paisa (1 Rs = 100 paisa)
+        // Khalti requires amount in paisa (Rs x 100)
         long amountInPaisa = (long) (order.getTotalAmount() * 100);
+
         String returnUrl = request.getScheme() + "://" + request.getServerName()
                 + ":" + request.getServerPort()
                 + request.getContextPath() + "/khalti/verify";
+
         String websiteUrl = request.getScheme() + "://" + request.getServerName()
                 + ":" + request.getServerPort() + request.getContextPath();
 
-        // Build JSON payload for initiation
-        String jsonBody = "{"
-                + "\"return_url\": \"" + returnUrl + "\","
-                + "\"website_url\": \"" + websiteUrl + "\","
-                + "\"amount\": " + amountInPaisa + ","
-                + "\"purchase_order_id\": \"ORDER-" + orderId + "\","
-                + "\"purchase_order_name\": \"NEO-HUB Order #" + orderId + "\","
-                + "\"customer_info\": {"
-                + "  \"name\": \"" + escapeJson(user.getFullName()) + "\","
-                + "  \"email\": \"" + escapeJson(user.getEmail()) + "\","
-                + "  \"phone\": \"" + escapeJson(user.getPhone() != null ? user.getPhone() : "") + "\""
-                + "}"
-                + "}";
+        // Build JSON payload using JSONObject — no manual string escaping needed
+        JSONObject customerInfo = new JSONObject();
+        customerInfo.put("name",  user.getFullName());
+        customerInfo.put("email", user.getEmail());
+        customerInfo.put("phone", user.getPhone() != null ? user.getPhone() : "");
 
-        String khaltiResponse = callKhaltiApi(KHALTI_INITIATE_URL, jsonBody);
+        JSONObject payload = new JSONObject();
+        payload.put("return_url",          returnUrl);
+        payload.put("website_url",         websiteUrl);
+        payload.put("amount",              amountInPaisa);
+        payload.put("purchase_order_id",   "ORDER-" + orderId);
+        payload.put("purchase_order_name", "NEO-HUB Order #" + orderId);
+        payload.put("customer_info",       customerInfo);
+
+        // Call Khalti initiate API
+        JSONObject khaltiResponse = callKhaltiApi(KHALTI_INITIATE_URL, payload.toString());
+
         if (khaltiResponse == null) {
-            response.sendRedirect(request.getContextPath() + "/order-failure?orderId=" + orderId + "&error=api");
+            System.err.println("Khalti API unreachable for order " + orderId);
+            orderDao.updateOrderStatus(orderId, "Cancelled");
+            paymentDao.updatePaymentStatus(orderId, "Failed", null);
+            response.sendRedirect(request.getContextPath()
+                    + "/order-failure?orderId=" + orderId + "&error=api");
             return;
         }
 
-        String paymentUrl = extractJsonValue(khaltiResponse, "payment_url");
-        String pidx = extractJsonValue(khaltiResponse, "pidx");
+        // Parse payment_url and pidx using JSONObject — clean and safe
+        String paymentUrl = khaltiResponse.optString("payment_url", null);
+        String pidx       = khaltiResponse.optString("pidx", null);
 
-        if (paymentUrl == null || paymentUrl.isEmpty()) {
-            System.err.println("Khalti initiation failed. Response: " + khaltiResponse);
-            response.sendRedirect(request.getContextPath() + "/order-failure?orderId=" + orderId + "&error=init");
+        if (paymentUrl == null || paymentUrl.trim().isEmpty()) {
+            System.err.println("Khalti initiation failed for order " + orderId
+                    + ". Response: " + khaltiResponse);
+            orderDao.updateOrderStatus(orderId, "Cancelled");
+            paymentDao.updatePaymentStatus(orderId, "Failed", null);
+            response.sendRedirect(request.getContextPath()
+                    + "/order-failure?orderId=" + orderId + "&error=init");
             return;
         }
 
-        // Store pidx and orderId in session for verification
-        request.getSession().setAttribute("khalti_pidx", pidx);
+        // Store pidx and orderId in session as fallback for doGet verification
+        request.getSession().setAttribute("khalti_pidx",    pidx);
         request.getSession().setAttribute("khalti_orderId", orderId);
+
+        // Redirect user to Khalti's hosted payment page
         response.sendRedirect(paymentUrl);
     }
 
-    // -------------------- GET: Verify Khalti Payment (Callback) --------------------
+    // =========================================================================
+    // GET /khalti/verify — Khalti redirects back here after user pays/cancels
+    // =========================================================================
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        String pidx = request.getParameter("pidx");
-        String status = request.getParameter("status");
-        String transactionId = request.getParameter("transaction_id");
+        String pidx            = request.getParameter("pidx");
+        String transactionId   = request.getParameter("transaction_id");
         String purchaseOrderId = request.getParameter("purchase_order_id");
 
-        // Parse orderId from purchase_order_id (most reliable)
+        // Primary: extract orderId from purchase_order_id ("ORDER-123")
         int orderId = -1;
         if (purchaseOrderId != null && purchaseOrderId.startsWith("ORDER-")) {
             try {
                 orderId = Integer.parseInt(purchaseOrderId.substring(6));
             } catch (NumberFormatException ignored) {}
         }
-        // Fallback to session value
+
+        // Fallback: read from session if URL param wasn't usable
         if (orderId == -1) {
-            Integer sessionOrderId = (Integer) request.getSession().getAttribute("khalti_orderId");
-            if (sessionOrderId != null) orderId = sessionOrderId;
+            Object sessionOrderId = request.getSession().getAttribute("khalti_orderId");
+            if (sessionOrderId != null) {
+                try {
+                    orderId = Integer.parseInt(String.valueOf(sessionOrderId));
+                } catch (NumberFormatException ignored) {}
+            }
         }
+
+        // Clean session regardless of outcome
+        request.getSession().removeAttribute("khalti_pidx");
+        request.getSession().removeAttribute("khalti_orderId");
+
         if (orderId == -1) {
             response.sendRedirect(request.getContextPath() + "/home");
             return;
         }
 
-        // Clean session
-        request.getSession().removeAttribute("khalti_pidx");
-        request.getSession().removeAttribute("khalti_orderId");
+        // ALWAYS verify with Khalti Lookup API — never trust callback params alone
+        JSONObject lookupPayload = new JSONObject();
+        lookupPayload.put("pidx", pidx != null ? pidx : "");
 
-        // --- Always verify with Khalti Lookup API (do not trust callback parameters alone) ---
-        String lookupBody = "{\"pidx\": \"" + pidx + "\"}";
-        String lookupResponse = callKhaltiApi(KHALTI_LOOKUP_URL, lookupBody);
+        JSONObject lookupResponse = callKhaltiApi(KHALTI_LOOKUP_URL, lookupPayload.toString());
+
         if (lookupResponse == null) {
+            System.err.println("Khalti lookup API unreachable for order " + orderId);
             paymentDao.updatePaymentStatus(orderId, "Pending", transactionId);
-            response.sendRedirect(request.getContextPath() + "/order-failure?orderId=" + orderId + "&error=verify");
+            response.sendRedirect(request.getContextPath()
+                    + "/order-failure?orderId=" + orderId + "&error=verify");
             return;
         }
 
-        String verifiedStatus = extractJsonValue(lookupResponse, "status");
-        String verifiedTransactionId = extractJsonValue(lookupResponse, "transaction_id");
+        // Parse verified status and transaction_id using JSONObject
+        String verifiedStatus        = lookupResponse.optString("status", "");
+        String verifiedTransactionId = lookupResponse.optString("transaction_id", null);
 
-        if ("Completed".equalsIgnoreCase(verifiedStatus)) {
-            // Payment successful: reduce stock, clear cart, update statuses
+        if ("Completed".equals(verifiedStatus)) {
+            // -----------------------------------------------------------------
+            // PAYMENT SUCCESS — safe to reduce stock and clear cart now
+            // -----------------------------------------------------------------
             List<OrderItem> items = orderItemDao.getItemsByOrderId(orderId);
             for (OrderItem item : items) {
                 productDao.updateStock(item.getProductId(), item.getQuantity());
             }
-            Order order = orderDao.getOrderById(orderId);
-            if (order != null) {
-                cartDao.clearCart(order.getUserId());
+
+            Order completedOrder = orderDao.getOrderById(orderId);
+            if (completedOrder != null) {
+                cartDao.clearCart(completedOrder.getUserId());
             }
+
             paymentDao.updatePaymentStatus(orderId, "Completed", verifiedTransactionId);
             orderDao.updateOrderStatus(orderId, "Confirmed");
+
             response.sendRedirect(request.getContextPath() + "/order-success?orderId=" + orderId);
+
         } else {
-            // Payment failed or pending – mark order as cancelled, stock and cart unchanged
+            // -----------------------------------------------------------------
+            // PAYMENT FAILED / CANCELLED — cancel order, leave stock + cart untouched
+            // Cart is untouched so the user can go back and retry
+            // -----------------------------------------------------------------
+            System.err.println("Khalti payment not completed for order " + orderId
+                    + ". Verified status: " + verifiedStatus);
+
             paymentDao.updatePaymentStatus(orderId, "Failed", verifiedTransactionId);
             orderDao.updateOrderStatus(orderId, "Cancelled");
-            response.sendRedirect(request.getContextPath() + "/order-failure?orderId=" + orderId);
+
+            response.sendRedirect(request.getContextPath()
+                    + "/order-failure?orderId=" + orderId + "&error=payment_failed");
         }
     }
 
-    // -------------------- Helper: Call Khalti API --------------------
-    private String callKhaltiApi(String apiUrl, String jsonBody) {
-        HttpURLConnection conn = null;
+    // =========================================================================
+    // Helper: POST to a Khalti API endpoint, return parsed JSONObject or null
+    // Uses java.net.http.HttpClient (same approach as sir's code)
+    // =========================================================================
+    private JSONObject callKhaltiApi(String apiUrl, String jsonBody) {
         try {
-            URL url = new URL(apiUrl);
-            conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Authorization", "Key " + KHALTI_SECRET_KEY);
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setDoOutput(true);
-            conn.setConnectTimeout(10000);
-            conn.setReadTimeout(10000);
-            try (OutputStream os = conn.getOutputStream()) {
-                os.write(jsonBody.getBytes(StandardCharsets.UTF_8));
+            HttpRequest httpRequest = HttpRequest.newBuilder()
+                    .uri(URI.create(apiUrl))
+                    .header("Content-Type", "application/json")
+                    .header("Authorization", "Key " + KHALTI_SECRET_KEY)
+                    .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
+                    .build();
+
+            HttpResponse<String> httpResponse =
+                    httpClient.send(httpRequest, HttpResponse.BodyHandlers.ofString());
+
+            String responseBody = httpResponse.body();
+            int    statusCode   = httpResponse.statusCode();
+
+            if (statusCode == 200) {
+                return new JSONObject(responseBody);
+            } else {
+                System.err.println("Khalti API error " + statusCode + ": " + responseBody);
+                return null;
             }
-            int responseCode = conn.getResponseCode();
-            InputStream is = (responseCode == HttpURLConnection.HTTP_OK)
-                    ? conn.getInputStream() : conn.getErrorStream();
-            if (is == null) return null;
-            StringBuilder sb = new StringBuilder();
-            try (BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
-                String line;
-                while ((line = br.readLine()) != null) sb.append(line);
-            }
-            return sb.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
+
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // restore interrupted flag — best practice
+            System.err.println("Khalti API call interrupted: " + e.getMessage());
             return null;
-        } finally {
-            if (conn != null) conn.disconnect();
+        } catch (Exception e) {
+            System.err.println("Khalti API call failed: " + e.getMessage());
+            return null;
         }
-    }
-
-    // -------------------- Helper: Extract a simple JSON value --------------------
-    private String extractJsonValue(String json, String key) {
-        String search = "\"" + key + "\"";
-        int keyIdx = json.indexOf(search);
-        if (keyIdx == -1) return null;
-        int colonIdx = json.indexOf(":", keyIdx);
-        if (colonIdx == -1) return null;
-        int start = colonIdx + 1;
-        while (start < json.length() && Character.isWhitespace(json.charAt(start))) start++;
-        if (json.charAt(start) == '"') {
-            int end = json.indexOf("\"", start + 1);
-            if (end == -1) return null;
-            return json.substring(start + 1, end);
-        } else {
-            int end = start;
-            while (end < json.length() && json.charAt(end) != ',' && json.charAt(end) != '}') end++;
-            return json.substring(start, end).trim();
-        }
-    }
-
-    // -------------------- Helper: Escape JSON strings --------------------
-    private String escapeJson(String s) {
-        if (s == null) return "";
-        return s.replace("\\", "\\\\")
-                .replace("\"", "\\\"")
-                .replace("\n", "\\n")
-                .replace("\r", "\\r");
     }
 }
