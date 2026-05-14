@@ -16,10 +16,10 @@
                         secondary: '#F5F5F7',
                         accent: '#1D1D1F',
                         dark: '#1F2937',
-                        danger:    '#EF4444',
+                        danger:    '#DC2626',
                         warning:   '#F59E0B',
                         info:      '#3B82F6',
-                        success:   '#22C55E', 
+                        success:   '#16A34A', 
                     },
                     fontFamily: {
                         poppins: ['Poppins', 'sans-serif']
@@ -67,8 +67,8 @@
             max-width: none !important;
             width: auto !important;
         }
-        .toast-success { background: #22C55E !important; }
-        .toast-error   { background: #EF4444 !important; }
+        .toast-success { background: #16A34A !important; }
+        .toast-error   { background: #DC2626 !important; }
         .toast-warning { background: #F59E0B !important; }
         .toast-info    { background: #3B82F6 !important; }
 
@@ -94,7 +94,7 @@
                 title:              { success: "Success", error: "Error", warning: "Warning", info: "Info" }[type] || "Notice",
                 text:               message,
                 confirmButtonText:  "OK",
-                confirmButtonColor: "#22C55E",
+                confirmButtonColor: "#16A34A",
                 customClass: {
                     popup:         "font-poppins rounded-xl border border-gray-200 shadow-sm",
                     title:         "text-base font-semibold",
