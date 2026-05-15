@@ -212,23 +212,7 @@ public class CategoryDaoImpl implements CategoryDao {
         return 0;
     }
 
-    @Override
-    public boolean isCategoryNameExists(String name) {
-    String sql = "SELECT COUNT(*) FROM categories WHERE LOWER(name) = LOWER(?)";
-    Connection conn = null;
-    try{
-        conn = DatabaseConnection.getConnection();
-        PreparedStatement stmt = conn.prepareStatement(sql);
-        stmt.setString(1, name);
-        ResultSet rs = stmt.executeQuery();
-        if (rs.next()) {
-            return rs.getInt(1) > 0;
-        }
-    } catch (SQLException e) {
-            System.out.println("Category not Found" + e.getMessage());
-        }
-        return false;
-    }
+
 
     private Category mapCategory(ResultSet rs) throws SQLException {
         Category category = new Category();

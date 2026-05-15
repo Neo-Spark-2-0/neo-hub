@@ -19,7 +19,4 @@ public interface CategoryDao {
     
     // dashboard to get category count
     int getTotalCategoryCount();
-    
-    // checking is category exist
-    boolean isCategoryNameExists(String name);
 }

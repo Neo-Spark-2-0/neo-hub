@@ -243,17 +243,4 @@ public class EmailTemplate {
     """.formatted(name, orderId, total, itemsHtml.toString());
     return baseTemplate(content);
     }
-
-    public static String passwordResetEmail(String name, String resetLink) {
-        String content = """
-            <p class="label">Password Reset</p>
-            <h2>Reset your password</h2>
-            <p>Hi %s, we received a request to reset your NEO-HUB account password. Click the button below to proceed.</p>
-            <p>This link will expire in <strong>1 hour</strong>.</p>
-            <a href="%s" class="btn" style="background:#1a1a1a;color:#ffffff;text-decoration:none;">Reset Password</a>
-            <hr class="divider"/>
-            <p class="note">If you did not request a password reset, you can safely ignore this email. Your password will not change.</p>
-        """.formatted(name, resetLink);
-        return baseTemplate(content);
-    }
 }

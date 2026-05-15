@@ -68,22 +68,6 @@ public class CartDaoImpl implements CartDao {
     }
 
     @Override
-    public int getCartItemCount(int userId) {
-        String sql = "SELECT COALESCE(SUM(quantity), 0) FROM cart WHERE user_id = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) return rs.getInt(1);
-        } catch (SQLException e) {
-            System.out.println("Error getting cart item count: " + e.getMessage());
-        }
-        return 0;
-    }
-
-
-
-    @Override
     public boolean removeFromCart(int userId, int productId) {
         String sql = "DELETE FROM cart WHERE user_id = ? AND product_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
