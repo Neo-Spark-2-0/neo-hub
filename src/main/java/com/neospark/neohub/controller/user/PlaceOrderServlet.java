@@ -109,8 +109,8 @@ public class PlaceOrderServlet extends HttpServlet {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrderId(orderId);
             orderItem.setProductId(item.getProductId());
+            orderItem.setProductName(item.getProductName());
             orderItem.setQuantity(item.getQuantity());
-            orderItems.add(orderItem);
             double unitPrice = 0.0; 
             if (item.getProductDiscountPrice() > 0) {
                 unitPrice = item.getProductDiscountPrice();
@@ -118,6 +118,7 @@ public class PlaceOrderServlet extends HttpServlet {
                 unitPrice = item.getProductPrice();
             }
             orderItem.setUnitPrice(unitPrice);
+            orderItems.add(orderItem);
         }
         orderItemDao.addOrderItems(orderItems);
 

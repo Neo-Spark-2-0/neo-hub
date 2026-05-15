@@ -196,19 +196,52 @@ public class EmailTemplate {
     }
 
     public static String orderConfirmationEmail(String name, String orderId, String total, List<OrderItem> orderItems) {
-        String content = """
-            <p class="label">Order Confirmed</p>
-            <h2>Your order has been placed</h2>
-            <p>Hi %s, we've received your order and it's being processed. You'll get another email once it's shipped.</p>
-            <div class="info-box">
-                <div class="info-row"><span class="info-label">Order ID</span><span class="info-value">#%s</span></div>
-                <div class="info-row"><span class="info-label">Total Amount</span><span class="info-value">Rs. %s</span></div>
-                <div class="info-row"><span class="info-label">Payment Status</span><span class="badge">Received</span></div>
-            </div>
-            <p>You can view and track your order from the Order History section of your account.</p>
-            <a href="http://localhost:8080/neo-hub/order-history" class="btn" style="background:#1a1a1a;color:#ffffff;text-decoration:none;">Track Order</a>
-        """.formatted(name, orderId, total);
-        return baseTemplate(content);
+        StringBuilder itemsHtml = new StringBuilder();
+    itemsHtml.append("""
+        <table style="width:100%; border-collapse: collapse; margin: 20px 0;">
+            <thead>
+                <tr>
+                    <th style="border-bottom: 1px solid #e0e0e0; padding: 8px; text-align: left;">Product</th>
+                    <th style="border-bottom: 1px solid #e0e0e0; padding: 8px; text-align: center;">Quantity</th>
+                    <th style="border-bottom: 1px solid #e0e0e0; padding: 8px; text-align: right;">Unit Price (Rs.)</th>
+                    <th style="border-bottom: 1px solid #e0e0e0; padding: 8px; text-align: right;">Total (Rs.)</th>
+                </tr>
+            </thead>
+            <tbody>
+    """);
+    
+    for (OrderItem item : orderItems) {
+        double itemTotal = item.getUnitPrice() * item.getQuantity();
+        itemsHtml.append(String.format("""
+            <tr>
+                <td style="padding: 8px; border-bottom: 1px solid #f0f0f0;">%s</td>
+                <td style="padding: 8px; border-bottom: 1px solid #f0f0f0; text-align: center;">%d</td>
+                <td style="padding: 8px; border-bottom: 1px solid #f0f0f0; text-align: right;">%.2f</td>
+                <td style="padding: 8px; border-bottom: 1px solid #f0f0f0; text-align: right;">%.2f</td>
+            </tr>
+        """, item.getProductName(), item.getQuantity(), item.getUnitPrice(), itemTotal));
+    }
+    
+    itemsHtml.append("""
+            </tbody>
+        </table>
+    """);
+    
+    String content = """
+        <p class="label">Order Confirmed</p>
+        <h2>Your order has been placed</h2>
+        <p>Hi %s, we've received your order and it's being processed. You'll get another email once it's shipped.</p>
+        <div class="info-box">
+            <div class="info-row"><span class="info-label">Order ID</span><span class="info-value">#%s</span></div>
+            <div class="info-row"><span class="info-label">Total Amount</span><span class="info-value">Rs. %s</span></div>
+            <div class="info-row"><span class="info-label">Payment Status</span><span class="badge">Received</span></div>
+        </div>
+        <h3 style="margin: 20px 0 10px;">Items Ordered</h3>
+        %s
+        <p>You can view and track your order from the Order History section of your account.</p>
+        <a href="http://localhost:8080/neo-hub/order-history" class="btn" style="background:#1a1a1a;color:#ffffff;text-decoration:none;">Track Order</a>
+    """.formatted(name, orderId, total, itemsHtml.toString());
+    return baseTemplate(content);
     }
 
     public static String passwordResetEmail(String name, String resetLink) {

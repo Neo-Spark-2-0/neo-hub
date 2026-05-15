@@ -1,8 +1,10 @@
 package com.neospark.neohub.utils;
 
 
+import java.util.List;
 import java.util.Properties;
 
+import com.neospark.neohub.model.OrderItem;
 import jakarta.mail.Authenticator;
 import jakarta.mail.Message;
 import jakarta.mail.PasswordAuthentication;
@@ -58,9 +60,9 @@ public class EmailService {
         return sendEmail(toEmail, subject, body);
     }
 
-    public static boolean sendOrderConfirmationEmail(String toEmail, String name, String orderId, String total, ) {
+    public static boolean sendOrderConfirmationEmail(String toEmail, String name, String orderId, String total, List<OrderItem> orderItems) {
         String subject = "NEO-HUB - Order Confirmed #" + orderId;
-        String body = EmailTemplate.orderConfirmationEmail(name, orderId, total);
+        String body = EmailTemplate.orderConfirmationEmail(name, orderId, total, orderItems);
         return sendEmail(toEmail, subject, body);
     }
 
