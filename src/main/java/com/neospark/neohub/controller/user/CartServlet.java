@@ -27,12 +27,11 @@ public class CartServlet extends HttpServlet {
 
 
 // this block of code i ve add because if user added some product to cart and after that product got out of stock or deleted by admin then also the stock not updated in cart 
-        boolean adjusted = false;
+
         for (Cart item : cartItems) {
         Product product = productDao.getProductById(item.getProductId());
         if (product == null || !product.isActive()) {
             cartDao.removeFromCart(user.getId(), item.getProductId());
-            adjusted = true;
             continue;
         }
         int currentStock = product.getStock();
@@ -42,7 +41,6 @@ public class CartServlet extends HttpServlet {
             } else {
                 cartDao.updateQuantity(user.getId(), item.getProductId(), currentStock);
             }
-            adjusted = true;
         }
     }
 

@@ -3,8 +3,6 @@ package com.neospark.neohub.controller.user;
 import com.neospark.neohub.dao.*;
 import com.neospark.neohub.model.*;
 import com.neospark.neohub.utils.SessionUtil;
-
-import jakarta.mail.Session;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;

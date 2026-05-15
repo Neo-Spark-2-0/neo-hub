@@ -149,6 +149,7 @@ public class PlaceOrderServlet extends HttpServlet {
             paymentDao.updatePaymentStatus(orderId, "Completed", null);
 
             // sending mail 
+
             try {
                 EmailService.sendOrderConfirmationEmail(
                         user.getEmail(),
@@ -159,6 +160,7 @@ public class PlaceOrderServlet extends HttpServlet {
             } catch (Exception e) {
                 System.err.println("Order confirmation email failed for order " + orderId + ": " + e.getMessage());
             }
+
 
             response.sendRedirect(request.getContextPath() + "/order-success?orderId=" + orderId);
         }
