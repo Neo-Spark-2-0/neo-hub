@@ -17,10 +17,17 @@
     </jsp:include>
 
     <main class="w-[90vw] mx-auto my-10 md:my-20">
-        <a href="${pageContext.request.contextPath}/order-history" 
-           class="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-accent transition mb-6">
-            <i class="fa-solid fa-arrow-left text-xs"></i> Back to Orders
-        </a>
+        <div class="flex items-center justify-between">
+            <a href="${pageContext.request.contextPath}/order-history" 
+               class="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-accent transition mb-6">
+                <i class="fa-solid fa-arrow-left text-xs"></i> Back to Orders
+            </a>
+            <c:if test="${order.orderStatus == 'Confirmed' or order.orderStatus == 'Delivered' or order.orderStatus == 'Shipped' or order.orderStatus == 'Processing'}">
+                <button onclick="printInvoice()" class="inline-flex items-center gap-2 bg-gray-200 text-gray-600 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-gray-300 transition ml-4">
+                <i class="fa-solid fa-download"></i> Download Invoice 
+                </button>
+            </c:if>
+        </div>
 
         <h1 class="text-2xl md:text-3xl font-bold text-accent mb-6">Order #${order.id}</h1>
 
@@ -165,5 +172,140 @@
     </main>
 
     <jsp:include page="/WEB-INF/templates/user/footer.jsp" />
+    <script>
+    function printInvoice() {
+        const printWindow = window.open('', '_blank', 'width=800,height=600');
+        
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>.</title>
+                <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    body {
+                        font-family: 'Poppins', sans-serif;
+                        padding: 40px;
+                        background: white;
+                    }
+                    .invoice-header {
+                        text-align: center;
+                        margin-bottom: 30px;
+                        padding-bottom: 20px;
+                        border-bottom: 2px solid #1D1D1F;
+                    }
+                    .invoice-header h1 {
+                        font-size: 28px;
+                        color: #1D1D1F;
+                        margin-bottom: 5px;
+                    }
+                    .invoice-header p {
+                        color: #666;
+                        font-size: 12px;
+                    }
+                    .order-details {
+                        margin-bottom: 30px;
+                    }
+                    .order-details table {
+                        width: 100%;
+                        border-collapse: collapse;
+                    }
+                    .order-details td {
+                        padding: 6px 0;
+                        font-size: 14px;
+                    }
+                    .order-details td:first-child {
+                        width: 120px;
+                        font-weight: 600;
+                        color: #555;
+                    }
+                    table.items {
+                        width: 100%;
+                        margin: 20px 0;
+                    }
+                    table.items th {
+                        background: #f5f5f5;
+                        padding: 10px;
+                        text-align: left;
+                        font-size: 13px;
+                        font-weight: 600;
+                        border-bottom: 1px solid #ddd;
+                    }
+                    table.items td {
+                        padding: 8px 10px;
+                        font-size: 13px;
+                        border-bottom: 1px solid #eee;
+                    }
+                    .total-row {
+                        text-align: right;
+                        font-weight: bold;
+                        font-size: 16px;
+                        margin-top: 20px;
+                        padding-top: 10px;
+                        border-top: 2px solid #1D1D1F;
+                    }
+                    .footer {
+                        text-align: center;
+                        margin-top: 40px;
+                        font-size: 11px;
+                        color: #aaa;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="invoice-header">
+                    <h1>NEO-HUB</h1>
+                    <p>IoT Equipment & Project Marketplace</p>
+                    <p>Gandaki Province, Pokhara, Nepal | neohubnepal@gmail.com</p>
+                </div>
+
+                <div class="order-details">
+                    <table>
+                        <tr><td>Order ID</td><td><strong>#${order.id}</strong></td></tr>
+                        <tr><td>Order Date</td><td><fmt:formatDate value="${order.createdAt}" pattern="dd MMM yyyy, hh:mm a"/></td></tr>
+                        <tr><td>Payment Method</td><td>${order.paymentMethod}</td></tr>
+                        <tr><td>Order Status</td><td>${order.orderStatus}</td></tr>
+                        <tr><td>Delivery Address</td><td>${order.userAddress}</td></tr>
+                    </table>
+                </div>
+
+                <table class="items">
+                    <thead>
+                        <tr><th>Product</th><th>Quantity</th><th>Unit Price</th><th>Total</th></tr>
+                    </thead>
+                    <tbody>
+                        <c:forEach var="item" items="${order.orderItems}">
+                            <tr>
+                                <td>${item.productName}</td>
+                                <td>${item.quantity}</td>
+                                <td>Rs. <fmt:formatNumber value="${item.unitPrice}" pattern="#,##0"/></td>
+                                <td>Rs. <fmt:formatNumber value="${item.unitPrice * item.quantity}" pattern="#,##0"/></td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+
+                <div class="total-row">
+                    Total Paid: Rs. <fmt:formatNumber value="${order.totalAmount}" pattern="#,##0"/>
+                </div>
+
+                <div class="footer">
+                    <p>Thank you for shopping with NEO-HUB!</p>
+                    <p>For any queries, contact neohubnepal@gmail.com</p>
+                </div>
+            </body>
+            </html>
+        `);
+        
+        printWindow.document.close();
+        printWindow.addEventListener('load', function() {
+            printWindow.focus();
+            printWindow.addEventListener('afterprint', function() {
+                printWindow.close();
+            });
+            printWindow.print();
+        });
+    }
+</script>
 </body>
 </html>

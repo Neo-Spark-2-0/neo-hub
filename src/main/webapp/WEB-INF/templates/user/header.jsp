@@ -69,7 +69,6 @@
                     <a href="${pageContext.request.contextPath}/cart"
                        class="relative w-9 h-9 flex items-center justify-center rounded-lg text-gray-600 hover:bg-gray-100 transition-colors">
                         <i class="fa fa-cart-shopping text-sm"></i>
-                        <span id="badge-cart-count">0</span>
                     </a>
 
                     <%-- Profile dropdown --%>

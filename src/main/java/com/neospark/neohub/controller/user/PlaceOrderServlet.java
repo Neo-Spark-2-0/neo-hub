@@ -155,7 +155,8 @@ public class PlaceOrderServlet extends HttpServlet {
                         user.getEmail(),
                         user.getFullName(),
                         String.valueOf(orderId),
-                        String.format("%.2f", total)
+                        String.format("%.2f", total),
+                        orderItems
                 );
             } catch (Exception e) {
                 System.err.println("Order confirmation email failed for order " + orderId + ": " + e.getMessage());

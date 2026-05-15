@@ -57,7 +57,7 @@
 
                     
             <c:if test="${product.stock == 0}">
-            <span class="absolute top-3 left-3 bg-red-500 text-white text-xs font-semibold px-2.5 py-1 rounded-full">
+            <span class="absolute top-3 left-3 bg-red-600 text-white text-xs font-semibold px-2.5 py-1 rounded-full">
                 Out of Stock
             </span>
             </c:if>

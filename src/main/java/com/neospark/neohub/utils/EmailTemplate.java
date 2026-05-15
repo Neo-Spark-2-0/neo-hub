@@ -1,5 +1,9 @@
 package com.neospark.neohub.utils;
 
+import java.util.List;
+
+import com.neospark.neohub.model.OrderItem;
+
 public class EmailTemplate {
 
     private static String baseTemplate(String content) {
@@ -191,7 +195,7 @@ public class EmailTemplate {
         return baseTemplate(content);
     }
 
-    public static String orderConfirmationEmail(String name, String orderId, String total) {
+    public static String orderConfirmationEmail(String name, String orderId, String total, List<OrderItem> orderItems) {
         String content = """
             <p class="label">Order Confirmed</p>
             <h2>Your order has been placed</h2>
@@ -202,7 +206,7 @@ public class EmailTemplate {
                 <div class="info-row"><span class="info-label">Payment Status</span><span class="badge">Received</span></div>
             </div>
             <p>You can view and track your order from the Order History section of your account.</p>
-            <a href="http://localhost:8080/NEO-HUB/order-history" class="btn" style="background:#1a1a1a;color:#ffffff;text-decoration:none;">Track Order</a>
+            <a href="http://localhost:8080/neo-hub/order-history" class="btn" style="background:#1a1a1a;color:#ffffff;text-decoration:none;">Track Order</a>
         """.formatted(name, orderId, total);
         return baseTemplate(content);
     }

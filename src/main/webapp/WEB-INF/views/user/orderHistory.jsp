@@ -57,8 +57,8 @@
                                         <td class="py-4 px-5">
                                             <c:choose>
                                                 <c:when test="${order.paymentMethod == 'Khalti'}">
-                                                    <span class="inline-flex items-center gap-1 text-purple-600">
-                                                        <i class="fa-solid fa-wallet"></i> Khalti
+                                                    <span class="inline-flex items-center gap-1 text-red-600">
+                                                        <i class="fa-solid fa-paper-plane text-[#DC0019]"></i>Khalti
                                                     </span>
                                                 </c:when>
                                                 <c:otherwise>

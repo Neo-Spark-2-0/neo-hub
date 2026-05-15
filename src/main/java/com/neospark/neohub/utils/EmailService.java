@@ -58,7 +58,7 @@ public class EmailService {
         return sendEmail(toEmail, subject, body);
     }
 
-    public static boolean sendOrderConfirmationEmail(String toEmail, String name, String orderId, String total) {
+    public static boolean sendOrderConfirmationEmail(String toEmail, String name, String orderId, String total, ) {
         String subject = "NEO-HUB - Order Confirmed #" + orderId;
         String body = EmailTemplate.orderConfirmationEmail(name, orderId, total);
         return sendEmail(toEmail, subject, body);
