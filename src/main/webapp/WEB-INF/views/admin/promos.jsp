@@ -58,6 +58,8 @@
                                 <th class="px-6 py-4">Valid Until</th>
                                 <th class="px-6 py-4 text-center">Status</th>
                                 <th class="px-6 py-4 text-right">Actions</th>
+                                <th class="px-6 py-4 text-right">Edit Promo</th>
+                                
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-secondary text-sm">
@@ -132,7 +134,34 @@
                                             </button>
                                         </form>
                                     </td>
-                                  
+
+                                    <!-- Edit --> 
+                                     <td class="px-6 py-4 text-right">
+                                        <div class="flex justify-end items-center gap-2">
+                                            
+                                            <%-- Edit button --%>
+                                            <button type="button"
+                                                    onclick="openEditModal('${p.id}', '${p.code}', '${p.discountPercent}', '${p.expiryDate}')"
+                                                    class="w-9 h-9 flex items-center justify-center bg-info/10 text-info rounded-xl hover:bg-info hover:text-white transition"
+                                                    title="Edit">
+                                                <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                            </button>
+
+                                            <%-- Delete (existing) --%>
+                                            <form id="delPromo-${p.id}" action="promos" method="POST">
+                                                <input type="hidden" name="action" value="delete">
+                                                <input type="hidden" name="id" value="${p.id}">
+                                                <button type="button"
+                                                        data-msg="Permanently delete promo code ${p.code}?"
+                                                        data-form="delPromo-${p.id}"
+                                                        onclick="handleConfirm(this)"
+                                                        class="w-9 h-9 flex items-center justify-center bg-danger/10 text-danger rounded-xl hover:bg-danger hover:text-white transition ml-auto"
+                                                        title="Delete">
+                                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
                                 </tr>
                             </c:forEach>
 
@@ -238,37 +267,123 @@
         </div>
     </div>
 
+
+// ── EDIT PROMO MODAL ─────────────────────────────────────────────── -->
+    <div id="editPromoModal"
+     tabindex="-1"
+     aria-hidden="true"
+     class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+
+    <div class="relative w-full max-w-md mx-4">
+        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
+
+            <div class="flex items-center justify-between px-8 py-6 border-b border-gray-100">
+                <div>
+                    <h3 class="text-lg font-bold text-accent">Edit Promo Code</h3>
+                    <p class="text-xs text-gray-400 mt-0.5">Update discount code details</p>
+                </div>
+                <button onclick="toggleModal('editPromoModal')"
+                        class="w-8 h-8 flex items-center justify-center rounded-xl bg-gray-100 hover:bg-gray-200 transition">
+                    <i class="fa-solid fa-xmark text-xs text-gray-500"></i>
+                </button>
+            </div>
+
+            <form action="promos" method="POST" class="px-8 py-6 space-y-5">
+                <input type="hidden" name="action" value="update">
+                <input type="hidden" name="id" id="edit-id">
+
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest">
+                        Promo Code*
+                    </label>
+                    <input type="text" name="code" id="edit-code" required
+                           maxlength="20"
+                           style="text-transform: uppercase;"
+                           class="w-full bg-secondary border-none rounded-xl py-3 px-4 text-sm font-mono font-bold focus:ring-2 focus:ring-info tracking-widest">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest">
+                        Discount Percentage* (1–100)
+                    </label>
+                    <div class="relative">
+                        <input type="number" name="discountPercent" id="edit-discount" required
+                               min="1" max="100" step="0.01"
+                               class="w-full bg-secondary border-none rounded-xl py-3 px-4 pr-10 text-sm font-bold focus:ring-2 focus:ring-info">
+                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">%</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest">
+                        Expiry Date*
+                    </label>
+                    <input type="date" name="expiry" id="edit-expiry" required
+                           class="w-full bg-secondary border-none rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-info">
+                </div>
+
+                <div class="flex gap-3 pt-2">
+                    <button type="button"
+                            onclick="toggleModal('editPromoModal')"
+                            class="flex-1 bg-gray-100 text-gray-500 py-3 rounded-xl text-sm font-bold hover:bg-gray-200 transition">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            class="flex-1 bg-accent text-white py-3 rounded-xl text-sm font-bold shadow-lg shadow-accent/20 hover:opacity-90 transition">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
     <!-- Flash toast + modal script -->
     <script>
-        function toggleModal(id) {
-            const modal = document.getElementById(id);
-            modal.classList.toggle('hidden');
+    function toggleModal(id) {
+        const modal = document.getElementById(id);
+        modal.classList.toggle('hidden');
+    }
+
+    function handleConfirm(btn) {
+        if (confirm(btn.dataset.msg)) {
+            document.getElementById(btn.dataset.form).submit();
         }
+    }
 
-        // Close modal on backdrop click
-        document.getElementById('addPromoModal').addEventListener('click', function(e) {
-            if (e.target === this) toggleModal('addPromoModal');
-        });
+    function openEditModal(id, code, discount, expiry) {
+        document.getElementById('edit-id').value = id;
+        document.getElementById('edit-code').value = code;
+        document.getElementById('edit-discount').value = discount;
+        document.getElementById('edit-expiry').value = expiry;
+        toggleModal('editPromoModal');
+    }
 
-        // Auto-uppercase promo code input
-        document.querySelector('input[name="code"]').addEventListener('input', function() {
-            this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
-        });
+    document.getElementById('addPromoModal').addEventListener('click', function(e) {
+        if (e.target === this) toggleModal('addPromoModal');
+    });
 
-        // Set minimum date to today for expiry input
-        window.addEventListener('DOMContentLoaded', function() {
-            const today = new Date().toISOString().split('T')[0];
-            document.querySelector('input[name="expiry"]').min = today;
+    document.getElementById('editPromoModal').addEventListener('click', function(e) {
+        if (e.target === this) toggleModal('editPromoModal');
+    });
 
-            // Show flash toasts
-            <c:if test="${not empty success}">
-                showToast("${success}", "success");
-            </c:if>
-            <c:if test="${not empty error}">
-                showToast("${error}", "error");
-            </c:if>
-        });
-    </script>
+    document.querySelector('#addPromoModal input[name="code"]').addEventListener('input', function() {
+        this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    });
+
+    window.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.querySelector('#addPromoModal input[name="expiry"]').min = today;
+        document.querySelector('#editPromoModal input[name="expiry"]').min = today;
+
+        <c:if test="${not empty success}">
+            showToast('<c:out value="${success}"/>', "success");
+        </c:if>
+        <c:if test="${not empty error}">
+            showToast('<c:out value="${error}"/>', "error");
+        </c:if>
+    });
+</script>
 
 </body>
 </html>

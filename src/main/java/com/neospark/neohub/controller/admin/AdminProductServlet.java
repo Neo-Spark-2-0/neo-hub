@@ -78,13 +78,6 @@ public class AdminProductServlet extends HttpServlet {
                     throw new ServletException(e);
                 }
                 break;
-            case "delete":
-                try {
-                    deleteProduct(req, resp);
-                } catch (Exception e) {
-                    throw new ServletException(e);
-                }
-                break;
             default:
                 listProducts(req, resp);
         }
@@ -153,7 +146,7 @@ public class AdminProductServlet extends HttpServlet {
 
         req.setAttribute("product", product);
         req.setAttribute("categories", categoryDao.getAllCategories());
-        req.getRequestDispatcher("/WEB-INF/views/admin/edit-products.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/views/admin/edit-product.jsp").forward(req, resp);
     }
 
     // POST
@@ -236,7 +229,7 @@ public class AdminProductServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/admin/products");
     }
 
-    // DELETE (MOVED TO POST!)
+    // DELETE 
     private void deleteProduct(HttpServletRequest req, HttpServletResponse resp)
             throws Exception {
 
