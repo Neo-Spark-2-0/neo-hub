@@ -1,109 +1,154 @@
-package com.neospark.neohub.controller.filter;
-import com.neospark.neohub.model.User;
-import jakarta.servlet.*;
-import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
+// package com.neospark.neohub.controller.filter;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+// import com.neospark.neohub.model.User;
+// import jakarta.servlet.*;
+// import jakarta.servlet.annotation.WebFilter;
+// import jakarta.servlet.http.HttpServletRequest;
+// import jakarta.servlet.http.HttpServletResponse;
+// import jakarta.servlet.http.HttpSession;
 
-@WebFilter("/*")
-public class AuthFilter implements Filter {
+// import java.io.IOException;
+// import java.util.Set;
 
-    // Pages accessible without login (public)
-    private static final Set<String> PUBLIC_PAGES = new HashSet<>(Arrays.asList(
-        "", "/", "/home", "/products", "/product-detail", "/about", "/contact",
-        "/login", "/register", "/verify-email", "/error"
-    ));
+// @WebFilter("/*")
+// public class AuthFilter implements Filter {
 
-    // Pages that require login (any logged-in user, regardless of role)
-    private static final Set<String> LOGIN_REQUIRED_PAGES = new HashSet<>(Arrays.asList(
-        "/cart", "/checkout", "/place-order", "/order-history", "/order-success", 
-        "/order-failure", "/profile", "/khalti/initiate", "/khalti/verify"
-    ));
+//     /**
+//      * Fully public — no login needed at all.
+//      * Note: query strings (?id=1) are NOT part of getRequestURI(),
+//      * so just list the base path here (e.g. /product-detail, not /product-detail?id=1).
+//      */
+//     private static final Set<String> PUBLIC_PATHS = Set.of(
+//         "", "/", "/home",
+//         "/products", "/product-detail",
+//         "/about", "/contact",
+//         "/login", "/register", "/verify-email",
+//         "/cart-count"   // returns 0 for guests, actual count for logged-in users
+//     );
 
-    // Admin-only prefix
-    private static final String ADMIN_PREFIX = "/admin/";
+//     /**
+//      * Prefixes that are always public (static files, uploads, error pages).
+//      */
+//     private static final Set<String> PUBLIC_PREFIXES = Set.of(
+//         "/static/", "/assets/", "/uploads/", "/WEB-INF/", "/error"
+//     );
 
-    @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+//     /**
+//      * USER role only — admin should not access these.
+//      */
+//     private static final Set<String> USER_ONLY_PATHS = Set.of(
+//         "/cart", "/checkout", "/place-order",
+//         "/order-history", "/order-success", "/order-failure",
+//         "/khalti/initiate", "/khalti/verify"
+//     );
 
-        HttpServletRequest req = (HttpServletRequest) request;
-        HttpServletResponse res = (HttpServletResponse) response;
+//     /**
+//      * Prefixes that are USER only (catches /khalti/* and /order-* in one go).
+//      */
+//     private static final Set<String> USER_ONLY_PREFIXES = Set.of(
+//         "/khalti/", "/order-"
+//     );
 
-        String uri = req.getRequestURI();
-        String contextPath = req.getContextPath();
-        String path = uri.substring(contextPath.length());
+//     /** Admin prefix — ADMIN role only. */
+//     private static final String ADMIN_PREFIX = "/admin";
 
-        // Allow static resources
-        if (path.startsWith("/static/") || path.startsWith("/assets/") || path.startsWith("/uploads/")) {
-            chain.doFilter(request, response);
-            return;
-        }
+//     /** Accessible by any logged-in user regardless of role. */
+//     private static final Set<String> ANY_LOGGED_IN_PATHS = Set.of(
+//         "/profile", "/logout"
+//     );
 
-        // 1. Check public pages
-        if (PUBLIC_PAGES.contains(path) || path.matches("/product-detail\\?.*")) {
-            chain.doFilter(request, response);
-            return;
-        }
+//     @Override
+//     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+//             throws IOException, ServletException {
 
-        // 2. Get logged-in user
-        HttpSession session = req.getSession(false);
-        User user = (session != null) ? (User) session.getAttribute("user") : null;
+//         HttpServletRequest  req  = (HttpServletRequest)  request;
+//         HttpServletResponse res  = (HttpServletResponse) response;
 
-        // 3. If accessing login/register while already logged in, redirect to home
-        if (user != null && (path.equals("/login") || path.equals("/register"))) {
-            res.sendRedirect(contextPath + "/home");
-            return;
-        }
+//         String contextPath = req.getContextPath();
+//         String path        = req.getRequestURI().substring(contextPath.length());
 
-        // 4. If not logged in and page requires login, redirect
-        boolean requiresLogin = LOGIN_REQUIRED_PAGES.contains(path) || path.startsWith("/khalti/") || path.startsWith("/order-");
-        if (user == null && requiresLogin) {
-            res.sendRedirect(contextPath + "/login");
-            return;
-        }
+//         // Normalize trailing slash so /home/ == /home
+//         if (path.length() > 1 && path.endsWith("/")) {
+//             path = path.substring(0, path.length() - 1);
+//         }
 
-        // 5. If logged in, check role-based access
-        if (user != null) {
-            String role = user.getRole(); // Should be "USER" or "ADMIN" (uppercase)
+//         // ── 1. Always allow static resources and public prefixes ─────────────
+//         for (String prefix : PUBLIC_PREFIXES) {
+//             if (path.startsWith(prefix)) {
+//                 chain.doFilter(request, response);
+//                 return;
+//             }
+//         }
 
-            // Admin-only pages
-            if (path.startsWith(ADMIN_PREFIX)) {
-                if ("ADMIN".equals(role)) {
-                    chain.doFilter(request, response);
-                } else {
-                    res.sendRedirect(contextPath + "/home");
-                }
-                return;
-            }
+//         // ── 2. Always allow fully public paths ───────────────────────────────
+//         if (PUBLIC_PATHS.contains(path)) {
+//             chain.doFilter(request, response);
+//             return;
+//         }
 
-            // User pages (cart, profile, etc.) – allow both USER and ADMIN? Actually admin should NOT access user pages.
-            // But profile is common. So we must restrict admin from user-only pages.
-            if (requiresLogin && !path.equals("/profile")) {
-                // These are user-only pages (cart, checkout, orders, khalti)
-                if ("USER".equals(role)) {
-                    chain.doFilter(request, response);
-                } else {
-                    // Admin trying to access user page – redirect to admin dashboard
-                    res.sendRedirect(contextPath + "/admin/dashboard");
-                }
-                return;
-            }
+//         // ── 3. Resolve session user ──────────────────────────────────────────
+//         HttpSession session = req.getSession(false);
+//         User user = (session != null) ? (User) session.getAttribute("user") : null;
 
-            // Profile page allowed for both roles
-            if (path.equals("/profile")) {
-                chain.doFilter(request, response);
-                return;
-            }
-        }
+//         // ── 4. Redirect already-logged-in users away from login/register ─────
+//         if (user != null && (path.equals("/login") || path.equals("/register"))) {
+//             if ("ADMIN".equals(user.getRole())) {
+//                 res.sendRedirect(contextPath + "/admin/dashboard");
+//             } else {
+//                 res.sendRedirect(contextPath + "/home");
+//             }
+//             return;
+//         }
 
-        // 6. Default: allow (for any other paths not matched)
-        chain.doFilter(request, response);
-    }
-}
+//         // ── 5. Classify this path ────────────────────────────────────────────
+//         boolean isAdminPath    = path.startsWith(ADMIN_PREFIX);
+//         boolean isUserOnlyPath = USER_ONLY_PATHS.contains(path)
+//                 || USER_ONLY_PREFIXES.stream().anyMatch(path::startsWith);
+//         boolean isAnyLoginPath = ANY_LOGGED_IN_PATHS.contains(path);
+
+//         // ── 6. Guest (not logged in) ─────────────────────────────────────────
+//         if (user == null) {
+//             if (isAdminPath || isUserOnlyPath || isAnyLoginPath) {
+//                 // Save intended URL so login can redirect back after auth (optional)
+//                 res.sendRedirect(contextPath + "/login");
+//                 return;
+//             }
+//             // Unknown path + guest → 404 is better than silent allow
+//             res.sendError(HttpServletResponse.SC_NOT_FOUND);
+//             return;
+//         }
+
+//         // ── 7. Logged-in: role-based checks ──────────────────────────────────
+//         String role = user.getRole(); // "USER" or "ADMIN"
+
+//         // Admin pages
+//         if (isAdminPath) {
+//             if ("ADMIN".equals(role)) {
+//                 chain.doFilter(request, response);
+//             } else {
+//                 res.sendRedirect(contextPath + "/home");
+//             }
+//             return;
+//         }
+
+//         // User-only pages
+//         if (isUserOnlyPath) {
+//             if ("USER".equals(role)) {
+//                 chain.doFilter(request, response);
+//             } else {
+//                 // Admin should not use cart/checkout/orders — send to dashboard
+//                 res.sendRedirect(contextPath + "/admin/dashboard");
+//             }
+//             return;
+//         }
+
+//         // Shared pages (profile, logout) — any logged-in role
+//         if (isAnyLoginPath) {
+//             chain.doFilter(request, response);
+//             return;
+//         }
+
+//         // ── 8. Unknown path + logged-in user → 404, not silent allow ─────────
+//         res.sendError(HttpServletResponse.SC_NOT_FOUND);
+//     }
+// }

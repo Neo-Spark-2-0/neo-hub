@@ -119,7 +119,7 @@
                             <a href="${pageContext.request.contextPath}/checkout"
                                class="block w-full text-center bg-accent text-white py-3 rounded-xl font-semibold hover:opacity-90 transition">
                                 Proceed to Checkout
-                            </a>
+                            </a>9 
                             <a href="${pageContext.request.contextPath}/products"
                                class="block w-full text-center border border-gray-300 text-gray-600 py-3 rounded-xl font-medium hover:bg-gray-50 transition">
                                 Continue Shopping
