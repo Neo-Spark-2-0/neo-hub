@@ -129,11 +129,11 @@
                                                 <!-- Handle Seed URL vs Local Upload -->
                                                 <c:choose>
                                                     <c:when test="${product.image.startsWith('http')}">
-                                                        <img src="${product.image}" class="w-full h-full object-contain">
+                                                        <img id="product-image-preview" src="${product.image}" class="w-full h-full object-contain" >
                                                     </c:when>
                                                     <c:otherwise>
-                                                        <img src="${pageContext.request.contextPath}/display-image/${product.image}" 
-                                                             class="w-full h-full object-contain">
+                                                        <img id="product-image-preview" src="${pageContext.request.contextPath}/display-image/${product.image}" 
+                                                             class="w-full h-full object-contain" >
                                                     </c:otherwise>
                                                 </c:choose>
                                             </c:when>
@@ -204,13 +204,14 @@
     </div>
 
     <script>
-        // Simple client-side preview (optional)
+        // Simple client-side preview 
+        const preview = document.getElementById('product-image-preview');
         const fileInput = document.querySelector('input[type="file"]');
         fileInput.addEventListener('change', function(e) {
             if (e.target.files && e.target.files[0]) {
                 const reader = new FileReader();
                 reader.onload = function(event) {
-                    document.querySelector('img').src = event.target.result;
+                    if (preview) preview.src = event.target.result;
                 }
                 reader.readAsDataURL(e.target.files[0]);
             }

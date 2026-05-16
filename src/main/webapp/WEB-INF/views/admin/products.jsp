@@ -215,10 +215,10 @@
         window.onload = function() {
             <%-- Read from session flash messages --%>
             <c:if test="${not empty success}">
-                showToast("${success}", "success");
+                showToast('<c:out value="${success}" />', "success");
             </c:if>
             <c:if test="${not empty error}">
-                showToast("${error}", "error");
+                showToast('<c:out value="${error}" />', "error");
             </c:if>
         };
     </script>
