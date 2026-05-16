@@ -169,7 +169,7 @@ public class OrderDaoImpl implements OrderDao {
                + "WHERE o.user_id = ? ";
 
         if (filterStatus)  sql += "AND LOWER(o.order_status) = LOWER(?) ";
-        if (filterPayment) sql += "AND p.method = ? ";
+        if (filterPayment) sql += "AND LOWER(p.method) = LOWER(?) ";
         sql += "ORDER BY o.created_at DESC";
 
         List<Order> orders = new ArrayList<>();
@@ -179,12 +179,14 @@ public class OrderDaoImpl implements OrderDao {
             PreparedStatement ps = connection.prepareStatement(sql);
 
             int idx = 1;
-            ps.setInt(idx++, userId);
+            ps.setInt(idx++, userId); // first it set to 1 and increases later
             if (filterStatus)  ps.setString(idx++, status);
             if (filterPayment) ps.setString(idx++, paymentMethod);
 
             ResultSet rs = ps.executeQuery();
-            while (rs.next()) orders.add(mapOrder(rs));
+            while (rs.next()) {
+                orders.add(mapOrder(rs));
+            }
         } catch (SQLException e) {
             System.out.println("Error getting filtered orders: " + e.getMessage());
         } finally {
@@ -226,8 +228,6 @@ public class OrderDaoImpl implements OrderDao {
         }
         return 0.0;
     }
-
-
 
     @Override
     public List<Order> getRecentOrders(int limit) {

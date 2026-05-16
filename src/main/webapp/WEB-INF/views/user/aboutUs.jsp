@@ -257,264 +257,170 @@
       </section>
 
       <!-- team members -->
-      <section class="w-[90vw] mx-auto py-14">
-        <div class="mb-10">
-          <p
-            class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1"
-          >
-            The People
-          </p>
-          <h2 class="text-2xl md:text-3xl font-bold text-accent">
-            Meet the NEO-SPARK Team
-          </h2>
-          <p class="text-sm text-gray-500 mt-2 max-w-lg">
-            A passionate group of developers and electronics enthusiasts
-            building tools that help Nepali makers bring their ideas to life.
-          </p>
-        </div>
+    <section class="w-[90vw] mx-auto py-14">
+      <div class="mb-10">
+        <p class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-1">The People</p>
+        <h2 class="text-2xl md:text-3xl font-bold text-accent">Meet the NEO-SPARK Team</h2>
+        <p class="text-sm text-gray-500 mt-2 max-w-lg">
+          A passionate group of developers and electronics enthusiasts building tools
+          that help Nepali makers bring their ideas to life.
+        </p>
+      </div>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          <!-- Aviyan Thapa -->
-          <div
-            class="bg-primary border border-gray-200 rounded-2xl p-6 flex flex-col gap-4 hover:shadow-md hover:border-gray-300 transition-all duration-200"
-          >
-            <div class="flex items-center gap-4">
-              <div
-                class="w-12 h-12 rounded-xl bg-accent flex items-center justify-center flex-shrink-0"
-              >
-                <span class="text-white font-extrabold text-base">AT</span>
-              </div>
-              <div>
-                <p class="text-sm font-bold text-accent leading-tight">
-                  Aviyan Thapa
-                </p>
-                <span
-                  class="inline-block text-[10px] font-semibold uppercase tracking-wide bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full mt-0.5"
-                  >Front End Developer</span
-                >
-              </div>
-            </div>
-            <div class="w-full h-px bg-gray-100"></div>
-            <div class="flex flex-col gap-2">
-              <div class="flex items-center gap-2.5">
-                <i
-                  class="fa-solid fa-code text-blue-500 text-xs w-4 text-center"
-                ></i>
-                <span class="text-xs text-gray-500">Java . JSP · MySQL</span>
-              </div>
-              <div class="flex items-center gap-2.5">
-                <i
-                  class="fa-solid fa-envelope text-red-400 text-xs w-4 text-center"
-                ></i>
-                <a
-                  href="mailto:thrashedgamer8@gmail.com"
-                  class="text-xs text-accent hover:underline truncate"
-                  >thrashedgamer8@gmail.com</a
-                >
-              </div>
-            </div>
-          </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
-          <!-- Bibek Poudel -->
-          <div
-            class="bg-primary border border-gray-200 rounded-2xl p-6 flex flex-col gap-4 hover:shadow-md hover:border-gray-300 transition-all duration-200"
-          >
-            <div class="flex items-center gap-4">
-              <div
-                class="w-12 h-12 rounded-xl bg-accent flex items-center justify-center flex-shrink-0"
-              >
-                <span class="text-white font-extrabold text-base">BP</span>
-              </div>
-              <div>
-                <p class="text-sm font-bold text-accent leading-tight">
-                  Bibek Poudel
-                </p>
-                <span
-                  class="inline-block text-[10px] font-semibold uppercase tracking-wide bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full mt-0.5"
-                  >Senior Full Stack Developer</span
-                >
-              </div>
+        <!--  Aviyan Thapa  -->
+        <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 transition">
+          <img src="${pageContext.request.contextPath}/assets/images/team/aviyan.jpg"
+              alt="Aviyan Thapa"
+              class="w-full h-44 object-cover object-top bg-gray-100" />
+          <div class="p-4 flex flex-col gap-2.5">
+            <div>
+              <p class="text-sm font-semibold text-accent">Aviyan Thapa</p>
+              <span class="inline-block mt-1 text-[10px] font-semibold uppercase tracking-wide bg-blue-50 text-blue-800 px-2.5 py-0.5 rounded-full">
+                Front-end developer
+              </span>
             </div>
-            <div class="w-full h-px bg-gray-100"></div>
-            <div class="flex flex-col gap-2">
-              <div class="flex items-center gap-2.5">
-                <i
-                  class="fa-solid fa-code text-blue-500 text-xs w-4 text-center"
-                ></i>
-                <span class="text-xs text-gray-500">Java . JSP · MySQL</span>
-              </div>
-              <div class="flex items-center gap-2.5">
-                <i
-                  class="fa-solid fa-envelope text-red-400 text-xs w-4 text-center"
-                ></i>
-                <a
-                  href="mailto:bibekpoudel855@gmail.com"
-                  class="text-xs text-accent hover:underline truncate"
-                  >bibekpoudel855@gmail.com</a
-                >
-              </div>
+            <div class="h-px bg-gray-100"></div>
+            <div class="flex items-center gap-2 text-xs text-gray-500">
+              <i class="fa-solid fa-code text-blue-400 w-4 text-center text-[11px]"></i>
+              Java · JSP · MySQL
             </div>
-          </div>
-
-          <!-- Mamata Timilsina -->
-          <div
-            class="bg-primary border border-gray-200 rounded-2xl p-6 flex flex-col gap-4 hover:shadow-md hover:border-gray-300 transition-all duration-200"
-          >
-            <div class="flex items-center gap-4">
-              <div
-                class="w-12 h-12 rounded-xl bg-accent flex items-center justify-center flex-shrink-0"
-              >
-                <span class="text-white font-extrabold text-base">MT</span>
-              </div>
-              <div>
-                <p class="text-sm font-bold text-accent leading-tight">
-                  Mamata Timilsina
-                </p>
-                <span
-                  class="inline-block text-[10px] font-semibold uppercase tracking-wide bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full mt-0.5"
-                  >Database Designer</span
-                >
-              </div>
-            </div>
-            <div class="w-full h-px bg-gray-100"></div>
-            <div class="flex flex-col gap-2">
-              <div class="flex items-center gap-2.5">
-                <i
-                  class="fa-solid fa-code text-blue-500 text-xs w-4 text-center"
-                ></i>
-                <span class="text-xs text-gray-500">Java . JSP · MySQL</span>
-              </div>
-              <div class="flex items-center gap-2.5">
-                <i
-                  class="fa-solid fa-envelope text-red-400 text-xs w-4 text-center"
-                ></i>
-                <span class="text-xs text-gray-500"
-                  >mamatimilsina8@gmail.com</span
-                >
-              </div>
-            </div>
-          </div>
-
-          <!-- Parbin Shrees -->
-          <div
-            class="bg-primary border border-gray-200 rounded-2xl p-6 flex flex-col gap-4 hover:shadow-md hover:border-gray-300 transition-all duration-200"
-          >
-            <div class="flex items-center gap-4">
-              <div
-                class="w-12 h-12 rounded-xl bg-accent flex items-center justify-center flex-shrink-0"
-              >
-                <span class="text-white font-extrabold text-base">PS</span>
-              </div>
-              <div>
-                <p class="text-sm font-bold text-accent leading-tight">
-                  Parbin Shrees
-                </p>
-                <span
-                  class="inline-block text-[10px] font-semibold uppercase tracking-wide bg-pink-50 text-pink-600 px-2 py-0.5 rounded-full mt-0.5"
-                  >UI/UX Designer</span
-                >
-              </div>
-            </div>
-            <div class="w-full h-px bg-gray-100"></div>
-            <div class="flex flex-col gap-2">
-              <div class="flex items-center gap-2.5">
-                <i
-                  class="fa-solid fa-code text-blue-500 text-xs w-4 text-center"
-                ></i>
-                <span class="text-xs text-gray-500">Java . JSP · MySQL</span>
-              </div>
-              <div class="flex items-center gap-2.5">
-                <i
-                  class="fa-solid fa-envelope text-red-400 text-xs w-4 text-center"
-                ></i>
-                <span class="text-xs text-gray-500"
-                  >parbinshreesh64487@gmail.com</span
-                >
-              </div>
-            </div>
-          </div>
-
-          <!-- Subodh Man Singh Bhandari -->
-          <div
-            class="bg-primary border border-gray-200 rounded-2xl p-6 flex flex-col gap-4 hover:shadow-md hover:border-gray-300 transition-all duration-200"
-          >
-            <div class="flex items-center gap-4">
-              <div
-                class="w-12 h-12 rounded-xl bg-accent flex items-center justify-center flex-shrink-0"
-              >
-                <span class="text-white font-extrabold text-base">SB</span>
-              </div>
-              <div>
-                <p class="text-sm font-bold text-accent leading-tight">
-                  Subodh Man Singh Bhandari
-                </p>
-                <span
-                  class="inline-block text-[10px] font-semibold uppercase tracking-wide bg-green-50 text-green-600 px-2 py-0.5 rounded-full mt-0.5"
-                  >Civil Eng. · Full Stack Dev</span
-                >
-              </div>
-            </div>
-            <div class="w-full h-px bg-gray-100"></div>
-            <div class="flex flex-col gap-2">
-              <div class="flex items-center gap-2.5">
-                <i
-                  class="fa-solid fa-helmet-safety text-green-500 text-xs w-4 text-center"
-                ></i>
-                <span class="text-xs text-gray-500"
-                  >Civil Engineering · Java · MySQL</span
-                >
-              </div>
-              <div class="flex items-center gap-2.5">
-                <i
-                  class="fa-solid fa-envelope text-red-400 text-xs w-4 text-center"
-                ></i>
-                <a
-                  href="mailto:smsb668@gmail.com"
-                  class="text-xs text-accent hover:underline truncate"
-                  >smsb668@gmail.com</a
-                >
-              </div>
-            </div>
-          </div>
-
-          <!-- Unita Rai -->
-          <div
-            class="bg-primary border border-gray-200 rounded-2xl p-6 flex flex-col gap-4 hover:shadow-md hover:border-gray-300 transition-all duration-200"
-          >
-            <div class="flex items-center gap-4">
-              <div
-                class="w-12 h-12 rounded-xl bg-accent flex items-center justify-center flex-shrink-0"
-              >
-                <span class="text-white font-extrabold text-base">UR</span>
-              </div>
-              <div>
-                <p class="text-sm font-bold text-accent leading-tight">
-                  Unita Rai
-                </p>
-                <span
-                  class="inline-block text-[10px] font-semibold uppercase tracking-wide bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full mt-0.5"
-                  >Full Stack Developer</span
-                >
-              </div>
-            </div>
-            <div class="w-full h-px bg-gray-100"></div>
-            <div class="flex flex-col gap-2">
-              <div class="flex items-center gap-2.5">
-                <i
-                  class="fa-solid fa-code text-blue-500 text-xs w-4 text-center"
-                ></i>
-                <span class="text-xs text-gray-500">Java · JSP · MySQL</span>
-              </div>
-              <div class="flex items-center gap-2.5">
-                <i
-                  class="fa-solid fa-envelope text-red-400 text-xs w-4 text-center"
-                ></i>
-                <span class="text-xs text-gray-500">ugurung247@gmail.com</span>
-              </div>
+            <div class="flex items-center gap-2 text-xs">
+              <i class="fa-solid fa-envelope text-red-400 w-4 text-center text-[11px]"></i>
+              <a href="mailto:thrashedgamer8@gmail.com" class="text-gray-500 hover:text-accent truncate transition">
+                thrashedgamer8@gmail.com
+              </a>
             </div>
           </div>
         </div>
-      </section>
+
+        <!--  Bibek Poudel -->
+        <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 transition">
+          <img src="${pageContext.request.contextPath}/assets/images/team/bibek.jpg"
+              alt="Bibek Poudel"
+              class="w-full h-44 object-cover object-top bg-gray-100" />
+          <div class="p-4 flex flex-col gap-2.5">
+            <div>
+              <p class="text-sm font-semibold text-accent">Bibek Poudel</p>
+              <span class="inline-block mt-1 text-[10px] font-semibold uppercase tracking-wide bg-blue-50 text-blue-800 px-2.5 py-0.5 rounded-full">
+                Senior full-stack developer
+              </span>
+            </div>
+            <div class="h-px bg-gray-100"></div>
+            <div class="flex items-center gap-2 text-xs text-gray-500">
+              <i class="fa-solid fa-code text-blue-400 w-4 text-center text-[11px]"></i>
+              Java · JSP · MySQL
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <i class="fa-solid fa-envelope text-red-400 w-4 text-center text-[11px]"></i>
+              <a href="mailto:bibekpoudel855@gmail.com" class="text-gray-500 hover:text-accent truncate transition">
+                bibekpoudel855@gmail.com
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!--  Mamata Timilsina  -->
+        <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 transition">
+          <img src="${pageContext.request.contextPath}/assets/images/team/mamata.jpg"
+              alt="Mamata Timilsina"
+              class="w-full h-44 object-cover object-top bg-gray-100" />
+          <div class="p-4 flex flex-col gap-2.5">
+            <div>
+              <p class="text-sm font-semibold text-accent">Mamata Timilsina</p>
+              <span class="inline-block mt-1 text-[10px] font-semibold uppercase tracking-wide bg-blue-50 text-blue-800 px-2.5 py-0.5 rounded-full">
+                Database designer
+              </span>
+            </div>
+            <div class="h-px bg-gray-100"></div>
+            <div class="flex items-center gap-2 text-xs text-gray-500">
+              <i class="fa-solid fa-code text-blue-400 w-4 text-center text-[11px]"></i>
+              Java · JSP · MySQL
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <i class="fa-solid fa-envelope text-red-400 w-4 text-center text-[11px]"></i>
+              <span class="text-gray-500 truncate">mamatimilsina8@gmail.com</span>
+            </div>
+          </div>
+        </div>
+
+        <!--  Parbin Shrees  -->
+        <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 transition">
+          <img src="${pageContext.request.contextPath}/assets/images/team/parbin.jpg"
+              alt="Parbin Shrees"
+              class="w-full h-44 object-cover object-top bg-gray-100" />
+          <div class="p-4 flex flex-col gap-2.5">
+            <div>
+              <p class="text-sm font-semibold text-accent">Parbin Shrees</p>
+              <span class="inline-block mt-1 text-[10px] font-semibold uppercase tracking-wide bg-pink-50 text-pink-800 px-2.5 py-0.5 rounded-full">
+                UI/UX designer
+              </span>
+            </div>
+            <div class="h-px bg-gray-100"></div>
+            <div class="flex items-center gap-2 text-xs text-gray-500">
+              <i class="fa-solid fa-code text-blue-400 w-4 text-center text-[11px]"></i>
+              Java · JSP · MySQL
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <i class="fa-solid fa-envelope text-red-400 w-4 text-center text-[11px]"></i>
+              <span class="text-gray-500 truncate">parbinshreesh64487@gmail.com</span>
+            </div>
+          </div>
+        </div>
+
+        <!--  Subodh Man Singh Bhandari  -->
+        <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 transition">
+          <img src="${pageContext.request.contextPath}/assets/images/team/subodh.jpg"
+              alt="Subodh Man Singh Bhandari"
+              class="w-full h-44 object-cover object-top bg-gray-100" />
+          <div class="p-4 flex flex-col gap-2.5">
+            <div>
+              <p class="text-sm font-semibold text-accent">Subodh Man Singh Bhandari</p>
+              <span class="inline-block mt-1 text-[10px] font-semibold uppercase tracking-wide bg-green-50 text-green-800 px-2.5 py-0.5 rounded-full">
+                Civil eng. · full-stack dev
+              </span>
+            </div>
+            <div class="h-px bg-gray-100"></div>
+            <div class="flex items-center gap-2 text-xs text-gray-500">
+              <i class="fa-solid fa-helmet-safety text-green-500 w-4 text-center text-[11px]"></i>
+              Civil Eng. · Java · MySQL
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <i class="fa-solid fa-envelope text-red-400 w-4 text-center text-[11px]"></i>
+              <a href="mailto:smsb668@gmail.com" class="text-gray-500 hover:text-accent truncate transition">
+                smsb668@gmail.com
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!--  Unita Rai  -->
+        <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 transition">
+          <img src="${pageContext.request.contextPath}/images/team/unita.jpg"
+              alt="Unita Rai"
+              class="w-full h-44 object-cover object-top bg-gray-100" />
+          <div class="p-4 flex flex-col gap-2.5">
+            <div>
+              <p class="text-sm font-semibold text-accent">Unita Rai</p>
+              <span class="inline-block mt-1 text-[10px] font-semibold uppercase tracking-wide bg-blue-50 text-blue-800 px-2.5 py-0.5 rounded-full">
+                Full-stack developer
+              </span>
+            </div>
+            <div class="h-px bg-gray-100"></div>
+            <div class="flex items-center gap-2 text-xs text-gray-500">
+              <i class="fa-solid fa-code text-blue-400 w-4 text-center text-[11px]"></i>
+              Java · JSP · MySQL
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+              <i class="fa-solid fa-envelope text-red-400 w-4 text-center text-[11px]"></i>
+              <span class="text-gray-500 truncate">ugurung247@gmail.com</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
 
       <!-- tech stack  -->
       <section class="bg-primary border-y border-gray-100">
