@@ -23,156 +23,146 @@ uri="jakarta.tags.fmt" %>
 
     <main>
       <!-- hero section  -->
-      <section class="overflow-hidden bg-accent text-white">
-        <div class="relative w-[90vw] mx-auto py-20 md:py-28 flex flex-col md:flex-row items-center gap-10">
-        <div style="
-        position: absolute;
-        inset: 0;
-        opacity: 0.04;
-        pointer-events: none;
-        background:
-        repeating-linear-gradient(
-            0deg,
-            transparent,
-            transparent 39px,
-            white 39px,
-            white 40px
-        ),
-        repeating-linear-gradient(
-            90deg,
-            transparent,
-            transparent 39px,
-            white 39px,
-            white 40px
-        );
-      "></div>
+      <section class="bg-gray-200 border-b border-gray-100">
+        <div class="w-[90vw] mx-auto py-14 md:py-20 flex flex-col md:flex-row items-center gap-12 md:gap-16">
+
+          <!-- left side section -->
           <div class="flex-1 text-center md:text-left">
-            <span
-              class="inline-block text-xs font-semibold tracking-widest uppercase text-gray-400 mb-4"
-            >
+
+            <span class="inline-flex items-center gap-2 text-[11px] font-semibold tracking-widest uppercase text-accent bg-accent/8 border border-accent/20 rounded-full px-3.5 py-1 mb-6">
+              <span class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
               Nepal's IoT Marketplace
             </span>
-            <h1
-              class="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-5"
-            >
-              Build Something<br />
-              <span class="text-gray-300">Extraordinary</span>
-            </h1>
-            <p
-              class="text-gray-400 text-sm sm:text-base max-w-md mb-8 mx-auto md:mx-0"
-            >
-              Arduino, ESP32, sensors, modules and ready-made IoT project kits —
-              all in one place.
-            </p>
-            <!-- add this inside the hero's left column (the div with class "flex-1 text-center md:text-left") -->
-          <form action="${pageContext.request.contextPath}/products" method="get" class="mt-6 mb-4">
-              <div class="flex items-center max-w-md mx-auto md:mx-0">
-                  <input type="text" name="keyword" placeholder="Search products "
-                        class="w-full px-4 py-2 text-sm text-accent bg-white rounded border border-white/20 focus:outline-none focus:ring-2 focus:ring-white/50">
 
-                  <button type="submit" class="bg-white text-accent px-4 py-2 rounded text-sm font-semibold hover:opacity-80 transition ml-2">
-                      <i class="fa-solid fa-magnifying-glass"></i>
-                  </button>
+            <h1 class="text-4xl sm:text-5xl md:text-[52px] font-extrabold text-accent leading-[1.1] tracking-tight mb-5">
+              Build Something<br />
+              <span class="text-gray-500">Extraordinary</span>
+            </h1>
+
+            <p class="text-gray-500 text-sm sm:text-base max-w-sm mb-8 mx-auto md:mx-0 leading-relaxed">
+              Arduino, ESP32, sensors, modules and ready-made IoT project kits —
+              all in one place, delivered nationwide.
+            </p>
+
+            <!-- search -->
+            <form action="${pageContext.request.contextPath}/products" method="get" class="mb-8">
+              <div class="flex items-center max-w-sm mx-auto md:mx-0 bg-white border border-gray-200 rounded-xl overflow-hidden focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/15 transition-all shadow-sm">
+                <i class="fa-solid fa-magnifying-glass text-gray-400 text-sm pl-4"></i>
+                <input type="text" name="keyword" placeholder="Search products…"
+                       class="flex-1 px-6 py-3 text-sm text-accent bg-transparent placeholder-gray-400 focus:outline-none" />
+                <button type="submit"
+                        class="m-1.5 px-4 py-2 bg-accent text-white text-sm font-semibold rounded-lg hover:opacity-90 transition flex-shrink-0">
+                  Search
+                </button>
               </div>
-          </form>
-            <div
-              class="flex flex-col sm:flex-row gap-3 justify-center md:justify-start"
-            >
-              <a
-                href="${pageContext.request.contextPath}/products"
-                class="bg-white text-accent text-sm font-semibold px-7 py-3 rounded-xl hover:opacity-90 transition"
-              >
-                Shop Now →
+            </form>
+
+
+          <!-- buttons  -->
+            <div class="flex flex-col sm:flex-row gap-3 justify-center md:justify-start">
+              <a href="${pageContext.request.contextPath}/products"
+                 class="bg-accent text-white text-sm font-bold px-8 py-3.5 rounded-xl hover:opacity-90 transition shadow-sm">
+                Shop Now &nbsp;→
               </a>
-              <a
-                href="${pageContext.request.contextPath}/products?sort=newest"
-                class="border border-gray-600 text-white text-sm font-medium px-7 py-3 rounded-xl hover:bg-white/10 transition"
-              >
+              <a href="${pageContext.request.contextPath}/products?sort=newest"
+                 class="bg-white border border-gray-200 text-gray-600 text-sm font-medium px-8 py-3.5 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition shadow-sm">
                 New Arrivals
               </a>
             </div>
+
+            <!--  stats -->
+            <div class="flex items-center gap-6 mt-10 justify-center md:justify-start">
+              <div class="text-center md:text-left">
+                <p class="text-lg font-extrabold text-accent leading-none">500+</p>
+                <p class="text-[11px] text-gray-400 mt-0.5">Products</p>
+              </div>
+              <div class="w-px h-8 bg-gray-200"></div>
+              <div class="text-center md:text-left">
+                <p class="text-lg font-extrabold text-accent leading-none">Khalti</p>
+                <p class="text-[11px] text-gray-400 mt-0.5">& COD</p>
+              </div>
+              <div class="w-px h-8 bg-gray-200"></div>
+              <div class="text-center md:text-left">
+                <p class="text-lg font-extrabold text-accent leading-none">Promo</p>
+                <p class="text-[11px] text-gray-400 mt-0.5">Code</p>
+              </div>
+            </div>
           </div>
-          
-            <div class="flex-1 hidden lg:flex justify-end gap-4 items-end">
-                <div
-                    class="w-36 h-44 rounded-2xl bg-white/5 border border-white/30 backdrop-blur-sm flex flex-col items-center justify-center gap-2 mb-6"
-                    >
-                    <i class="fa-solid fa-microchip text-3xl text-white"></i>
-                    <span class="text-xs text-gray-400 font-medium"
-                        >Microcontrollers</span
-                    >
-                    </div>
-                    <div
-                    class="w-36 h-44 rounded-2xl bg-white/5 border border-white/30 backdrop-blur-sm flex flex-col items-center justify-center gap-2"
-                    >
-                    <i class="fa-solid fa-wifi text-3xl text-white"></i>
-                    <span class="text-xs text-gray-400 font-medium">IoT Modules</span>
-                    </div>
-                    <div
-                    class="w-36 h-44 rounded-2xl bg-white/5 border border-white/30 backdrop-blur-sm flex flex-col items-center justify-center gap-2 mb-6"
-                    >
-                    <i class="fa-solid fa-gauge text-3xl text-white"></i>
-                    <span class="text-xs text-gray-400 font-medium">Sensors</span>
-                    </div>
+
+          <!-- right hero image -->
+          <div class="flex-1 w-full max-w-md md:max-w-none">
+            <div class="relative rounded-3xl overflow-hidden bg-gray-100 border border-gray-200 aspect-[4/3] shadow-sm">
+              <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80"
+                   alt="IoT components and project kits"
+                   class="w-full h-full object-cover" />
+
+              <!-- floating badge -->
+              <div class="absolute bottom-4 left-4 bg-white/95 backdrop-blur-sm border border-gray-200 rounded-xl px-4 py-2.5 flex items-center gap-2.5 shadow-sm">
+                <div class="w-7 h-7 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
+                  <i class="fa-solid fa-truck text-green-600 text-xs"></i>
                 </div>
+                <div>
+                  <p class="text-[11px] font-bold text-gray-800 leading-none">Free Delivery</p>
+                  <p class="text-[10px] text-gray-400 mt-0.5">On orders over Rs. 2000</p>
+                </div>
+              </div>
             </div>
-        </div>
-    </section>
+          </div>
 
-
-
-    <!-- featured bar  -->
-      <section class="bg-primary border-b border-gray-100">
-        <div
-          class="w-[90vw] mx-auto py-5 grid grid-cols-2 md:grid-cols-4 "
-        >
-          <div class="px-6 flex items-center gap-3">
-            <i class="fa-solid fa-box text-accent text-lg"></i>
-            <div>
-              <p
-                class="text-xs text-gray-400 font-medium uppercase tracking-wide"
-              >
-                Products
-              </p>
-              <p class="text-sm font-bold text-accent">500+</p>
-            </div>
-          </div>
-          <div class="px-6 flex items-center gap-3">
-            <i class="fa-solid fa-truck text-accent text-lg"></i>
-            <div>
-              <p
-                class="text-xs text-gray-400 font-medium uppercase tracking-wide"
-              >
-                Delivery
-              </p>
-              <p class="text-sm font-bold text-accent">Nationwide</p>
-            </div>
-          </div>
-          <div class="px-6 flex items-center gap-3">
-            <i class="fa-solid fa-shield-halved text-accent text-lg"></i>
-            <div>
-              <p
-                class="text-xs text-gray-400 font-medium uppercase tracking-wide"
-              >
-                Secure Pay
-              </p>
-              <p class="text-sm font-bold text-accent">Khalti & COD</p>
-            </div>
-          </div>
-          <div class="px-6 flex items-center gap-3">
-            <i class="fa-solid fa-star text-accent text-lg"></i>
-            <div>
-              <p
-                class="text-xs text-gray-400 font-medium uppercase tracking-wide"
-              >
-                Rewards
-              </p>
-              <p class="text-sm font-bold text-accent">Points on every order</p>
-            </div>
-          </div>
         </div>
       </section>
 
+
+      <!-- hero below bar  -->
+      <section class="bg-white border-b border-gray-100">
+        <div class="w-[90vw] mx-auto py-5 grid grid-cols-2 md:grid-cols-4 divide-x divide-gray-100">
+
+          <!-- Products -->
+          <div class="px-6 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-box text-blue-500 text-sm"></i>
+            </div>
+            <div>
+              <p class="text-[10px] text-gray-400 font-semibold uppercase tracking-wide">Products</p>
+              <p class="text-sm font-bold text-accent">500+</p>
+            </div>
+          </div>
+
+          <!-- Delivery -->
+          <div class="px-6 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-truck text-green-500 text-sm"></i>
+            </div>
+            <div>
+              <p class="text-[10px] text-gray-400 font-semibold uppercase tracking-wide">Delivery</p>
+              <p class="text-sm font-bold text-accent">Nationwide</p>
+            </div>
+          </div>
+
+          <!-- Khalti -->
+          <div class="px-6 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-red-50 flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-paper-plane text-red-500 text-sm"></i>
+            </div>
+            <div>
+              <p class="text-[10px] text-gray-400 font-semibold uppercase tracking-wide">Secure Pay</p>
+              <p class="text-sm font-bold text-accent">Khalti & COD</p>
+            </div>
+          </div>
+
+          <!-- Rewards -->
+          <div class="px-6 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-yellow-50 flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid fa-star text-yellow-500 text-sm"></i>
+            </div>
+            <div>
+              <p class="text-[10px] text-gray-400 font-semibold uppercase tracking-wide">Rewards</p>
+              <p class="text-sm font-bold text-accent">Points on every order</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
 
 
       <!-- category section  -->

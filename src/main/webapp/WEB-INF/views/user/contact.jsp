@@ -23,154 +23,146 @@
 
     <main class="w-[90vw] mx-auto my-10 md:my-20 flex flex-col gap-10">
       <!-- hero section  -->
-      <section
-        class="relative bg-[#1D1D1F] rounded-2xl overflow-hidden px-8 py-14 md:px-16 md:py-20 flex flex-col md:flex-row items-center gap-10"
-      >
-        <div
-          class="absolute inset-0 opacity-10"
-          style="
-            background-image: radial-gradient(
-              circle,
-              #fff 1px,
-              transparent 1px
-            );
-            background-size: 28px 28px;
-          "
-        ></div>
+       <section class="relative bg-[#1D1D1F] rounded-2xl overflow-hidden">
 
-        <div class="flex-1 relative text-center md:text-left">
-          <span
-            class="inline-block text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4 bg-white/10 px-3 py-1 rounded-full"
-          >
-            Contact NEO-HUB
-          </span>
-          <h1
-            class="text-3xl md:text-4xl font-bold text-white leading-tight mb-4"
-          >
-            We'd Love to<br />
-            <span class="text-blue-400">Hear From You</span>
-          </h1>
-          <p
-            class="text-gray-300 text-sm md:text-base leading-relaxed max-w-lg"
-          >
-            Have a question about a product, need help with an order, or just
-            want to say hello? Drop us a message and we'll get back to you as
-            soon as possible.
-          </p>
+    <!-- dot-grid texture -->
+    <div class="absolute inset-0 opacity-10 pointer-events-none"
+         style="background-image:radial-gradient(circle,#fff 1px,transparent 1px);background-size:28px 28px;"></div>
+
+    <!-- top content row -->
+    <div class="relative z-10 px-8 pt-12 md:px-16 md:pt-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
+
+        <!-- left: label + heading + desc -->
+        <div class="flex-1 max-w-xl">
+            <span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-gray-400 bg-white/10 border border-white/10 px-3 py-1 rounded-full mb-5">
+                <i class="fa-solid fa-headset text-blue-400 text-xs"></i>
+                Contact NEO-HUB
+            </span>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-white leading-tight mb-4">
+                We'd Love to<br/>
+                <span class="text-blue-400">Hear From You</span>
+            </h1>
+            <p class="text-gray-400 text-sm md:text-base leading-relaxed">
+                Have a question about a product, need help with an order, or just
+                want to say hello? Drop us a message and we'll get back to you
+                as soon as possible.
+            </p>
         </div>
 
-
-        <div
-          class="relative w-36 h-36 md:w-48 md:h-48 bg-white/10 rounded-full border border-white/20 flex items-center justify-center"
-        >
-          <div
-            class="w-24 h-24 md:w-32 md:h-32 bg-white/10 rounded-full border border-white/20 flex items-center justify-center"
-          >
-            <i
-              class="fa-solid fa-envelope-open-text text-blue-400 text-4xl md:text-5xl"
-            ></i>
-          </div>
-          <span
-            class="absolute top-4 right-5 w-3 h-3 bg-blue-400 rounded-full opacity-80"
-          ></span>
-          <span
-            class="absolute bottom-5 left-4 w-2 h-2 bg-green-400 rounded-full opacity-80"
-          ></span>
-          <span
-            class="absolute top-1/2 right-1 w-2 h-2 bg-yellow-300 rounded-full opacity-70"
-          ></span>
+        <!-- right: contact quick-info pills -->
+        <div class="flex flex-col gap-3 flex-shrink-0">
+            <div class="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl px-5 py-3.5">
+                <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-envelope text-blue-400 text-xs"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-semibold uppercase tracking-wide text-gray-500 mb-0.5">Email</p>
+                    <p class="text-sm font-semibold text-white">neohubnepal@gmail.com</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl px-5 py-3.5">
+                <div class="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-phone text-green-400 text-xs"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-semibold uppercase tracking-wide text-gray-500 mb-0.5">Phone</p>
+                    <p class="text-sm font-semibold text-white">+977 981-2345678</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 bg-white/5 border border-white/10 rounded-2xl px-5 py-3.5">
+                <div class="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center flex-shrink-0">
+                    <i class="fa-solid fa-clock text-orange-400 text-xs"></i>
+                </div>
+                <div>
+                    <p class="text-[10px] font-semibold uppercase tracking-wide text-gray-500 mb-0.5">Hours</p>
+                    <p class="text-sm font-semibold text-white">Sun – Fri, 9AM – 6PM</p>
+                </div>
+            </div>
         </div>
-      </section>
 
+    </div>
+
+    <!-- bottom stats bar -->
+    <div class="relative z-10 mx-8 md:mx-16 mt-10 mb-0 border-t border-white/10 grid grid-cols-3 divide-x divide-white/10">
+        <div class="flex items-center gap-3 py-6 pr-8">
+            <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0">
+                <i class="fa-solid fa-bolt text-yellow-400 text-xs"></i>
+            </div>
+            <div>
+                <p class="text-base font-extrabold text-white leading-none">24h</p>
+                <p class="text-[11px] text-gray-500 mt-0.5">Reply Time</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3 py-6 px-8">
+            <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0">
+                <i class="fa-solid fa-calendar-days text-blue-400 text-xs"></i>
+            </div>
+            <div>
+                <p class="text-base font-extrabold text-white leading-none">6 Days</p>
+                <p class="text-[11px] text-gray-500 mt-0.5">A Week</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3 py-6 pl-8">
+            <div class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center flex-shrink-0">
+                <i class="fa-solid fa-shield-halved text-green-400 text-xs"></i>
+            </div>
+            <div>
+                <p class="text-base font-extrabold text-white leading-none">Free</p>
+                <p class="text-[11px] text-gray-500 mt-0.5">Support</p>
+            </div>
+        </div>
+    </div>
+
+</section>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- left side contact details  -->
-        <div class="flex flex-col gap-4">
-          <div
-            class="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-3"
-          >
-            <div
-              class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center flex-shrink-0"
-            >
-              <i class="fa-solid fa-location-dot text-gray-500"></i>
-            </div>
-            <div>
-              <p
-                class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1"
-              >
-                Our Address
-              </p>
-              <p class="text-sm font-semibold text-[#1D1D1F]">NEO-HUB Store</p>
-              <p class="text-xs text-gray-500 leading-relaxed mt-0.5">
-                Gandaki Province, Pokhara<br />Nepal
-              </p>
-            </div>
-          </div>
+         <div class="flex flex-col gap-4">
+          <div class="bg-white border border-gray-200 rounded-2xl p-6 flex items-start gap-4">
+            <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-location-dot text-blue-500"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">Our Address</p>
+                            <p class="text-sm font-semibold text-accent">NEO-HUB Store</p>
+                            <p class="text-xs text-gray-500 leading-relaxed mt-0.5">Gandaki Province, Pokhara<br/>Nepal</p>
+                        </div>
+                    </div>
 
-          <div
-            class="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-3"
-          >
-            <div
-              class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center flex-shrink-0"
-            >
-              <i class="fa-solid fa-phone text-gray-500"></i>
-            </div>
-            <div>
-              <p
-                class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1"
-              >
-                Phone
-              </p>
-              <p class="text-sm font-semibold text-[#1D1D1F]">
-                +977 981-2345678
-              </p>
-              <p class="text-xs text-gray-500 mt-0.5">Sun – Fri, 9 AM – 6 PM</p>
-            </div>
-          </div>
+                    <div class="bg-white border border-gray-200 rounded-2xl p-6 flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-phone text-green-500"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">Phone</p>
+                            <p class="text-sm font-semibold text-accent">+977 981-2345678</p>
+                            <p class="text-xs text-gray-500 mt-0.5">Sun – Fri, 9 AM – 6 PM</p>
+                        </div>
+                    </div>
 
-          <div
-            class="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-3"
-          >
-            <div
-              class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center flex-shrink-0"
-            >
-              <i class="fa-solid fa-envelope text-gray-500"></i>
-            </div>
-            <div>
-              <p
-                class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1"
-              >
-                Email
-              </p>
-              <p class="text-sm font-semibold text-[#1D1D1F]">
-                neohubnepal@gmail.com
-              </p>
-              <p class="text-xs text-gray-500 mt-0.5">
-                We reply within 24 hours
-              </p>
-            </div>
-          </div>
+                    <div class="bg-white border border-gray-200 rounded-2xl p-6 flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-envelope text-purple-500"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">Email</p>
+                            <p class="text-sm font-semibold text-accent">neohubnepal@gmail.com</p>
+                            <p class="text-xs text-gray-500 mt-0.5">We reply within 24 hours</p>
+                        </div>
+                    </div>
 
-          <div
-            class="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-3"
-          >
-            <div
-              class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center flex-shrink-0"
-            >
-              <i class="fa-solid fa-clock text-gray-500"></i>
-            </div>
-            <div>
-              <p
-                class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1"
-              >
-                Business Hours
-              </p>
-              <p class="text-sm font-semibold text-[#1D1D1F]">
-                Sunday – Friday
-              </p>
-              <p class="text-xs text-gray-500 mt-0.5">9:00 AM – 6:00 PM NPT</p>
-            </div>
-          </div>
-        </div>
+                    <div class="bg-white border border-gray-200 rounded-2xl p-6 flex items-start gap-4">
+                        <div class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-clock text-orange-500"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-wide text-gray-400 mb-1">Business Hours</p>
+                            <p class="text-sm font-semibold text-accent">Sunday – Friday</p>
+                            <p class="text-xs text-gray-500 mt-0.5">9:00 AM – 6:00 PM NPT</p>
+                        </div>
+                    </div>
+
+                </div>
+
 
         <!-- contact form  -->
         <div
