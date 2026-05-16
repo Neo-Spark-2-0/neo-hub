@@ -5,7 +5,7 @@
          version="6.0">
 
 
-<!-- ========== handling error pages ================ -->
+
 <!-- the throwable handles only exceptions which are not handled code using try catch   -->
     <error-page>
         <exception-type>java.lang.Throwable</exception-type>

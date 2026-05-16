@@ -16,9 +16,64 @@
         <jsp:param name="activePage" value="orders" />
     </jsp:include>
 
-    <main class="w-[90vw] mx-auto my-10 md:my-20">
+    <main class="w-[90vw] mx-auto my-10 md:my-20 min-h-[50vh]">
         <h1 class="text-2xl md:text-3xl font-bold text-accent mb-8">My Orders</h1>
+        <!-- filter  -->
+        <div class="bg-white border border-gray-200 rounded-2xl p-5 mb-6 shadow-sm">
+            <div class="flex flex-wrap items-end gap-6">
 
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[11px] font-medium text-gray-800 uppercase tracking-widest">Status</label>
+                    <select name="status" id="status"
+                            hx-get="${pageContext.request.contextPath}/order-history"
+                            hx-trigger="change"
+                            hx-target="#order-table"
+                            hx-swap="innerHTML"
+                            class="h-9 px-6 bg-white border border-gray-200 text-sm text-accent rounded-xl cursor-pointer">
+                        <option value="all">All Orders</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="processing">Processing</option>
+                        <option value="confirmed">Confirmed</option>
+                    </select>
+                </div>
+
+                <!-- payment method  -->
+                <div class="flex flex-col gap-1.5">
+                    <label class="text-[11px] font-medium text-gray-800 uppercase tracking-widest">Payment method</label>
+                    <div class="flex flex-wrap gap-2">
+                        <label class="flex items-center gap-2 px-4 py-1.5 rounded-full border border-gray-200 cursor-pointer text-sm text-gray-500">
+                            <input type="radio" name="paymentMethod" value="all" checked
+                                   hx-get="${pageContext.request.contextPath}/order-history"
+                                   hx-trigger="change" hx-target="#order-table" hx-swap="innerHTML"
+                                   class="hidden">
+                            All
+                        </label>
+                        <label class="flex items-center gap-2 px-4 py-1.5 rounded-full border border-gray-200 cursor-pointer text-sm text-gray-500">
+                            <input type="radio" name="paymentMethod" value="Khalti"
+                                   hx-get="${pageContext.request.contextPath}/order-history"
+                                   hx-trigger="change" hx-target="#order-table" hx-swap="innerHTML"
+                                   class="hidden">
+                            <i class="fa-solid fa-paper-plane text-red-500 text-xs"></i> Khalti
+                        </label>
+                        <label class="flex items-center gap-2 px-4 py-1.5 rounded-full border border-gray-200 cursor-pointer text-sm text-gray-500 ">
+                            <input type="radio" name="paymentMethod" value="CashOnDelivery"
+                                   hx-get="${pageContext.request.contextPath}/order-history"
+                                   hx-trigger="change" hx-target="#order-table" hx-swap="innerHTML"
+                                   class="hidden">
+                            <i class="fa-solid fa-money-bill-wave text-green-600 text-xs"></i> Cash on delivery
+                        </label>
+                    </div>
+                </div>
+
+                <!-- reset -->
+                <a href="${pageContext.request.contextPath}/order-history"
+                   class="ml-auto flex items-center gap-1.5 text-xs text-red-500 hover:text-accent border border-gray-200 hover:border-accent/30 rounded-xl px-3 py-2 transition self-end">
+                    <i class="fa-solid fa-rotate-right text-[10px]"></i> Reset
+                </a>
+            </div>
+        </div>
         <c:choose>
             <c:when test="${empty orders}">
                 <div class="bg-white rounded-2xl border border-gray-200 p-12 text-center">
@@ -33,7 +88,7 @@
             <c:otherwise>
                 <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
                     <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
+                        <table class="w-full text-sm" id="order-table">
                             <thead class="bg-gray-50 border-b border-gray-200">
                                 <tr>
                                     <th class="text-left py-4 px-5 font-semibold text-gray-600">Order ID</th>

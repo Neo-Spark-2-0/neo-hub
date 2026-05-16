@@ -92,7 +92,7 @@ uri="jakarta.tags.fmt" %>
           <!-- right hero image -->
           <div class="flex-1 w-full max-w-md md:max-w-none">
             <div class="relative rounded-3xl overflow-hidden bg-gray-100 border border-gray-200 aspect-[4/3] shadow-sm">
-              <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&q=80"
+              <img src="${pageContext.request.contextPath}/static/images/hero.jpg"
                    alt="IoT components and project kits"
                    class="w-full h-full object-cover" />
 
