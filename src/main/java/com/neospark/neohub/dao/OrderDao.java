@@ -14,6 +14,7 @@ public interface OrderDao {
     List<Order> getAllOrders();
     List<Order> getOrdersByUser(int userId);
     List<Order> getOrdersByStatus(String orderStatus);
+    List<Order> getOrdersByUserWithFilters(int userId, String status, String paymentMethod);
     
     // Dashboard
     int getTotalOrderCount();

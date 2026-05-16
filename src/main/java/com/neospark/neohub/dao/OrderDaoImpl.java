@@ -155,6 +155,45 @@ public class OrderDaoImpl implements OrderDao {
         }
         return orders;
     }
+
+    @Override
+    public List<Order> getOrdersByUserWithFilters(int userId, String status, String paymentMethod) {
+        boolean filterStatus  = status != null && !"all".equals(status);
+        boolean filterPayment = paymentMethod != null && !"all".equals(paymentMethod);
+        String sql = "SELECT o.*, u.full_name AS user_full_name, u.phone AS user_phone, "
+               + "u.street, u.city, u.district, u.province, "
+               + "p.method AS payment_method, p.status AS payment_status, p.transaction_id "
+               + "FROM orders o "
+               + "LEFT JOIN users u ON o.user_id = u.id "
+               + "LEFT JOIN payments p ON p.order_id = o.id "
+               + "WHERE o.user_id = ? ";
+
+        if (filterStatus)  sql += "AND LOWER(o.order_status) = LOWER(?) ";
+        if (filterPayment) sql += "AND p.method = ? ";
+        sql += "ORDER BY o.created_at DESC";
+
+        List<Order> orders = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            int idx = 1;
+            ps.setInt(idx++, userId);
+            if (filterStatus)  ps.setString(idx++, status);
+            if (filterPayment) ps.setString(idx++, paymentMethod);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) orders.add(mapOrder(rs));
+        } catch (SQLException e) {
+            System.out.println("Error getting filtered orders: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return orders;
+    }
+
+
     @Override
     public int getTotalOrderCount() {
         String sql = "SELECT COUNT(*) FROM orders";

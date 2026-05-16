@@ -1,4 +1,7 @@
-<table class="w-full text-sm" id="order-table">
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>   
+        <table class="w-full text-sm">
                             <thead class="bg-gray-50 border-b border-gray-200">
                                 <tr>
                                     <th class="text-left py-4 px-5 font-semibold text-gray-600">Order ID</th>
