@@ -22,4 +22,10 @@ public interface OrderDao {
     double getTotalRevenue();
     List<Order> getRecentOrders(int limit);
     List<Object[]> getMonthlyRevenue();
+    // Returns last 7 days revenue as list of Object[]{date_string, revenue_double}
+    List<Object[]> getDailyRevenue(int days);
+
+    // Returns order count grouped by status
+    List<Object[]> getOrderStatusBreakdown();
+
 }

@@ -28,10 +28,10 @@
                 </div>
                 
                 <!-- Status Update Form -->
-                <form action="orders" method="POST" class="flex gap-2">
+                <form action="orders" method="POST" class="flex gap-4">
                     <input type="hidden" name="action" value="updateStatus">
                     <input type="hidden" name="orderId" value="${order.id}">
-                    <select name="orderStatus" class="bg-white border-none rounded-xl text-xs font-bold focus:ring-2 focus:ring-info shadow-sm">
+                    <select name="orderStatus" class="bg-white px-7 py-2 border-none rounded-xl text-xs font-bold focus:ring-2 focus:ring-info shadow-sm">
                         <option value="Pending" ${order.orderStatus eq 'Pending' ? 'selected' : ''}>Pending</option>
                         <option value="Processing" ${order.orderStatus eq 'Processing' ? 'selected' : ''}>Processing</option>
                         <option value="Shipped" ${order.orderStatus eq 'Shipped' ? 'selected' : ''}>Shipped</option>
