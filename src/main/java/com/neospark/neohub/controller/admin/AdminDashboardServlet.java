@@ -58,6 +58,19 @@ public class AdminDashboardServlet extends HttpServlet {
         req.setAttribute("recentUsers", recentUsers);
         req.setAttribute("lowStockProducts", lowStockProducts);
 
+        // Analytics data for charts
+        List<Object[]> dailyRevenue      = orderDao.getDailyRevenue(7); // 7-day sparkline
+        List<Object[]> monthlyRevenue    = orderDao.getMonthlyRevenue();    // 12-month trend
+        List<Object[]> orderStatusData   = orderDao.getOrderStatusBreakdown();
+        List<Object[]> topProducts       = productDao.getTopSellingProducts(5);
+        List<Object[]> salesByCategory   = productDao.getSalesByCategory();
+
+        req.setAttribute("dailyRevenue",    dailyRevenue);
+        req.setAttribute("monthlyRevenue",  monthlyRevenue);
+        req.setAttribute("orderStatusData", orderStatusData);
+        req.setAttribute("topProducts",     topProducts);
+        req.setAttribute("salesByCategory", salesByCategory);
+
         // Forward to dashboard JSP
         req.getRequestDispatcher("/WEB-INF/views/admin/dashboard.jsp").forward(req, resp);
     }

@@ -296,7 +296,63 @@ public class OrderDaoImpl implements OrderDao {
         return 0;
     }
 
-       private Order mapOrder(ResultSet rs) throws SQLException {
+    @Override
+    public List<Object[]> getDailyRevenue(int days) {
+        String sql = "SELECT DATE(created_at) as day, COALESCE(SUM(total_amount), 0) as revenue "
+                + "FROM orders "
+                + "WHERE created_at >= CURDATE() - INTERVAL ? DAY "
+                + "  AND order_status != 'Cancelled' "
+                + "GROUP BY DATE(created_at) "
+                + "ORDER BY day ASC";
+        List<Object[]> result = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, days);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                result.add(new Object[]{
+                    rs.getString("day"),
+                    rs.getDouble("revenue")
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getDailyRevenue: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return result;
+    }
+
+    @Override
+    public List<Object[]> getOrderStatusBreakdown() {
+        String sql = "SELECT order_status, COUNT(*) as count "
+                + "FROM orders "
+                + "GROUP BY order_status "
+                + "ORDER BY count DESC";
+        List<Object[]> result = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                result.add(new Object[]{
+                    rs.getString("order_status"),
+                    rs.getInt("count")
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getOrderStatusBreakdown: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return result;
+    }
+
+    
+    private Order mapOrder(ResultSet rs) throws SQLException {
         Order order = new Order();
         order.setId(rs.getInt("id"));
         order.setSubTotalAmount(rs.getDouble("sub_total_amount"));
@@ -332,11 +388,11 @@ public class OrderDaoImpl implements OrderDao {
 
     private String buildAddress(String street, String city, String district, String province) {
         StringBuilder sb = new StringBuilder();
-        if (province != null && !province.isEmpty()) sb.append(province);
-        if (district != null && !district.isEmpty()) sb.append(district).append(", ");
-        if (city     != null && !city.isEmpty())     sb.append(city).append(", ");
         if (street   != null && !street.isEmpty())   sb.append(street).append(", ");
+        if (city     != null && !city.isEmpty())     sb.append(city).append(", ");
+        if (district != null && !district.isEmpty()) sb.append(district).append(", ");
+        if (province != null && !province.isEmpty()) sb.append(province);
         return sb.toString().replaceAll(",\\s*$", "");
-}
+    }
     
 }
