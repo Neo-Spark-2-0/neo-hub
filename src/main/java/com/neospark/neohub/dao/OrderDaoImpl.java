@@ -308,7 +308,7 @@ public class OrderDaoImpl implements OrderDao {
         order.setCreatedAt(rs.getTimestamp("created_at"));
         order.setUpdatedAt(rs.getTimestamp("updated_at"));
  
-        // Nullable FK
+        // fk nullable handling for promo_code_id
         int promoCodeId = rs.getInt("promo_code_id");
         order.setPromoCodeId(rs.wasNull() ? null : promoCodeId);
  
@@ -331,12 +331,12 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     private String buildAddress(String street, String city, String district, String province) {
-        StringBuilder sb = new StringBuilder();
-        if (province != null && !province.isEmpty()) sb.append(province);
-        if (district != null && !district.isEmpty()) sb.append(district).append(", ");
-        if (city     != null && !city.isEmpty())     sb.append(city).append(", ");
-        if (street   != null && !street.isEmpty())   sb.append(street).append(", ");
-        return sb.toString().replaceAll(",\\s*$", "");
-}
-    
-}
+            StringBuilder sb = new StringBuilder();
+            if (province != null && !province.isEmpty()) sb.append(province);
+            if (district != null && !district.isEmpty()) sb.append(district).append(", ");
+            if (city     != null && !city.isEmpty())     sb.append(city).append(", ");
+            if (street   != null && !street.isEmpty())   sb.append(street).append(", ");
+            return sb.toString().replaceAll(",\\s*$", "");
+    }
+        
+    }

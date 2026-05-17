@@ -404,7 +404,7 @@
             <div>
               <p class="text-sm font-semibold text-accent">Unita Rai</p>
               <span class="inline-block mt-1 text-[10px] font-semibold uppercase tracking-wide bg-blue-50 text-blue-800 px-2.5 py-0.5 rounded-full">
-                Full-stack developer
+                Project Manager
               </span>
             </div>
             <div class="h-px bg-gray-100"></div>
