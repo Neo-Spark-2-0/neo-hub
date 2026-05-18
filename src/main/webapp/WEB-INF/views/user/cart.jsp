@@ -129,6 +129,22 @@
                 </div>
             </c:otherwise>
         </c:choose>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     </main>
 
     <jsp:include page="/WEB-INF/templates/user/footer.jsp" />

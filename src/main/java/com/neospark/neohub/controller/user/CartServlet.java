@@ -26,8 +26,7 @@ public class CartServlet extends HttpServlet {
         List<Cart> cartItems = cartDao.getCartByUser(user.getId());
 
 
-// this block of code i ve add because if user added some product to cart and after that product got out of stock or deleted by admin then also the stock not updated in cart 
-
+// this block of code i ve add because if user added some product to cart and after that product got out of stock or deleted by admin then also the stock not updated in cart
         for (Cart item : cartItems) {
         Product product = productDao.getProductById(item.getProductId());
         if (product == null || !product.isActive()) {
