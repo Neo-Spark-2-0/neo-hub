@@ -27,22 +27,6 @@ public class ContactMessageDaoImpl implements ContactMessageDao {
     }
 
     @Override
-    public ContactMessage getMessageById(int id) {
-        String sql = "SELECT * FROM contact_messages WHERE id = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return mapMessage(rs);
-            }
-        } catch (SQLException e) {
-            System.out.println("Error fetching message by id: " + e.getMessage());
-        }
-        return null;
-    }
-
-    @Override
     public List<ContactMessage> getAllMessages() {
         List<ContactMessage> list = new ArrayList<>();
         String sql = "SELECT * FROM contact_messages ORDER BY created_at DESC";
@@ -59,33 +43,6 @@ public class ContactMessageDaoImpl implements ContactMessageDao {
     }
 
 
-
-    @Override
-    public boolean updateStatus(int messageId, String status) {
-        String sql = "UPDATE contact_messages SET status = ? WHERE id = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setString(1, status);
-            ps.setInt(2, messageId);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.out.println("Error updating message status: " + e.getMessage());
-            return false;
-        }
-    }
-
-    @Override
-    public boolean deleteMessage(int messageId) {
-        String sql = "DELETE FROM contact_messages WHERE id = ?";
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, messageId);
-            return ps.executeUpdate() > 0;
-        } catch (SQLException e) {
-            System.out.println("Error deleting message: " + e.getMessage());
-            return false;
-        }
-    }
 
     private ContactMessage mapMessage(ResultSet rs) throws SQLException {
         ContactMessage msg = new ContactMessage();
