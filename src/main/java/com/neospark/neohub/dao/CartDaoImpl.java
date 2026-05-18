@@ -7,8 +7,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CartDaoImpl implements CartDao {
 
+public class CartDaoImpl implements CartDao {
+// method to add to cart
     @Override
     public boolean addToCart(Cart cart) {
         String sql = "INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?) "
