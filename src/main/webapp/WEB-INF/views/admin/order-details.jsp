@@ -38,7 +38,11 @@
                         <option value="Delivered" ${order.orderStatus eq 'Delivered' ? 'selected' : ''}>Delivered</option>
                         <option value="Cancelled" ${order.orderStatus eq 'Cancelled' ? 'selected' : ''}>Cancelled</option>
                     </select>
-                    <button type="submit" class="bg-accent text-white px-4 py-2 rounded-xl text-xs font-bold shadow-sm hover:opacity-90 transition">Update</button>
+                    <button type="button"
+                            onclick="this.form.submit();"
+                            class="bg-accent text-white px-4 py-2 rounded-xl text-xs font-bold shadow-sm hover:opacity-90 transition">
+                        Update
+                    </button>
                 </form>
             </div>
 
@@ -118,5 +122,17 @@
         </main>
         <jsp:include page="/WEB-INF/templates/admin/footer.jsp" />
     </div>
+
+    <script>
+        window.onload = function() {
+            <%-- Read from session flash messages --%>
+            <c:if test="${not empty success}">
+                showToast('<c:out value="${success}" />', "success");
+            </c:if>
+            <c:if test="${not empty error}">
+                showToast('<c:out value="${error}" />', "error");
+            </c:if>
+        };
+    </script>
 </body>
 </html>
