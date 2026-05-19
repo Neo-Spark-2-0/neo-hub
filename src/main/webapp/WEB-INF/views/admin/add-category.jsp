@@ -20,11 +20,11 @@
         <main class="p-6 md:p-10 flex-1">
             <div class="max-w-2xl mx-auto">
                 <div class="flex items-center gap-4 mb-8">
-                    <a href="categories" class="w-10 h-10 flex items-center justify-center bg-white rounded-xl shadow-sm"><i class="fa-solid fa-arrow-left text-xs"></i></a>
+                    <a href="${pageContext.request.contextPath}/admin/categories" class="w-10 h-10 flex items-center justify-center bg-white rounded-xl shadow-sm"><i class="fa-solid fa-arrow-left text-xs"></i></a>
                     <h2 class="text-2xl font-bold">New Category</h2>
                 </div>
 
-                <form action="categories" method="POST" enctype="multipart/form-data" class="bg-primary p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+                <form action="${pageContext.request.contextPath}/admin/categories" method="POST" enctype="multipart/form-data" class="bg-primary p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
                     <input type="hidden" name="action" value="insert">
                     
                     <div>

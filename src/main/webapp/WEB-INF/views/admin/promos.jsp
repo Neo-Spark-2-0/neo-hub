@@ -196,7 +196,7 @@
                 </div>
 
                 <!-- Modal Form -->
-                <form action="promos" method="POST" class="px-8 py-6 space-y-5">
+                <form action="${pageContext.request.contextPath}/admin/promos" method="POST" class="px-8 py-6 space-y-5">
                     <input type="hidden" name="action" value="insert">
 
                     <!-- Code -->

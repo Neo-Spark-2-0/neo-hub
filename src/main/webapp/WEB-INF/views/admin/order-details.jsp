@@ -28,7 +28,7 @@
                 </div>
                 
                 <!-- Status Update Form -->
-                <form action="orders" method="POST" class="flex gap-4">
+                <form action="${pageContext.request.contextPath}/admin/orders" method="POST" class="flex gap-4">
                     <input type="hidden" name="action" value="updateStatus">
                     <input type="hidden" name="orderId" value="${order.id}">
                     <select name="orderStatus" class="bg-white px-7 py-2 border-none rounded-xl text-xs font-bold focus:ring-2 focus:ring-info shadow-sm">

@@ -27,7 +27,7 @@
                     <h2 class="text-2xl font-bold text-accent">Modify Category</h2>
                 </div>
 
-                <form action="categories" method="POST" enctype="multipart/form-data" 
+                <form action="${pageContext.request.contextPath}/admin/categories" method="POST" enctype="multipart/form-data" 
                       class="bg-primary p-10 rounded-[2.5rem] shadow-sm border border-gray-100 space-y-8">
                     
                     <input type="hidden" name="action" value="update">

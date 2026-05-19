@@ -63,7 +63,7 @@
                             <a href="categories?action=edit&id=${category.id}" class="flex-1 text-center bg-secondary text-accent py-2 rounded-lg text-xs font-bold hover:bg-gray-200 transition">
                                 <i class="fa-solid fa-pen-to-square mr-1"></i> Edit
                             </a>
-                            <form id="delCat-${category.id}" action="categories" method="POST" class="flex-1 m-0">
+                            <form id="delCat-${category.id}" action="${pageContext.request.contextPath}/admin/categories" method="POST" class="flex-1 m-0">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="id" value="${category.id}">
                                 <button type="button" onclick="confirmAdminAction('Delete category? All associated products may be affected.', 'delCat-${category.id}')"
@@ -78,5 +78,19 @@
         </main>
         <jsp:include page="/WEB-INF/templates/admin/footer.jsp" />
     </div>
+
+    <!-- SCRIPT FOR NOTIFICATIONS -->
+    <script>
+        window.onload = function() {
+            <%-- Read from session flash messages --%>
+            <c:if test="${not empty success}">
+                showToast('<c:out value="${success}" />', "success");
+            </c:if>
+            <c:if test="${not empty error}">
+                showToast('<c:out value="${error}" />', "error");
+            </c:if>
+        };
+    </script>
+
 </body>
 </html>
