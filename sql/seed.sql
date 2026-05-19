@@ -12,7 +12,7 @@ USE neohub;
 --    PasswordUtil.getHashPassword("password123")
 -- -----------------------------------------------------
 INSERT INTO users (full_name, email, password, phone, province, district, city, street, role, is_active, is_email_verified) VALUES
-('Admin User', 'admin@neohub.com', '$2a$10$N9qo8uLOickgx2ZMRZoMy.Mr5vY8qZqZqZqZqZqZqZqZqZqZq', '9812345678', 'Bagmati', 'Kathmandu', 'Kathmandu', 'Admin Street', 'ADMIN', TRUE, TRUE),
+('Admin', 'admin@neohub.com', '$2a$10$aCaiJw4Zpmrko9FiWF1AzOUE542GKLfm8vB6JAeHRCYsaYAow8LSK', '9812345678', 'Bagmati', 'Kathmandu', 'Kathmandu', 'Admin Street', 'ADMIN', TRUE, TRUE),
 ('Ram Sharma', 'ram.sharma@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMy.Mr5vY8qZqZqZqZqZqZqZqZqZq', '9812345670', 'Bagmati', 'Lalitpur', 'Patan', 'Mangal Bazaar', 'USER', TRUE, TRUE),
 ('Sita Thapa', 'sita.thapa@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMy.Mr5vY8qZqZqZqZqZqZqZqZqZq', '9812345671', 'Bagmati', 'Bhaktapur', 'Bhaktapur', 'Durbar Square', 'USER', TRUE, TRUE),
 ('Hari Nepal', 'hari.nepal@example.com', '$2a$10$N9qo8uLOickgx2ZMRZoMy.Mr5vY8qZqZqZqZqZqZqZqZqZq', '9812345672', 'Province1', 'Jhapa', 'Birtamode', 'Main Road', 'USER', TRUE, TRUE),
