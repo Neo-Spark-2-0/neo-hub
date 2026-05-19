@@ -7,21 +7,31 @@ import com.neospark.neohub.model.Order;
 public interface OrderDao {
     // CRUD
     boolean placeOrder(Order order);
+
     boolean updateOrderStatus(int orderId, String orderStatus);
-    
+
     // Fetch
     Order getOrderById(int id);
+
     List<Order> getAllOrders();
+
     List<Order> getOrdersByUser(int userId);
+
     List<Order> getOrdersByStatus(String orderStatus);
+
     List<Order> getOrdersByUserWithFilters(int userId, String status, String paymentMethod);
-    
+
     // Dashboard
     int getTotalOrderCount();
+
     int getOrderCountByStatus(String orderStatus);
+
     double getTotalRevenue();
+
     List<Order> getRecentOrders(int limit);
+
     List<Object[]> getMonthlyRevenue();
+
     // Returns last 7 days revenue as list of Object[]{date_string, revenue_double}
     List<Object[]> getDailyRevenue(int days);
 

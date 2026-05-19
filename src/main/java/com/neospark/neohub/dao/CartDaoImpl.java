@@ -10,6 +10,8 @@ import java.util.List;
 
 public class CartDaoImpl implements CartDao {
 // method to add to cart
+
+
     @Override
     public boolean addToCart(Cart cart) {
         String sql = "INSERT INTO cart (user_id, product_id, quantity) VALUES (?, ?, ?) "
@@ -25,6 +27,7 @@ public class CartDaoImpl implements CartDao {
             return false;
         }
     }
+
 
     @Override
     public boolean updateQuantity(int userId, int productId, int quantity) {

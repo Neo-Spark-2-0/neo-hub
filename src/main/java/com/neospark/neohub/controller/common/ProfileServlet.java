@@ -104,6 +104,7 @@ public class ProfileServlet extends HttpServlet {
             setErrorAndForward(request, response, "profileError", "Failed to update profile. Try again.");
         }
     }
+
     public void handleChangePassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) SessionUtil.getAttribute(request, "user");
         String currentPassword = request.getParameter("currentPassword").trim();
@@ -138,6 +139,7 @@ public class ProfileServlet extends HttpServlet {
             setErrorAndForward(request, response, "passwordError", "Failed to update password. Try again.");
         }
     }
+
     public void handleUploadPhoto(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Part imagePart = request.getPart("profilePhoto");
         String imagePath = ImageUploadUtil.uploadImage(imagePart, "profile");

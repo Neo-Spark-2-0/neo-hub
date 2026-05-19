@@ -12,6 +12,7 @@ public class ContactMessage {
     private Timestamp updatedAt;
 
     public ContactMessage() {}
+
     public ContactMessage(int id, int userId, String subject, String message, String status, Timestamp createdAt, Timestamp updatedAt) {
         this.id = id;
         this.userId = userId;

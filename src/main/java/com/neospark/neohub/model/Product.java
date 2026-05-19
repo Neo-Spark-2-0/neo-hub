@@ -27,7 +27,7 @@ public class Product {
     // Timestamps
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    
+
     // Constructors
     public Product() {}
 

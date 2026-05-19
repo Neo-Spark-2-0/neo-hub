@@ -1,5 +1,6 @@
 package com.neospark.neohub.utils;
 import org.mindrot.jbcrypt.BCrypt;
+
 public class PasswordUtil {
 
     private static final int COST = 10;

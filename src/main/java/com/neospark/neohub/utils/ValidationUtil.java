@@ -9,7 +9,7 @@ public class ValidationUtil {
         return false;
     }
 
-      public static boolean isNullOrEmpty(String value) {
+    public static boolean isNullOrEmpty(String value) {
         return value == null || value.trim().isEmpty();
     }
 
@@ -31,10 +31,12 @@ public class ValidationUtil {
     public static boolean isPasswordsMatch(String password, String retypePassword) {
         return password != null && password.equals(retypePassword);
     }
-        public static boolean isValidPhone(String phone) {
+
+    public static boolean isValidPhone(String phone) {
         if (isNullOrEmpty(phone)) return false;
         return phone.matches("^(98|97|96)[0-9]{8}$");
     }
+
     public static boolean isFullName(String username) {
         if (isNullOrEmpty(username)) return false;
 

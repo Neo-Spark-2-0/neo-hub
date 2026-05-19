@@ -32,7 +32,7 @@ public class User {
 
     public User() {}
 
-    // Constructor for New User Registration 
+    // Constructor for New User Registration
     public User(String fullName, String email,String phone, String password) {
         this.fullName = fullName;
         this.email    = email;
@@ -66,127 +66,145 @@ public class User {
     }
 
 
-    public int getId() { 
+    public int getId() {
         return id; 
     }
-    public void setId(int id) { 
+
+    public void setId(int id) {
         this.id = id; 
     }
 
-    public String getFullName() { 
+    public String getFullName() {
         return fullName; 
     }
-    public void setFullName(String fullName) { 
+
+    public void setFullName(String fullName) {
         this.fullName = fullName; 
     }
 
-    public String getEmail() { 
+    public String getEmail() {
         return email; 
     }
-    public void setEmail(String email) { 
+
+    public void setEmail(String email) {
         this.email = email; 
     }
 
-    public String getPassword() { 
+    public String getPassword() {
         return password; 
     }
-    public void setPassword(String password) { 
+
+    public void setPassword(String password) {
         this.password = password; 
     }
 
     public String getPhone() {
         return phone; 
         }
-    public void setPhone(String phone) { 
+
+    public void setPhone(String phone) {
         this.phone = phone; 
     }
 
-    public String getProvince() { 
+    public String getProvince() {
         return province; 
     }
-    public void setProvince(String province) { 
+
+    public void setProvince(String province) {
         this.province = province; 
     }
 
-    public String getDistrict() { 
+    public String getDistrict() {
         return district; 
     }
-    public void setDistrict(String district) { 
+
+    public void setDistrict(String district) {
         this.district = district; 
     }
 
-    public String getCity() { 
+    public String getCity() {
         return city; 
     }
-    public void setCity(String city) { 
+
+    public void setCity(String city) {
         this.city = city; 
     }
 
     public String getLocalLevel() {
         return localLevel;
     }
+
     public void setLocalLevel(String local_level) {
         this.localLevel = local_level;
     }
 
-    public String getWard() { 
+    public String getWard() {
         return ward; 
     }
-    public void setWard(String ward) { 
+
+    public void setWard(String ward) {
         this.ward = ward; 
     }
 
-    public String getStreet() { 
+    public String getStreet() {
         return street; 
     }
-    public void setStreet(String street) { 
+
+    public void setStreet(String street) {
         this.street = street; 
     }
 
-    public String getLandmark() { 
+    public String getLandmark() {
         return landmark; 
     }
-    public void setLandmark(String landmark) { 
+
+    public void setLandmark(String landmark) {
         this.landmark = landmark; 
     }
 
-    public String getProfileImage() { 
+    public String getProfileImage() {
         return profileImage; 
     }
-    public void setProfileImage(String profileImage) { 
+
+    public void setProfileImage(String profileImage) {
         this.profileImage = profileImage; 
     }
 
-    public String getRole() { 
+    public String getRole() {
         return role; 
     }
-    public void setRole(String role) { 
+
+    public void setRole(String role) {
         this.role = role; 
     }
 
-    public boolean isActive() { 
+    public boolean isActive() {
         return isActive; 
     }
-    public void setActive(boolean active) { 
+
+    public void setActive(boolean active) {
         isActive = active; 
     }
 
     public boolean getEmailVerified() {
         return emailVerified;
     }
+
     public void setEmailVerified(boolean emailVerified) {
         this.emailVerified = emailVerified;
     }
 
-    public Timestamp getCreatedAt() { 
+    public Timestamp getCreatedAt() {
         return createdAt; 
     }
+
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
 
-    public Timestamp getUpdatedAt() { 
+    public Timestamp getUpdatedAt() {
         return updatedAt; 
     }
-    public void setUpdatedAt(Timestamp updatedAt) { 
+
+    public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt; 
     }
 

@@ -14,7 +14,9 @@ public class Cart {
     private int productStock;
     private Timestamp createdAt;
     private Timestamp updatedAt;
+
     public Cart(){}
+
     public Cart(Timestamp createdAt, int id, int userId, int productId, int quantity, Timestamp updatedAt) {
         this.createdAt = createdAt;
         this.id = id;

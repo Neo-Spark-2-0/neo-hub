@@ -1,7 +1,6 @@
 package com.neospark.neohub.model;
 
 
-
 public class OrderItem {
 
     private int id;
