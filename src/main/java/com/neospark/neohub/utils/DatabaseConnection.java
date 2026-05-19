@@ -8,7 +8,7 @@ public class DatabaseConnection {
 
     private static final String DB_URL = "jdbc:mysql://ballast.proxy.rlwy.net:41576/railway";
     private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "";
+    private static final String DB_PASSWORD = "fVuepOIdNBGyDWudLBLyKXBTLBEcsKBY";
 
     static {
         try {
