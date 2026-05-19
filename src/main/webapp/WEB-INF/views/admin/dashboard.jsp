@@ -112,7 +112,7 @@
         <%-- ── CHARTS ROW ───────────────────────────────────────────────── --%>
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-            <%-- Revenue Trend (12 months) - takes 2/3 width --%>
+            <%-- Revenue Trend (12 months) - 2/3 width --%>
             <div class="lg:col-span-2 bg-primary p-6 rounded-2xl shadow-sm border border-gray-100">
                 <div class="flex items-center justify-between mb-6">
                     <div>
@@ -124,7 +124,7 @@
                 <canvas id="revenueChart" height="100"></canvas>
             </div>
 
-            <%-- Order Status Doughnut - takes 1/3 width --%>
+            <%-- Order Status Doughnut -  1/3 width --%>
             <div class="bg-primary p-6 rounded-2xl shadow-sm border border-gray-100">
                 <div class="flex items-center justify-between mb-6">
                     <div>
@@ -251,7 +251,6 @@
 
 <%-- ── CHART DATA FROM SERVLET (written as JS variables) ─────────────── --%>
 <script>
-    <%-- Build JS arrays from Java lists passed by servlet --%>
 
     const revenueLabels = [
         <c:forEach var="row" items="${monthlyRevenue}" varStatus="s">
@@ -299,7 +298,6 @@
 </script>
 
 <!-- chart js  -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
     const palette = {
         blue:   '#3B82F6',
@@ -361,7 +359,7 @@
             labels: statusLabels,
             datasets: [{
                 data: statusData,
-                backgroundColor: [palette.yellow, palette.blue, palette.teal, palette.green, palette.red],
+                backgroundColor: [palette.yellow, palette.blue, palette.teal, palette.green, palette.red, palette.purple],
                 borderWidth: 2,
                 borderColor: '#fff'
             }]

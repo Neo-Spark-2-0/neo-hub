@@ -60,7 +60,7 @@ public class AdminUserServlet extends HttpServlet {
                 if (userId <= 0) {
                     req.getSession().setAttribute("error", "Invalid user ID.");
                 } else if (userId == currentUser.getId()) {
-                    req.getSession().setAttribute("error", "You cannot delete your own account.");
+                    req.getSession().setAttribute("error", "You cannot delete admin account.");
                 } else {
                     boolean deleted = userDao.deleteUser(userId);
                     req.getSession().setAttribute(

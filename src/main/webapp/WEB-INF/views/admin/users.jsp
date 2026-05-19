@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
+<%@ taglib prefix="fn" uri="jakarta.tags.functions" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -39,28 +40,43 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-secondary text-sm">
-                        <c:forEach var="u" items="${userList}">
+                        <c:forEach var="user" items="${userList}">
                             <tr class="hover:bg-secondary/30 transition-colors">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
                                         <div class="w-10 h-10 rounded-full bg-secondary overflow-hidden border border-gray-100">
-                                            <img src="${pageContext.request.contextPath}/${not empty u.profileImage ? u.profileImage : 'static/images/default-user.png'}" class="w-full h-full object-cover">
+                                            <c:choose>
+                                                <c:when test="${not empty user.profileImage}">
+                                                <img src="${pageContext.request.contextPath}/uploads/${user.profileImage}" alt="Photo" class="w-full h-full object-cover"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                <span class="text-base font-semibold text-blue-500 w-full h-full flex items-center justify-center">
+                                                <c:set var="parts" value="${fn:split(user.fullName, ' ')}" />
+                                                    ${fn:substring(parts[0], 0, 1)}
+                                                    <c:if test="${fn:length(parts) > 1}">
+                                                        ${fn:substring(parts[1], 0, 1)}
+                                                    </c:if>
+                                                </span>
+                                                </c:otherwise>
+                                            </c:choose>
                                         </div>
                                         <div>
-                                            <div class="font-bold text-accent">${u.fullName}</div>
-                                            <div class="text-[11px] text-gray-400">${u.email}</div>
+                                            <div class="font-bold text-accent">${user.fullName}</div>
+                                            <div class="text-[11px] text-gray-400">${user.email}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 text-gray-600">${u.phone}</td>
+                                <td class="px-6 py-4 text-gray-600">${user.phone}</td>
                                 <td class="px-6 py-4 text-center">
-                                    <span class="px-2 py-1 rounded-lg text-[10px] font-bold uppercase ${u.role eq 'ADMIN' ? 'bg-accent text-white' : 'bg-gray-100 text-gray-500'}">
-                                        ${u.role}
+                                    <span class="px-2 py-1 rounded-lg text-[10px] font-bold uppercase ${user.role eq 'ADMIN' ? 'bg-accent text-white' : 'bg-gray-100 text-gray-500'}">
+                                        ${user.role}
                                     </span>
                                 </td>
+
+                                <!-- email verification status -->
                                 <td class="px-6 py-4 text-center">
                                     <c:choose>
-                                        <c:when test="${u.emailVerified}">
+                                        <c:when test="${user.emailVerified}">
                                             <i class="fa-solid fa-circle-check text-success" title="Verified"></i>
                                         </c:when>
                                         <c:otherwise>
@@ -68,23 +84,40 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
+
+                                <!-- toggle active/banned status -->
                                 <td class="px-6 py-4 text-center">
-                                    <form id="statusForm-${u.id}" action="users" method="POST">
+                                    <form id="statusForm-${user.id}" action="${pageContext.request.contextPath}/admin/users" method="POST">
                                         <input type="hidden" name="action" value="toggleStatus">
-                                        <input type="hidden" name="userId" value="${u.id}">
-                                        <button type="button" onclick="confirmAdminAction('Change this user status?', 'statusForm-${u.id}')"
-                                            class="px-2 py-1 rounded-lg text-[10px] font-bold uppercase ${u.active ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}">
-                                            ${u.active ? 'Active' : 'Banned'}
+                                        <input type="hidden" name="userId" value="${user.id}">
+                                        
+                                        <button type="button"
+                                            onclick="confirmAdminAction('${user.active ? 'Ban' : 'Activate'}', '${user.fullName}', 'statusForm-${user.id}')"
+                                            title="${user.active ? 'Click to ban user' : 'Click to activate user'}"
+                                            class="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold uppercase cursor-pointer transition hover:opacity-80 ${user.active ? 'bg-success/10 text-success hover:bg-success/20' : 'bg-danger/10 text-danger hover:bg-danger/20'}">
+                                            <c:choose>
+                                                <c:when test="${user.active}">
+                                                    <i class="fa-solid fa-circle-check text-[10px]"></i> Active
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <i class="fa-solid fa-ban text-[10px]"></i> Banned
+                                                </c:otherwise>
+                                            </c:choose>
+                                            <i class="fa-solid fa-chevron-down text-[8px] opacity-60"></i>
                                         </button>
                                     </form>
                                 </td>
+
+                                <!-- delete user, but not self -->
                                 <td class="px-6 py-4 text-right">
-                                    <c:if test="${u.id != sessionScope.user.id}">
-                                        <form id="delUser-${u.id}" action="users" method="POST">
+                                    <c:if test="${user.id != sessionScope.user.id}">
+                                        <form id="deleteForm-${user.id}" action="${pageContext.request.contextPath}/admin/users" method="POST">
                                             <input type="hidden" name="action" value="delete">
-                                            <input type="hidden" name="userId" value="${u.id}">
-                                            <button type="button" onclick="confirmAdminAction('Permanently delete this user?', 'delUser-${u.id}')"
-                                                    class="text-danger hover:bg-danger/10 p-2 rounded-lg transition">
+                                            <input type="hidden" name="userId" value="${user.id}">
+                                            <%-- FIX: pass the correct unique formId into confirmDelete --%>
+                                            <button type="button"
+                                                onclick="confirmDelete('${user.fullName}', 'deleteForm-${user.id}')"
+                                                class="text-danger hover:bg-danger/10 p-2 rounded-lg transition">
                                                 <i class="fa-solid fa-trash-can"></i>
                                             </button>
                                         </form>
@@ -98,5 +131,54 @@
         </main>
         <jsp:include page="/WEB-INF/templates/admin/footer.jsp" />
     </div>
+
+    <script>
+        <!-- Handle confirmation for admin actions -->
+        function confirmAdminAction(actionLabel, userName, formId) {
+            const isActivating = actionLabel === 'Activate';
+            Swal.fire({
+                title: actionLabel + " User?",
+                text: isActivating
+                    ? "This will restore access for " + userName + "."
+                    : "This will revoke access for " + userName + ".",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: isActivating ? "#22c55e" : "#ef4444",
+                cancelButtonColor: "#6b7280",
+                confirmButtonText: "Yes, " + actionLabel
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(formId).submit();
+                }
+            });
+        }
+
+        <!-- Handle confirmation for delete action -->
+        function confirmDelete(userName, formId) {
+            Swal.fire({
+                title: "Delete " + userName + "?",
+                text: "This action cannot be undone!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#ef4444",
+                cancelButtonColor: "#6b7280",
+                confirmButtonText: "Yes, delete it"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    document.getElementById(formId).submit();
+                }
+            });
+        }
+
+            <!-- Show flash messages -->       
+        <c:if test="${not empty success}">
+            showToast('<c:out value="${success}"/>', "success");
+        </c:if>
+        <c:if test="${not empty error}">
+            showToast('<c:out value="${error}"/>', "error");
+        </c:if>
+
+    </script>
+
 </body>
 </html>

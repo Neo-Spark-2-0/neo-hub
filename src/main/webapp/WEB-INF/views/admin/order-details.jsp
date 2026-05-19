@@ -60,7 +60,18 @@
                                 <c:forEach var="item" items="${order.orderItems}">
                                     <tr>
                                         <td class="px-6 py-4 flex items-center gap-3">
-                                            <img src="${pageContext.request.contextPath}/${item.productImage}" class="w-10 h-10 rounded-lg border object-cover">
+                                            <c:choose>
+                                                <c:when test="${not empty item.productImage}">
+                                                    <img src="${pageContext.request.contextPath}/uploads/${item.productImage}" 
+                                                        alt="${item.productName}" 
+                                                        class="w-12 h-12 object-cover rounded-lg"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                <img src="${pageContext.request.contextPath}/static/images/product-fallback.jpg" 
+                                                        alt="${item.productName}" 
+                                                        class="w-12 h-12 object-cover rounded-lg"/>
+                                                </c:otherwise>
+                                            </c:choose>
                                             <span class="text-sm font-bold text-accent">${item.productName}</span>
                                         </td>
                                         <td class="px-6 py-4 text-center text-sm">${item.quantity}</td>

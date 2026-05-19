@@ -63,8 +63,7 @@ public class AdminOrderServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/admin/orders");
             return;
         }
-
-        // Load order items (they aren't populated by getOrderById)
+        
         List<OrderItem> items = orderItemDao.getItemsByOrderId(id);
         order.setOrderItems(items);
 
@@ -96,8 +95,6 @@ public class AdminOrderServlet extends HttpServlet {
 
             } else if ("updatePayment".equals(action)) {
                 String payStatus = req.getParameter("paymentStatus");
-                // Signature: updatePaymentStatus(orderId, status, transactionId)
-                // transactionId is optional here — pass existing or empty
                 Order order = orderDao.getOrderById(orderId);
                 String txId = (order != null && order.getTransactionId() != null)
                               ? order.getTransactionId() : "";

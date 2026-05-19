@@ -27,30 +27,46 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <c:forEach var="cat" items="${categoryList}">
+                <c:forEach var="category" items="${categoryList}">
                     <div class="bg-primary rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all relative overflow-hidden group">
                         <div class="flex items-start justify-between mb-4">
                             <div class="w-14 h-14 bg-secondary rounded-xl overflow-hidden border border-gray-50">
-                                <img src="${pageContext.request.contextPath}/${cat.image}" class="w-full h-full object-cover">
+                                <c:choose>
+                                    <c:when test="${not empty category.image}">
+                                        <img
+                                        src="${pageContext.request.contextPath}/uploads/${category.image}"
+                                        alt="${category.name}"
+                                        class="w-full h-full object-cover rounded-xl"
+                                        />
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img
+                                        src="${pageContext.request.contextPath}/static/images/category-fallback.jpg"
+                                        alt="${category.name}"
+                                        class="w-full h-full object-cover rounded-xl"
+                                        />
+                                    </c:otherwise>
+                                </c:choose>
+                                
                             </div>
-                            <span class="text-[10px] font-bold uppercase px-2 py-1 rounded-lg ${cat.active ? 'bg-success/10 text-success' : 'bg-gray-100 text-gray-400'}">
-                                ${cat.active ? 'Active' : 'Disabled'}
+                            <span class="text-[10px] font-bold uppercase px-2 py-1 rounded-lg ${category.active ? 'bg-success/10 text-success' : 'bg-gray-100 text-gray-400'}">
+                                ${category.active ? 'Active' : 'Disabled'}
                             </span>
                         </div>
                         
-                        <h3 class="font-bold text-accent mb-1">${cat.name}</h3>
+                        <h3 class="font-bold text-accent mb-1">${category.name}</h3>
                         <p class="text-xs text-gray-400 leading-relaxed mb-6">
-                            ${fn:substring(cat.description, 0, 80)}...
+                            ${fn:substring(category.description, 0, 80)}...
                         </p>
 
                         <div class="flex gap-2">
-                            <a href="categories?action=edit&id=${cat.id}" class="flex-1 text-center bg-secondary text-accent py-2 rounded-lg text-xs font-bold hover:bg-gray-200 transition">
+                            <a href="categories?action=edit&id=${category.id}" class="flex-1 text-center bg-secondary text-accent py-2 rounded-lg text-xs font-bold hover:bg-gray-200 transition">
                                 <i class="fa-solid fa-pen-to-square mr-1"></i> Edit
                             </a>
-                            <form id="delCat-${cat.id}" action="categories" method="POST" class="flex-1 m-0">
+                            <form id="delCat-${category.id}" action="categories" method="POST" class="flex-1 m-0">
                                 <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="id" value="${cat.id}">
-                                <button type="button" onclick="confirmAdminAction('Delete category? All associated products may be affected.', 'delCat-${cat.id}')"
+                                <input type="hidden" name="id" value="${category.id}">
+                                <button type="button" onclick="confirmAdminAction('Delete category? All associated products may be affected.', 'delCat-${category.id}')"
                                     class="w-full bg-danger/10 text-danger py-2 rounded-lg text-xs font-bold hover:bg-danger hover:text-white transition">
                                     <i class="fa-solid fa-trash-can mr-1"></i> Delete
                                 </button>

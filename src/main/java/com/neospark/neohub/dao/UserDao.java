@@ -36,6 +36,6 @@ public interface UserDao {
 
     int getTotalUserCount(); //Added for dashboard stats
 
-    List<User> getRecentUsers(int i); //Added for dashboard recent users
+    List<User> getRecentUsers(int limit); //Added for dashboard recent users
     
 }
