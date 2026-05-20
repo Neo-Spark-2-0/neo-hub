@@ -16,14 +16,9 @@
 
         <div class="relative group">
             <div class="w-10 h-10 rounded-full border-2 border-secondary overflow-hidden bg-secondary shadow-sm">
-                <c:choose>
-                    <c:when test="${not empty sessionScope.user.profileImage}">
-                        <img src="${pageContext.request.contextPath}/${sessionScope.user.profileImage}" class="w-full h-full object-cover">
-                    </c:when>
-                    <c:otherwise>
-                        <div class="w-full h-full flex items-center justify-center font-bold text-accent">AD</div>
-                    </c:otherwise>
-                </c:choose>
+                <c:if test="${not empty sessionScope.user.profileImage}">
+                    <div class="w-full h-full flex items-center justify-center font-bold text-accent">AD</div>
+                </c:if>
             </div>
         </div>
     </div>

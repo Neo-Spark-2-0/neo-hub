@@ -23,6 +23,10 @@ public class CartServlet extends HttpServlet {
             throws ServletException, IOException {
 
         User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
         List<Cart> cartItems = cartDao.getCartByUser(user.getId());
 
 
@@ -62,6 +66,10 @@ public class CartServlet extends HttpServlet {
             throws ServletException, IOException {
 
         User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
         String action = request.getParameter("action");
         boolean isHtmx = "true".equals(request.getHeader("HX-Request"));
 

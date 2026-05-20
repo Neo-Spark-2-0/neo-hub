@@ -61,6 +61,10 @@ public class LoginServlet extends HttpServlet {
 
         // storing flash message in session to show in login page
         SessionUtil.setAttribute(req, "loginSuccessFlashMessage", "Login successful! Welcome back.");
+        if(user.isAdmin()) {
+            resp.sendRedirect(req.getContextPath() + "/admin/dashboard");
+            return;
+        }
         resp.sendRedirect(req.getContextPath() + "/");
 
     }
