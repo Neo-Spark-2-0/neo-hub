@@ -15,6 +15,9 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * The type Order history servlet.
+ */
 @WebServlet("/order-history")
 public class OrderHistoryServlet extends HttpServlet {
 

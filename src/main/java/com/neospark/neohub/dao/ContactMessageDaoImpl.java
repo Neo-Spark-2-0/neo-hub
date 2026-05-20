@@ -10,6 +10,9 @@ import java.util.List;
 import com.neospark.neohub.model.ContactMessage;
 import com.neospark.neohub.utils.DatabaseConnection;
 
+/**
+ * The type Contact message dao.
+ */
 public class ContactMessageDaoImpl implements ContactMessageDao {
     @Override
     public boolean saveMessage(ContactMessage message) {

@@ -10,6 +10,9 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * The type Admin user servlet.
+ */
 @WebServlet("/admin/users")
 public class AdminUserServlet extends HttpServlet {
     private final UserDao userDao = new UserDaoImpl();

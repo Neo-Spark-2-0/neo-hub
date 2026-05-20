@@ -15,6 +15,9 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * The type Admin order servlet.
+ */
 @WebServlet("/admin/orders")
 public class AdminOrderServlet extends HttpServlet {
     private final OrderDao orderDao = new OrderDaoImpl();

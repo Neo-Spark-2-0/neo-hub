@@ -11,6 +11,9 @@ import java.util.List;
 import com.neospark.neohub.utils.DatabaseConnection;
 import com.neospark.neohub.model.Product;
 
+/**
+ * The type Product dao.
+ */
 public class ProductDaoImpl implements ProductDao {
 
     @Override

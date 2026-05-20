@@ -18,8 +18,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * The type Register servlet.
+ */
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
+    /**
+     * The User dao.
+     */
     public  final UserDao userDao = new UserDaoImpl();
 
     @Override

@@ -7,6 +7,9 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * The type Order failure servlet.
+ */
 @WebServlet("/order-failure")
 public class OrderFailureServlet extends HomeServlet {
     @Override

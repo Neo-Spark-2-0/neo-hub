@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
+/**
+ * The type Cart servlet.
+ */
 @WebServlet("/cart")
 public class CartServlet extends HttpServlet {
 

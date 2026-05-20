@@ -18,6 +18,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 
+/**
+ * The type Profile servlet.
+ */
 @WebServlet("/profile")
 @MultipartConfig(
     fileSizeThreshold = 1024 * 1024,
@@ -48,6 +51,14 @@ public class ProfileServlet extends HttpServlet {
     }
 
 
+    /**
+     * Handle update profile.
+     *
+     * @param request  the request
+     * @param response the response
+     * @throws ServletException the servlet exception
+     * @throws IOException      the io exception
+     */
     public void handleUpdateProfile(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User sessionUser = (User) SessionUtil.getAttribute(request, "user");
         String fullName  = request.getParameter("fullName").trim();
@@ -105,6 +116,14 @@ public class ProfileServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Handle change password.
+     *
+     * @param request  the request
+     * @param response the response
+     * @throws ServletException the servlet exception
+     * @throws IOException      the io exception
+     */
     public void handleChangePassword(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User user = (User) SessionUtil.getAttribute(request, "user");
         String currentPassword = request.getParameter("currentPassword").trim();
@@ -140,6 +159,14 @@ public class ProfileServlet extends HttpServlet {
         }
     }
 
+    /**
+     * Handle upload photo.
+     *
+     * @param request  the request
+     * @param response the response
+     * @throws ServletException the servlet exception
+     * @throws IOException      the io exception
+     */
     public void handleUploadPhoto(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Part imagePart = request.getPart("profilePhoto");
         String imagePath = ImageUploadUtil.uploadImage(imagePart, "profile");
@@ -163,6 +190,14 @@ public class ProfileServlet extends HttpServlet {
     }
 
 
+    /**
+     * Delete account.
+     *
+     * @param request  the request
+     * @param response the response
+     * @throws ServletException the servlet exception
+     * @throws IOException      the io exception
+     */
     public void deleteAccount(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         User sessionUser = (User) SessionUtil.getAttribute(request, "user");
         boolean success = userDao.deleteUser(sessionUser.getId());

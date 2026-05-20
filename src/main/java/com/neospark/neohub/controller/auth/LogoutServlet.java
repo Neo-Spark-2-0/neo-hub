@@ -10,6 +10,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * The type Logout servlet.
+ */
 @WebServlet("/logout")
 public class LogoutServlet extends HttpServlet {
     @Override

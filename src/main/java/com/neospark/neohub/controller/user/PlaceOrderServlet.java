@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Place order servlet.
+ */
 @WebServlet("/place-order")
 public class PlaceOrderServlet extends HttpServlet {
 

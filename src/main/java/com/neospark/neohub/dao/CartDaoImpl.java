@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * The type Cart dao.
+ */
 public class CartDaoImpl implements CartDao {
 // method to add to cart
 

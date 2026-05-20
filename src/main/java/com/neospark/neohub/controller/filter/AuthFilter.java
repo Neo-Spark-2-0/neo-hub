@@ -14,6 +14,9 @@ import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * The type Auth filter.
+ */
 @WebFilter("/*")
 public class AuthFilter implements Filter {
 

@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The type Product detail servlet.
+ */
 @WebServlet("/product-detail")
 public class ProductDetailServlet extends HttpServlet {
  

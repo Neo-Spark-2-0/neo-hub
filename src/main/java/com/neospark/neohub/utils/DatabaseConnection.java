@@ -4,6 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * The type Database connection.
+ */
 public class DatabaseConnection {
 
     private static final String DB_URL = "jdbc:mysql://localhost:3306/neohub";
@@ -18,10 +21,21 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * Gets connection.
+     *
+     * @return the connection
+     * @throws SQLException the sql exception
+     */
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
     }
 
+    /**
+     * Close connection.
+     *
+     * @param connection the connection
+     */
     public static void closeConnection(Connection connection) {
         try {
             if (connection != null) {

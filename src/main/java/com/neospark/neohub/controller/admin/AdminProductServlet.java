@@ -16,6 +16,9 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
+/**
+ * The type Admin product servlet.
+ */
 @WebServlet("/admin/products")
 @MultipartConfig(
     fileSizeThreshold = 1024 * 1024,          // 1 MB threshold before temp file

@@ -10,6 +10,9 @@ import java.util.List;
 import com.neospark.neohub.model.User;
 import com.neospark.neohub.utils.DatabaseConnection;
 
+/**
+ * The type User dao.
+ */
 public class UserDaoImpl implements UserDao {
     @Override
     public boolean registerUser(User user){
