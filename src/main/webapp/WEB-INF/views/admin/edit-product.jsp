@@ -125,29 +125,21 @@
                                     <p class="text-[10px] font-bold text-gray-400 uppercase mb-2">Current Image</p>
                                     <div class="w-full h-44 bg-secondary rounded-2xl overflow-hidden border border-gray-100 shadow-inner flex items-center justify-center">
                                         <c:choose>
-                                            <c:when test="${not empty product.image}">
-                                                <!-- Handle Seed URL vs Local Upload -->
-                                                <c:choose>
-                                                    <c:when test="${product.image.startsWith('http')}">
-                                                        <img id="product-image-preview" src="${product.image}" class="w-full h-full object-contain" >
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <img id="product-image-preview" src="${pageContext.request.contextPath}/display-image/${product.image}" 
-                                                             class="w-full h-full object-contain" >
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <span class="text-xs text-gray-300 italic">No Image Available</span>
-                                            </c:otherwise>
-                                        </c:choose>
+                                                <c:when test="${not empty product.image}">
+                                                    <img src="${pageContext.request.contextPath}/uploads/${product.image}" class="w-full h-full object-cover">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img src="${pageContext.request.contextPath}/static/images/product-fallback.jpg"
+                                                         alt="No image" class="w-full max-h-[400px] object-fit rounded-xl">
+                                                </c:otherwise>
+                                            </c:choose>
                                     </div>
                                 </div>
 
                                 <div>
                                     <p class="text-[10px] font-bold text-gray-400 uppercase mb-2">Replace Image</p>
                                     <input type="file" name="image" 
-                                           class="block w-full text-[10px] text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-bold file:bg-info/10 file:text-info hover:file:bg-info/20">
+                                           class="block w-full text-[10px] text-gray-400 file:mr- file:py-4 file:px-4 file:rounded-full file:border-0 file:text-[10px] file:font-bold file:bg-info/10 file:text-info hover:file:bg-info/20">
                                 </div>
                             </div>
 

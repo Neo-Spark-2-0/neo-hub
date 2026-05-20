@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * The type Checkout servlet.
+ */
 @WebServlet("/checkout")
 public class CheckoutServlet extends HttpServlet {
 

@@ -21,6 +21,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * The type Admin dashboard servlet.
+ */
 @WebServlet("/admin/dashboard")
 public class AdminDashboardServlet extends HttpServlet {
 
@@ -71,7 +74,6 @@ public class AdminDashboardServlet extends HttpServlet {
         req.setAttribute("topProducts",     topProducts);
         req.setAttribute("salesByCategory", salesByCategory);
 
-        // Forward to dashboard JSP
         req.getRequestDispatcher("/WEB-INF/views/admin/dashboard.jsp").forward(req, resp);
     }
 }

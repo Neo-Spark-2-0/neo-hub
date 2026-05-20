@@ -12,6 +12,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * The type Image retrival servlet.
+ */
 @WebServlet("/uploads/*")
 public class ImageRetrivalServlet extends HttpServlet {
     private static final String BASE_UPLOAD_DIR =

@@ -10,6 +10,9 @@ import java.sql.Types;
 import com.neospark.neohub.model.Payment;
 import com.neospark.neohub.utils.DatabaseConnection;
 
+/**
+ * The type Payment dao.
+ */
 public class PaymentDaoImpl implements PaymentDao {
 
 

@@ -15,8 +15,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * The type Login servlet.
+ */
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
+    /**
+     * The User dao.
+     */
     public final UserDao userDao = new UserDaoImpl();
 
     @Override
@@ -61,6 +67,10 @@ public class LoginServlet extends HttpServlet {
 
         // storing flash message in session to show in login page
         SessionUtil.setAttribute(req, "loginSuccessFlashMessage", "Login successful! Welcome back.");
+        if(user.isAdmin()) {
+            resp.sendRedirect(req.getContextPath() + "/admin/dashboard");
+            return;
+        }
         resp.sendRedirect(req.getContextPath() + "/");
 
     }

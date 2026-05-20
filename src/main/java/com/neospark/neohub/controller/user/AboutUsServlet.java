@@ -9,6 +9,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 
+/**
+ * The type About us servlet.
+ */
 @WebServlet("/about")
 public class AboutUsServlet extends HttpServlet{
     // do get runs when browser sens get request

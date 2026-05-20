@@ -10,6 +10,9 @@ import java.util.List;
 import com.neospark.neohub.model.OrderItem;
 import com.neospark.neohub.utils.DatabaseConnection;
 
+/**
+ * The type Order item dao.
+ */
 public class OrderItemDaoImpl implements OrderItemDao {
 
     @Override

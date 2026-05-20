@@ -16,6 +16,9 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * The type Order success servlet.
+ */
 @WebServlet("/order-success")
 public class OrderSuccessServlet extends HttpServlet {
 

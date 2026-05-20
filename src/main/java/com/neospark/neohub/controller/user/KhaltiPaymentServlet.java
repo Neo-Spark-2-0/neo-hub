@@ -18,6 +18,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 
+/**
+ * The type Khalti payment servlet.
+ */
 // Here I am reusing same servlet for payment and verification
 @WebServlet({"/khalti/initiate", "/khalti/verify"})
 public class KhaltiPaymentServlet extends HttpServlet {

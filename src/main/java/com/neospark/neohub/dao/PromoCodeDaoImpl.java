@@ -10,6 +10,9 @@ import java.util.List;
 import com.neospark.neohub.model.PromoCode;
 import com.neospark.neohub.utils.DatabaseConnection;
 
+/**
+ * The type Promo code dao.
+ */
 public class PromoCodeDaoImpl implements PromoCodeDao {
     @Override
     public boolean addPromoCode(PromoCode promoCode) {

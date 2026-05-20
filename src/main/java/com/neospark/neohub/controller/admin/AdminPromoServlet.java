@@ -11,6 +11,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
+/**
+ * The type Admin promo servlet.
+ */
 @WebServlet("/admin/promos")
 public class AdminPromoServlet extends HttpServlet {
 

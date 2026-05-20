@@ -15,6 +15,9 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * The type Order history servlet.
+ */
 @WebServlet("/order-history")
 public class OrderHistoryServlet extends HttpServlet {
 
@@ -30,7 +33,6 @@ public class OrderHistoryServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-
         String action = request.getParameter("action");
         String idParam = request.getParameter("id");
         boolean isHTMX = "true".equals(request.getHeader("HX-Request"));

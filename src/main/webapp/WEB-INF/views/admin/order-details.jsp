@@ -28,7 +28,7 @@
                 </div>
                 
                 <!-- Status Update Form -->
-                <form action="orders" method="POST" class="flex gap-4">
+                <form action="${pageContext.request.contextPath}/admin/orders" method="POST" class="flex gap-4">
                     <input type="hidden" name="action" value="updateStatus">
                     <input type="hidden" name="orderId" value="${order.id}">
                     <select name="orderStatus" class="bg-white px-7 py-2 border-none rounded-xl text-xs font-bold focus:ring-2 focus:ring-info shadow-sm">
@@ -38,7 +38,11 @@
                         <option value="Delivered" ${order.orderStatus eq 'Delivered' ? 'selected' : ''}>Delivered</option>
                         <option value="Cancelled" ${order.orderStatus eq 'Cancelled' ? 'selected' : ''}>Cancelled</option>
                     </select>
-                    <button type="submit" class="bg-accent text-white px-4 py-2 rounded-xl text-xs font-bold shadow-sm hover:opacity-90 transition">Update</button>
+                    <button type="button"
+                            onclick="this.form.submit();"
+                            class="bg-accent text-white px-4 py-2 rounded-xl text-xs font-bold shadow-sm hover:opacity-90 transition">
+                        Update
+                    </button>
                 </form>
             </div>
 
@@ -60,7 +64,18 @@
                                 <c:forEach var="item" items="${order.orderItems}">
                                     <tr>
                                         <td class="px-6 py-4 flex items-center gap-3">
-                                            <img src="${pageContext.request.contextPath}/${item.productImage}" class="w-10 h-10 rounded-lg border object-cover">
+                                            <c:choose>
+                                                <c:when test="${not empty item.productImage}">
+                                                    <img src="${pageContext.request.contextPath}/uploads/${item.productImage}" 
+                                                        alt="${item.productName}" 
+                                                        class="w-12 h-12 object-cover rounded-lg"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                <img src="${pageContext.request.contextPath}/static/images/product-fallback.jpg" 
+                                                        alt="${item.productName}" 
+                                                        class="w-12 h-12 object-cover rounded-lg"/>
+                                                </c:otherwise>
+                                            </c:choose>
                                             <span class="text-sm font-bold text-accent">${item.productName}</span>
                                         </td>
                                         <td class="px-6 py-4 text-center text-sm">${item.quantity}</td>
@@ -107,5 +122,17 @@
         </main>
         <jsp:include page="/WEB-INF/templates/admin/footer.jsp" />
     </div>
+
+    <script>
+        window.onload = function() {
+            <%-- Read from session flash messages --%>
+            <c:if test="${not empty success}">
+                showToast('<c:out value="${success}" />', "success");
+            </c:if>
+            <c:if test="${not empty error}">
+                showToast('<c:out value="${error}" />', "error");
+            </c:if>
+        };
+    </script>
 </body>
 </html>

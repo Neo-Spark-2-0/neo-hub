@@ -27,7 +27,7 @@
                     <h2 class="text-2xl font-bold text-accent">Modify Category</h2>
                 </div>
 
-                <form action="categories" method="POST" enctype="multipart/form-data" 
+                <form action="${pageContext.request.contextPath}/admin/categories" method="POST" enctype="multipart/form-data" 
                       class="bg-primary p-10 rounded-[2.5rem] shadow-sm border border-gray-100 space-y-8">
                     
                     <input type="hidden" name="action" value="update">
@@ -55,7 +55,22 @@
                             <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest">Category Icon</label>
                             <div class="relative group">
                                 <div class="w-full h-40 bg-secondary rounded-2xl overflow-hidden border border-dashed border-gray-200 flex items-center justify-center">
-                                    <img src="${pageContext.request.contextPath}/${category.image}" class="w-full h-full object-cover">
+                                    <c:choose>
+                                    <c:when test="${not empty category.image}">
+                                        <img
+                                        src="${pageContext.request.contextPath}/uploads/${category.image}"
+                                        alt="${category.name}"
+                                        class="w-full h-full object-cover rounded-xl"
+                                        />
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img
+                                        src="${pageContext.request.contextPath}/static/images/category-fallback.jpg"
+                                        alt="${category.name}"
+                                        class="w-full h-full object-cover rounded-xl"
+                                        />
+                                    </c:otherwise>
+                                </c:choose>
                                 </div>
                                 <div class="mt-4">
                                     <input type="file" name="image" 
