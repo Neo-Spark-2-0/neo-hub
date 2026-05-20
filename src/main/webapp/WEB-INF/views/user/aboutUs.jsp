@@ -271,9 +271,9 @@
 
         <!--  Aviyan Thapa  -->
         <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 transition">
-          <img src="${pageContext.request.contextPath}/assets/images/team/aviyan.jpg"
+          <img src="${pageContext.request.contextPath}/static/images/aviyan.jpeg"
               alt="Aviyan Thapa"
-              class="w-full h-44 object-cover object-top bg-gray-100" />
+              class="w-full h-96 object-cover object-top bg-gray-100" />
           <div class="p-4 flex flex-col gap-2.5">
             <div>
               <p class="text-sm font-semibold text-accent">Aviyan Thapa</p>
@@ -281,7 +281,7 @@
                 Front-end developer
               </span>
             </div>
-            <div class="h-px bg-gray-100"></div>
+            <div class="  bg-gray-100"></div>
             <div class="flex items-center gap-2 text-xs text-gray-500">
               <i class="fa-solid fa-code text-blue-400 w-4 text-center text-[11px]"></i>
               Java · JSP · MySQL
@@ -289,7 +289,7 @@
             <div class="flex items-center gap-2 text-xs">
               <i class="fa-solid fa-envelope text-red-400 w-4 text-center text-[11px]"></i>
               <a href="mailto:thrashedgamer8@gmail.com" class="text-gray-500 hover:text-accent truncate transition">
-                thrashedgamer8@gmail.com
+                aviyan960@gmail.com
               </a>
             </div>
           </div>
@@ -297,9 +297,9 @@
 
         <!--  Bibek Poudel -->
         <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 transition">
-          <img src="${pageContext.request.contextPath}/assets/images/team/bibek.jpg"
+          <img src="${pageContext.request.contextPath}/static/images/bibek.jpeg"
               alt="Bibek Poudel"
-              class="w-full h-44 object-cover object-top bg-gray-100" />
+              class="w-full h-96 object-cover object-center bg-gray-100" />
           <div class="p-4 flex flex-col gap-2.5">
             <div>
               <p class="text-sm font-semibold text-accent">Bibek Poudel</p>
@@ -307,7 +307,7 @@
                 Senior full-stack developer
               </span>
             </div>
-            <div class="h-px bg-gray-100"></div>
+            <div class="  bg-gray-100"></div>
             <div class="flex items-center gap-2 text-xs text-gray-500">
               <i class="fa-solid fa-code text-blue-400 w-4 text-center text-[11px]"></i>
               Java · JSP · MySQL
@@ -323,9 +323,9 @@
 
         <!--  Mamata Timilsina  -->
         <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 transition">
-          <img src="${pageContext.request.contextPath}/assets/images/team/mamata.jpg"
+          <img src="${pageContext.request.contextPath}/static/images/mamata.jpeg"
               alt="Mamata Timilsina"
-              class="w-full h-44 object-cover object-top bg-gray-100" />
+              class="w-full h-96 object-cover  object-bottom bg-gray-100" />
           <div class="p-4 flex flex-col gap-2.5">
             <div>
               <p class="text-sm font-semibold text-accent">Mamata Timilsina</p>
@@ -333,7 +333,7 @@
                 Database Designer
               </span>
             </div>
-            <div class="h-px bg-gray-100"></div>
+            <div class="bg-gray-100"></div>
             <div class="flex items-center gap-2 text-xs text-gray-500">
               <i class="fa-solid fa-code text-blue-400 w-4 text-center text-[11px]"></i>
               Java · JSP · MySQL
@@ -347,9 +347,9 @@
 
         <!--  Parbin Shrees  -->
         <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 transition">
-          <img src="${pageContext.request.contextPath}/assets/images/team/parbin.jpg"
+          <img src="${pageContext.request.contextPath}/static/images/parbin.jpeg"
               alt="Parbin Shrees"
-              class="w-full h-44 object-cover object-top bg-gray-100" />
+              class="w-full h-96 object-cover  object-center bg-gray-100" />
           <div class="p-4 flex flex-col gap-2.5">
             <div>
               <p class="text-sm font-semibold text-accent">Parbin Shrees</p>
@@ -357,7 +357,7 @@
                 UI/UX designer
               </span>
             </div>
-            <div class="h-px bg-gray-100"></div>
+            <div class="bg-gray-100"></div>
             <div class="flex items-center gap-2 text-xs text-gray-500">
               <i class="fa-solid fa-code text-blue-400 w-4 text-center text-[11px]"></i>
               Java · JSP · MySQL
@@ -371,9 +371,9 @@
 
         <!--  Subodh Man Singh Bhandari  -->
         <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 transition">
-          <img src="${pageContext.request.contextPath}/assets/images/team/subodh.jpg"
+          <img src="${pageContext.request.contextPath}/static/images/subodh.jpeg"
               alt="Subodh Man Singh Bhandari"
-              class="w-full h-44 object-cover object-top bg-gray-100" />
+              class="w-full h-96 object-cover object-top bg-gray-100" />
           <div class="p-4 flex flex-col gap-2.5">
             <div>
               <p class="text-sm font-semibold text-accent">Subodh Man Singh Bhandari</p>
@@ -381,7 +381,7 @@
                 Civil eng. · full-stack dev
               </span>
             </div>
-            <div class="h-px bg-gray-100"></div>
+            <div class="bg-gray-100"></div>
             <div class="flex items-center gap-2 text-xs text-gray-500">
               <i class="fa-solid fa-helmet-safety text-green-500 w-4 text-center text-[11px]"></i>
               Civil Eng. · Java · MySQL
@@ -397,9 +397,9 @@
 
         <!--  Unita Rai  -->
         <div class="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 transition">
-          <img src="${pageContext.request.contextPath}/images/team/unita.jpg"
+          <img src="${pageContext.request.contextPath}/static/images/unita.jpeg"
               alt="Unita Rai"
-              class="w-full h-44 object-cover object-top bg-gray-100" />
+              class="w-full h-96 object-cover object-top bg-gray-100" />
           <div class="p-4 flex flex-col gap-2.5">
             <div>
               <p class="text-sm font-semibold text-accent">Unita Rai</p>
@@ -407,7 +407,7 @@
                 Project Manager
               </span>
             </div>
-            <div class="h-px bg-gray-100"></div>
+            <div class="bg-gray-100"></div>
             <div class="flex items-center gap-2 text-xs text-gray-500">
               <i class="fa-solid fa-code text-blue-400 w-4 text-center text-[11px]"></i>
               Java · JSP · MySQL

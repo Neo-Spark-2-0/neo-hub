@@ -21,13 +21,13 @@ public class AuthFilter implements Filter {
     private static final String[] PUBLIC_PAGES = {
         "/", "/home", "/products", "/product-detail", "/about", "/contact",
         "/login", "/register", "/forgot-password", "/reset-password", "/verify-email",
-        "/error", "/order-failure"
+        "/error"
     };
 
     // user only pages
     private static final String[] USER_PREFIXES = {
         "/cart", "/checkout", "/place-order", "/order-history",
-        "/order-success", "/profile", "/khalti/"
+        "/order-success", "/profile", "/khalti/", "/order-failure"
     };
 
     // checking if the path is in public pages

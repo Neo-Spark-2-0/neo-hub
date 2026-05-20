@@ -30,7 +30,6 @@ public class OrderHistoryServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-
         String action = request.getParameter("action");
         String idParam = request.getParameter("id");
         boolean isHTMX = "true".equals(request.getHeader("HX-Request"));
