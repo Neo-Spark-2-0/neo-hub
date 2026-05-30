@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.neospark.neohub.model.OrderItem;
 
+/**
+ * The type Email template.
+ */
 public class EmailTemplate {
 
     private static String baseTemplate(String content) {
@@ -182,6 +185,13 @@ public class EmailTemplate {
     }
 
 
+    /**
+     * Verification email string.
+     *
+     * @param name       the name
+     * @param verifyLink the verify link
+     * @return the string
+     */
     public static String verificationEmail(String name, String verifyLink) {
         String content = """
             <p class="label">Email Verification</p>
@@ -195,6 +205,15 @@ public class EmailTemplate {
         return baseTemplate(content);
     }
 
+    /**
+     * Order confirmation email string.
+     *
+     * @param name       the name
+     * @param orderId    the order id
+     * @param total      the total
+     * @param orderItems the order items
+     * @return the string
+     */
     public static String orderConfirmationEmail(String name, String orderId, String total, List<OrderItem> orderItems) {
         StringBuilder itemsHtml = new StringBuilder();
     itemsHtml.append("""

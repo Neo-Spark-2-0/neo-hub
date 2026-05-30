@@ -56,7 +56,7 @@
                                     rounded-xl shadow-md z-50 overflow-hidden">
                             <div class="flex items-center justify-between px-4 py-3 border-b border-gray-100">
                                 <p class="text-xs font-semibold text-accent">Notifications</p>
-                                <a href="${pageContext.request.contextPath}/notifications"
+                                <a href="${pageContext.request.contextPath}/home"
                                    class="text-[11px] text-gray-400 hover:text-accent transition-colors">See all</a>
                             </div>
                             <div class="py-2 px-4">

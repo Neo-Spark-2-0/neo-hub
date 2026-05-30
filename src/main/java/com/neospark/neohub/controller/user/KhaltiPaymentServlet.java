@@ -2,6 +2,7 @@ package com.neospark.neohub.controller.user;
 
 import com.neospark.neohub.dao.*;
 import com.neospark.neohub.model.*;
+import com.neospark.neohub.utils.EmailService;
 import com.neospark.neohub.utils.SessionUtil;
 
 import jakarta.servlet.ServletException;
@@ -17,6 +18,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
 
+/**
+ * The type Khalti payment servlet.
+ */
 // Here I am reusing same servlet for payment and verification
 @WebServlet({"/khalti/initiate", "/khalti/verify"})
 public class KhaltiPaymentServlet extends HttpServlet {
@@ -186,7 +190,19 @@ public class KhaltiPaymentServlet extends HttpServlet {
             }
             paymentDao.updatePaymentStatus(orderId, "Completed", verifiedTransactionId);
             orderDao.updateOrderStatus(orderId, "Confirmed");
-
+            // sending mail after payment
+            try {
+                User user = new UserDaoImpl().getUserById(completedOrder.getUserId());
+                EmailService.sendOrderConfirmationEmail(
+                        user.getEmail(),
+                        user.getFullName(),
+                        String.valueOf(orderId),
+                        String.format("%.2f", completedOrder.getTotalAmount()),
+                        items
+                );
+            } catch (Exception e) {
+                System.err.println("Order confirmation email failed for order " + orderId + ": " + e.getMessage());
+            }
             response.sendRedirect(request.getContextPath() + "/order-success?orderId=" + orderId);
 
         } else {

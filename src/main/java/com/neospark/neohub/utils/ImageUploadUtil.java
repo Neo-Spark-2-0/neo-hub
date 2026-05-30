@@ -6,12 +6,23 @@ import java.util.UUID;
 import jakarta.servlet.http.Part;
 
 
+/**
+ * The type Image upload util.
+ */
 public class ImageUploadUtil {
     
     private static final String BASE_UPLOAD_DIR = System.getProperty("user.home") + File.separator + "neohub-uploads";
 
     private static final String[] ALLOWED_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"};
 
+    /**
+     * Upload image string.
+     *
+     * @param part   the part
+     * @param folder the folder
+     * @return the string
+     * @throws IOException the io exception
+     */
     public static String uploadImage(Part part, String folder) throws IOException {
 
         if (part == null || part.getSize() == 0) {
@@ -46,6 +57,11 @@ public class ImageUploadUtil {
         }
     }
 
+    /**
+     * Delete image.
+     *
+     * @param imagePath the image path
+     */
     public static void deleteImage(String imagePath) {
         if (imagePath == null || imagePath.isEmpty()) {
             return;

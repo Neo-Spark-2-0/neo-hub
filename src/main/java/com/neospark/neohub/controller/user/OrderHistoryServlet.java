@@ -15,6 +15,9 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * The type Order history servlet.
+ */
 @WebServlet("/order-history")
 public class OrderHistoryServlet extends HttpServlet {
 
@@ -30,9 +33,9 @@ public class OrderHistoryServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
-
         String action = request.getParameter("action");
         String idParam = request.getParameter("id");
+        boolean isHTMX = "true".equals(request.getHeader("HX-Request"));
 
         if ("view".equals(action) && idParam != null && !idParam.isEmpty()) {
             try {
@@ -55,6 +58,14 @@ public class OrderHistoryServlet extends HttpServlet {
         }
         // this is for showing all orders of the user
         else {
+            if (isHTMX) {
+                String statusFilter = request.getParameter("status");
+                String paymentMethodFilter = request.getParameter("paymentMethod");
+                List<Order> orders = orderDao.getOrdersByUserWithFilters(user.getId(), statusFilter, paymentMethodFilter);
+                request.setAttribute("orders", orders);
+                request.getRequestDispatcher("/WEB-INF/views/user/components/order-history-list.jsp").forward(request, response);
+                return;
+            }
             List<Order> orders = orderDao.getOrdersByUser(user.getId());
             request.setAttribute("orders", orders);
             request.getRequestDispatcher("/WEB-INF/views/user/orderHistory.jsp").forward(request, response);

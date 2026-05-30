@@ -6,12 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.neospark.neohub.model.Payment;
 import com.neospark.neohub.utils.DatabaseConnection;
 
+/**
+ * The type Payment dao.
+ */
 public class PaymentDaoImpl implements PaymentDao {
 
 
@@ -35,43 +36,6 @@ public class PaymentDaoImpl implements PaymentDao {
         } finally {
             DatabaseConnection.closeConnection(connection);
         }
-    }
-
-
-    @Override
-    public Payment getPaymentByOrderId(int orderId) {
-        String sql = "SELECT * FROM payments WHERE order_id = ?";
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setInt(1, orderId);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) return mapPayment(rs);
-        } catch (SQLException e) {
-            System.out.println("Error getting payment by order ID: " + e.getMessage());
-        } finally {
-            DatabaseConnection.closeConnection(connection);
-        }
-        return null;
-    }
-
-    @Override
-    public List<Payment> getAllPayments() {
-        String sql = "SELECT * FROM payments ORDER BY created_at DESC";
-        List<Payment> payments = new ArrayList<>();
-        Connection connection = null;
-        try {
-            connection = DatabaseConnection.getConnection();
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) payments.add(mapPayment(rs));
-        } catch (SQLException e) {
-            System.out.println("Error getting all payments: " + e.getMessage());
-        } finally {
-            DatabaseConnection.closeConnection(connection);
-        }
-        return payments;
     }
 
 

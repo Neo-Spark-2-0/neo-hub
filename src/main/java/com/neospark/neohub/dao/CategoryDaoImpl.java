@@ -10,6 +10,9 @@ import java.util.List;
 import com.neospark.neohub.utils.DatabaseConnection;
 import com.neospark.neohub.model.Category;
 
+/**
+ * The type Category dao.
+ */
 public class CategoryDaoImpl implements CategoryDao {
 
     @Override

@@ -1,5 +1,5 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %> <%@ taglib
+prefix="c" uri="jakarta.tags.core" %>
 <html>
   <head>
     <jsp:include page="/WEB-INF/templates/common/head.jsp">
@@ -24,61 +24,75 @@
     <main class="w-[90vw] mx-auto my-10 md:my-20 flex flex-col gap-10">
       <!-- hero section  -->
       <section
-        class="relative bg-[#1D1D1F] rounded-2xl overflow-hidden px-8 py-14 md:px-16 md:py-20 flex flex-col md:flex-row items-center gap-10"
+        class="bg-white border border-gray-200 rounded-2xl overflow-hidden"
       >
-        <div
-          class="absolute inset-0 opacity-10"
-          style="
-            background-image: radial-gradient(
-              circle,
-              #fff 1px,
-              transparent 1px
-            );
-            background-size: 28px 28px;
-          "
-        ></div>
-
-        <div class="flex-1 relative text-center md:text-left">
-          <span
-            class="inline-block text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4 bg-white/10 px-3 py-1 rounded-full"
-          >
-            Contact NEO-HUB
-          </span>
-          <h1
-            class="text-3xl md:text-4xl font-bold text-white leading-tight mb-4"
-          >
-            We'd Love to<br />
-            <span class="text-blue-400">Hear From You</span>
-          </h1>
-          <p
-            class="text-gray-300 text-sm md:text-base leading-relaxed max-w-lg"
-          >
-            Have a question about a product, need help with an order, or just
-            want to say hello? Drop us a message and we'll get back to you as
-            soon as possible.
-          </p>
-        </div>
-
-
-        <div
-          class="relative w-36 h-36 md:w-48 md:h-48 bg-white/10 rounded-full border border-white/20 flex items-center justify-center"
-        >
+        <div class="flex flex-col md:flex-row items-stretch">
+          <!-- lleft  -->
           <div
-            class="w-24 h-24 md:w-32 md:h-32 bg-white/10 rounded-full border border-white/20 flex items-center justify-center"
+            class="flex-1 p-8 md:p-12 lg:p-16 text-center md:text-left"
           >
-            <i
-              class="fa-solid fa-envelope-open-text text-blue-400 text-4xl md:text-5xl"
-            ></i>
+            <span
+              class="inline-flex items-center gap-2 text-[11px] font-semibold tracking-widest uppercase text-accent bg-accent/5 border border-accent/20 rounded-full px-3.5 py-1 mb-5"
+            >
+              <span
+                class="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"
+              ></span>
+              Get in Touch
+            </span>
+            <h1
+              class="text-3xl md:text-4xl lg:text-5xl font-bold text-accent leading-tight mb-4"
+            >
+              Let’s talk.<br />
+              <span class="text-gray-500">We’re here to help.</span>
+            </h1>
+            <p
+              class="text-gray-500 text-sm md:text-base max-w-md mx-auto md:mx-0 leading-relaxed mb-8"
+            >
+              Have a question about a product, need help with an order, or just
+              want to say hello? Fill out the form or reach us directly.
+            </p>
+            <div
+              class="flex flex-col sm:flex-row gap-3 justify-center md:justify-start"
+            >
+              <a
+                href="${pageContext.request.contextPath}/products"
+                class="inline-flex items-center gap-2 bg-accent text-white text-sm font-semibold px-6 py-2.5 rounded-xl hover:opacity-90 transition shadow-sm"
+              >
+                Browse Products <i class="fa-solid fa-arrow-right text-xs"></i>
+              </a>
+              <a
+                href="${pageContext.request.contextPath}/#"
+                class="inline-flex items-center gap-2 bg-white border border-gray-200 text-gray-600 text-sm font-medium px-6 py-2.5 rounded-xl hover:bg-gray-50 transition"
+              >
+                <i class="fa-regular fa-circle-question"></i> FAQ
+              </a>
+            </div>
           </div>
-          <span
-            class="absolute top-4 right-5 w-3 h-3 bg-blue-400 rounded-full opacity-80"
-          ></span>
-          <span
-            class="absolute bottom-5 left-4 w-2 h-2 bg-green-400 rounded-full opacity-80"
-          ></span>
-          <span
-            class="absolute top-1/2 right-1 w-2 h-2 bg-yellow-300 rounded-full opacity-70"
-          ></span>
+
+          <!-- right side -->
+          <div
+            class="flex-1 hidden md:flex items-center justify-center p-8 lg:p-12"
+          >
+            <div class="relative">
+              <div
+                class="w-40 h-40 lg:w-56 lg:h-56 rounded-full bg-accent/5 flex items-center justify-center"
+              >
+                <i
+                  class="fa-solid fa-headset text-accent text-6xl lg:text-7xl"
+                ></i>
+              </div>
+              <div
+                class="absolute -bottom-4 -right-4 w-20 h-20 bg-white rounded-full shadow-md flex items-center justify-center border border-gray-100"
+              >
+                <i class="fa-regular fa-message text-accent text-2xl"></i>
+              </div>
+              <div
+                class="absolute -top-3 -left-3 w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center"
+              >
+                <i class="fa-regular fa-clock text-accent text-sm"></i>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -86,12 +100,12 @@
         <!-- left side contact details  -->
         <div class="flex flex-col gap-4">
           <div
-            class="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-3"
+            class="bg-white border border-gray-200 rounded-2xl p-6 flex items-start gap-4"
           >
             <div
-              class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center flex-shrink-0"
+              class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0"
             >
-              <i class="fa-solid fa-location-dot text-gray-500"></i>
+              <i class="fa-solid fa-location-dot text-blue-500"></i>
             </div>
             <div>
               <p
@@ -99,7 +113,7 @@
               >
                 Our Address
               </p>
-              <p class="text-sm font-semibold text-[#1D1D1F]">NEO-HUB Store</p>
+              <p class="text-sm font-semibold text-accent">NEO-HUB Store</p>
               <p class="text-xs text-gray-500 leading-relaxed mt-0.5">
                 Gandaki Province, Pokhara<br />Nepal
               </p>
@@ -107,12 +121,12 @@
           </div>
 
           <div
-            class="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-3"
+            class="bg-white border border-gray-200 rounded-2xl p-6 flex items-start gap-4"
           >
             <div
-              class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center flex-shrink-0"
+              class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0"
             >
-              <i class="fa-solid fa-phone text-gray-500"></i>
+              <i class="fa-solid fa-phone text-green-500"></i>
             </div>
             <div>
               <p
@@ -120,20 +134,18 @@
               >
                 Phone
               </p>
-              <p class="text-sm font-semibold text-[#1D1D1F]">
-                +977 981-2345678
-              </p>
+              <p class="text-sm font-semibold text-accent">+977 981-2345678</p>
               <p class="text-xs text-gray-500 mt-0.5">Sun – Fri, 9 AM – 6 PM</p>
             </div>
           </div>
 
           <div
-            class="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-3"
+            class="bg-white border border-gray-200 rounded-2xl p-6 flex items-start gap-4"
           >
             <div
-              class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center flex-shrink-0"
+              class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0"
             >
-              <i class="fa-solid fa-envelope text-gray-500"></i>
+              <i class="fa-solid fa-envelope text-purple-500"></i>
             </div>
             <div>
               <p
@@ -141,7 +153,7 @@
               >
                 Email
               </p>
-              <p class="text-sm font-semibold text-[#1D1D1F]">
+              <p class="text-sm font-semibold text-accent">
                 neohubnepal@gmail.com
               </p>
               <p class="text-xs text-gray-500 mt-0.5">
@@ -151,12 +163,12 @@
           </div>
 
           <div
-            class="bg-white border border-gray-200 rounded-2xl p-6 flex flex-col gap-3"
+            class="bg-white border border-gray-200 rounded-2xl p-6 flex items-start gap-4"
           >
             <div
-              class="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center flex-shrink-0"
+              class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center flex-shrink-0"
             >
-              <i class="fa-solid fa-clock text-gray-500"></i>
+              <i class="fa-solid fa-clock text-orange-500"></i>
             </div>
             <div>
               <p
@@ -164,9 +176,7 @@
               >
                 Business Hours
               </p>
-              <p class="text-sm font-semibold text-[#1D1D1F]">
-                Sunday – Friday
-              </p>
+              <p class="text-sm font-semibold text-accent">Sunday – Friday</p>
               <p class="text-xs text-gray-500 mt-0.5">9:00 AM – 6:00 PM NPT</p>
             </div>
           </div>
@@ -258,7 +268,6 @@
                   />
                 </div>
 
-
                 <div>
                   <label
                     class="block text-xs font-semibold uppercase text-gray-400 mb-1"
@@ -271,7 +280,9 @@
                     required
                     placeholder="Write your message here..."
                     class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:border-gray-400 transition resize-none"
-                  ><c:out value='${param.message}'/></textarea>
+                  >
+<c:out value='${param.message}'/></textarea
+                  >
                 </div>
 
                 <div class="flex justify-end">
@@ -313,16 +324,16 @@
 
     <jsp:include page="/WEB-INF/templates/user/footer.jsp" />
 
-<script>
-    <c:if test="${not empty contactError}">
-        showToast("<c:out value='${contactError}'/>", "error");
-    </c:if>
-    
-    // flash messages from session and remove them
-    <c:if test="${not empty sessionScope.contactSuccess}">
-        showToast("<c:out value='${sessionScope.contactSuccess}'/>", "success");
-        <c:remove var="contactSuccess" scope="session" />
-    </c:if>
-</script>
+    <script>
+      <c:if test="${not empty contactError}">
+          showToast("<c:out value='${contactError}'/>", "error");
+      </c:if>
+
+      // flash messages from session and remove them
+      <c:if test="${not empty sessionScope.contactSuccess}">
+          showToast("<c:out value='${sessionScope.contactSuccess}'/>", "success");
+          <c:remove var="contactSuccess" scope="session" />
+      </c:if>
+    </script>
   </body>
 </html>

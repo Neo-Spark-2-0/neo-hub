@@ -2,6 +2,9 @@ package com.neospark.neohub.model;
 
 import java.sql.Timestamp;
 
+/**
+ * The type User.
+ */
 public class User {
     // Personal Information
     private int       id;
@@ -30,9 +33,20 @@ public class User {
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
+    /**
+     * Instantiates a new User.
+     */
     public User() {}
 
-    // Constructor for New User Registration 
+    /**
+     * Instantiates a new User.
+     *
+     * @param fullName the full name
+     * @param email    the email
+     * @param phone    the phone
+     * @param password the password
+     */
+// Constructor for New User Registration
     public User(String fullName, String email,String phone, String password) {
         this.fullName = fullName;
         this.email    = email;
@@ -40,7 +54,29 @@ public class User {
         this.password = password;
     }
 
-    // Full Table Mapping Constructor
+    /**
+     * Instantiates a new User.
+     *
+     * @param id              the id
+     * @param fullName        the full name
+     * @param email           the email
+     * @param password        the password
+     * @param phone           the phone
+     * @param province        the province
+     * @param district        the district
+     * @param city            the city
+     * @param localLevel      the local level
+     * @param ward            the ward
+     * @param street          the street
+     * @param landmark        the landmark
+     * @param profileImage    the profile image
+     * @param role            the role
+     * @param isActive        the is active
+     * @param isEmailVerified the is email verified
+     * @param createdAt       the created at
+     * @param updatedAt       the updated at
+     */
+// Full Table Mapping Constructor
     public User(int id, String fullName, String email, String password,
                 String phone, String province, String district, String city, String localLevel, String ward, String street, String landmark,
                 String profileImage, String role, boolean isActive, boolean isEmailVerified,
@@ -66,131 +102,334 @@ public class User {
     }
 
 
-    public int getId() { 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
+    public int getId() {
         return id; 
     }
-    public void setId(int id) { 
+
+    /**
+     * Sets id.
+     *
+     * @param id the id
+     */
+    public void setId(int id) {
         this.id = id; 
     }
 
-    public String getFullName() { 
+    /**
+     * Gets full name.
+     *
+     * @return the full name
+     */
+    public String getFullName() {
         return fullName; 
     }
-    public void setFullName(String fullName) { 
+
+    /**
+     * Sets full name.
+     *
+     * @param fullName the full name
+     */
+    public void setFullName(String fullName) {
         this.fullName = fullName; 
     }
 
-    public String getEmail() { 
+    /**
+     * Gets email.
+     *
+     * @return the email
+     */
+    public String getEmail() {
         return email; 
     }
-    public void setEmail(String email) { 
+
+    /**
+     * Sets email.
+     *
+     * @param email the email
+     */
+    public void setEmail(String email) {
         this.email = email; 
     }
 
-    public String getPassword() { 
+    /**
+     * Gets password.
+     *
+     * @return the password
+     */
+    public String getPassword() {
         return password; 
     }
-    public void setPassword(String password) { 
+
+    /**
+     * Sets password.
+     *
+     * @param password the password
+     */
+    public void setPassword(String password) {
         this.password = password; 
     }
 
+    /**
+     * Gets phone.
+     *
+     * @return the phone
+     */
     public String getPhone() {
         return phone; 
         }
-    public void setPhone(String phone) { 
+
+    /**
+     * Sets phone.
+     *
+     * @param phone the phone
+     */
+    public void setPhone(String phone) {
         this.phone = phone; 
     }
 
-    public String getProvince() { 
+    /**
+     * Gets province.
+     *
+     * @return the province
+     */
+    public String getProvince() {
         return province; 
     }
-    public void setProvince(String province) { 
+
+    /**
+     * Sets province.
+     *
+     * @param province the province
+     */
+    public void setProvince(String province) {
         this.province = province; 
     }
 
-    public String getDistrict() { 
+    /**
+     * Gets district.
+     *
+     * @return the district
+     */
+    public String getDistrict() {
         return district; 
     }
-    public void setDistrict(String district) { 
+
+    /**
+     * Sets district.
+     *
+     * @param district the district
+     */
+    public void setDistrict(String district) {
         this.district = district; 
     }
 
-    public String getCity() { 
+    /**
+     * Gets city.
+     *
+     * @return the city
+     */
+    public String getCity() {
         return city; 
     }
-    public void setCity(String city) { 
+
+    /**
+     * Sets city.
+     *
+     * @param city the city
+     */
+    public void setCity(String city) {
         this.city = city; 
     }
 
+    /**
+     * Gets local level.
+     *
+     * @return the local level
+     */
     public String getLocalLevel() {
         return localLevel;
     }
+
+    /**
+     * Sets local level.
+     *
+     * @param local_level the local level
+     */
     public void setLocalLevel(String local_level) {
         this.localLevel = local_level;
     }
 
-    public String getWard() { 
+    /**
+     * Gets ward.
+     *
+     * @return the ward
+     */
+    public String getWard() {
         return ward; 
     }
-    public void setWard(String ward) { 
+
+    /**
+     * Sets ward.
+     *
+     * @param ward the ward
+     */
+    public void setWard(String ward) {
         this.ward = ward; 
     }
 
-    public String getStreet() { 
+    /**
+     * Gets street.
+     *
+     * @return the street
+     */
+    public String getStreet() {
         return street; 
     }
-    public void setStreet(String street) { 
+
+    /**
+     * Sets street.
+     *
+     * @param street the street
+     */
+    public void setStreet(String street) {
         this.street = street; 
     }
 
-    public String getLandmark() { 
+    /**
+     * Gets landmark.
+     *
+     * @return the landmark
+     */
+    public String getLandmark() {
         return landmark; 
     }
-    public void setLandmark(String landmark) { 
+
+    /**
+     * Sets landmark.
+     *
+     * @param landmark the landmark
+     */
+    public void setLandmark(String landmark) {
         this.landmark = landmark; 
     }
 
-    public String getProfileImage() { 
+    /**
+     * Gets profile image.
+     *
+     * @return the profile image
+     */
+    public String getProfileImage() {
         return profileImage; 
     }
-    public void setProfileImage(String profileImage) { 
+
+    /**
+     * Sets profile image.
+     *
+     * @param profileImage the profile image
+     */
+    public void setProfileImage(String profileImage) {
         this.profileImage = profileImage; 
     }
 
-    public String getRole() { 
+    /**
+     * Gets role.
+     *
+     * @return the role
+     */
+    public String getRole() {
         return role; 
     }
-    public void setRole(String role) { 
+
+    /**
+     * Sets role.
+     *
+     * @param role the role
+     */
+    public void setRole(String role) {
         this.role = role; 
     }
 
-    public boolean isActive() { 
+    /**
+     * Is active boolean.
+     *
+     * @return the boolean
+     */
+    public boolean isActive() {
         return isActive; 
     }
-    public void setActive(boolean active) { 
+
+    /**
+     * Sets active.
+     *
+     * @param active the active
+     */
+    public void setActive(boolean active) {
         isActive = active; 
     }
 
+    /**
+     * Gets email verified.
+     *
+     * @return the email verified
+     */
     public boolean getEmailVerified() {
         return emailVerified;
     }
+
+    /**
+     * Sets email verified.
+     *
+     * @param emailVerified the email verified
+     */
     public void setEmailVerified(boolean emailVerified) {
         this.emailVerified = emailVerified;
     }
 
-    public Timestamp getCreatedAt() { 
+    /**
+     * Gets created at.
+     *
+     * @return the created at
+     */
+    public Timestamp getCreatedAt() {
         return createdAt; 
     }
+
+    /**
+     * Sets created at.
+     *
+     * @param createdAt the created at
+     */
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
 
-    public Timestamp getUpdatedAt() { 
+    /**
+     * Gets updated at.
+     *
+     * @return the updated at
+     */
+    public Timestamp getUpdatedAt() {
         return updatedAt; 
     }
-    public void setUpdatedAt(Timestamp updatedAt) { 
+
+    /**
+     * Sets updated at.
+     *
+     * @param updatedAt the updated at
+     */
+    public void setUpdatedAt(Timestamp updatedAt) {
         this.updatedAt = updatedAt; 
     }
 
-    //Added:check admin role
+    /**
+     * Is admin boolean.
+     *
+     * @return the boolean
+     */
+//Added:check admin role
      public boolean isAdmin() {
         return "ADMIN".equalsIgnoreCase(role);
         

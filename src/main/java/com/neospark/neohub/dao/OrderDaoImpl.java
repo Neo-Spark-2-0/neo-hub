@@ -10,6 +10,9 @@ import java.util.List;
 import com.neospark.neohub.utils.DatabaseConnection;
 import com.neospark.neohub.model.Order;
 
+/**
+ * The type Order dao.
+ */
 public class OrderDaoImpl implements OrderDao {
 
     @Override
@@ -155,6 +158,47 @@ public class OrderDaoImpl implements OrderDao {
         }
         return orders;
     }
+
+    @Override
+    public List<Order> getOrdersByUserWithFilters(int userId, String status, String paymentMethod) {
+        boolean filterStatus  = status != null && !"all".equals(status);
+        boolean filterPayment = paymentMethod != null && !"all".equals(paymentMethod);
+        String sql = "SELECT o.*, u.full_name AS user_full_name, u.phone AS user_phone, "
+               + "u.street, u.city, u.district, u.province, "
+               + "p.method AS payment_method, p.status AS payment_status, p.transaction_id "
+               + "FROM orders o "
+               + "LEFT JOIN users u ON o.user_id = u.id "
+               + "LEFT JOIN payments p ON p.order_id = o.id "
+               + "WHERE o.user_id = ? ";
+
+        if (filterStatus)  sql += "AND LOWER(o.order_status) = LOWER(?) ";
+        if (filterPayment) sql += "AND LOWER(p.method) = LOWER(?) ";
+        sql += "ORDER BY o.created_at DESC";
+
+        List<Order> orders = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+
+            int idx = 1;
+            ps.setInt(idx++, userId); // first it set to 1 and increases later
+            if (filterStatus)  ps.setString(idx++, status);
+            if (filterPayment) ps.setString(idx++, paymentMethod);
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                orders.add(mapOrder(rs));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting filtered orders: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return orders;
+    }
+
+
     @Override
     public int getTotalOrderCount() {
         String sql = "SELECT COUNT(*) FROM orders";
@@ -187,8 +231,6 @@ public class OrderDaoImpl implements OrderDao {
         }
         return 0.0;
     }
-
-
 
     @Override
     public List<Order> getRecentOrders(int limit) {
@@ -257,7 +299,63 @@ public class OrderDaoImpl implements OrderDao {
         return 0;
     }
 
-       private Order mapOrder(ResultSet rs) throws SQLException {
+    @Override
+    public List<Object[]> getDailyRevenue(int days) {
+        String sql = "SELECT DATE(created_at) as day, COALESCE(SUM(total_amount), 0) as revenue "
+                + "FROM orders "
+                + "WHERE created_at >= CURDATE() - INTERVAL ? DAY "
+                + "  AND order_status != 'Cancelled' "
+                + "GROUP BY DATE(created_at) "
+                + "ORDER BY day ASC";
+        List<Object[]> result = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, days);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                result.add(new Object[]{
+                    rs.getString("day"),
+                    rs.getDouble("revenue")
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getDailyRevenue: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return result;
+    }
+
+    @Override
+    public List<Object[]> getOrderStatusBreakdown() {
+        String sql = "SELECT order_status, COUNT(*) as count "
+                + "FROM orders "
+                + "GROUP BY order_status "
+                + "ORDER BY count DESC";
+        List<Object[]> result = new ArrayList<>();
+        Connection connection = null;
+        try {
+            connection = DatabaseConnection.getConnection();
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                result.add(new Object[]{
+                    rs.getString("order_status"),
+                    rs.getInt("count")
+                });
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getOrderStatusBreakdown: " + e.getMessage());
+        } finally {
+            DatabaseConnection.closeConnection(connection);
+        }
+        return result;
+    }
+
+    
+    private Order mapOrder(ResultSet rs) throws SQLException {
         Order order = new Order();
         order.setId(rs.getInt("id"));
         order.setSubTotalAmount(rs.getDouble("sub_total_amount"));
@@ -269,7 +367,7 @@ public class OrderDaoImpl implements OrderDao {
         order.setCreatedAt(rs.getTimestamp("created_at"));
         order.setUpdatedAt(rs.getTimestamp("updated_at"));
  
-        // Nullable FK
+        // fk nullable handling for promo_code_id
         int promoCodeId = rs.getInt("promo_code_id");
         order.setPromoCodeId(rs.wasNull() ? null : promoCodeId);
  
@@ -293,11 +391,11 @@ public class OrderDaoImpl implements OrderDao {
 
     private String buildAddress(String street, String city, String district, String province) {
         StringBuilder sb = new StringBuilder();
-        if (province != null && !province.isEmpty()) sb.append(province);
-        if (district != null && !district.isEmpty()) sb.append(district).append(", ");
-        if (city     != null && !city.isEmpty())     sb.append(city).append(", ");
         if (street   != null && !street.isEmpty())   sb.append(street).append(", ");
+        if (city     != null && !city.isEmpty())     sb.append(city).append(", ");
+        if (district != null && !district.isEmpty()) sb.append(district).append(", ");
+        if (province != null && !province.isEmpty()) sb.append(province);
         return sb.toString().replaceAll(",\\s*$", "");
-}
+    }
     
 }

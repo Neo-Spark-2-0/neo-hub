@@ -18,8 +18,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+/**
+ * The type Register servlet.
+ */
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
+    /**
+     * The User dao.
+     */
     public  final UserDao userDao = new UserDaoImpl();
 
     @Override
@@ -55,11 +61,11 @@ public class RegisterServlet extends HttpServlet {
             request.getRequestDispatcher("/WEB-INF/views/user/registration.jsp").forward(request, response);
             return;
         }
-//        if(!ValidationUtil.isValidPassword(password)){
-//            request.setAttribute("error", "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.");
-//            request.getRequestDispatcher("/WEB-INF/views/user/registration.jsp").forward(request, response);
-//            return;
-//        }
+       if(!ValidationUtil.isValidPassword(password)){
+           request.setAttribute("error", "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one digit, and one special character.");
+           request.getRequestDispatcher("/WEB-INF/views/user/registration.jsp").forward(request, response);
+           return;
+       }
         if (!ValidationUtil.isPasswordsMatch(confirmPassword, password)) {
             request.setAttribute("error", "Passwords do not match.");
             request.getRequestDispatcher("/WEB-INF/views/user/registration.jsp").forward(request, response);

@@ -10,6 +10,9 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
+/**
+ * The type Admin user servlet.
+ */
 @WebServlet("/admin/users")
 public class AdminUserServlet extends HttpServlet {
     private final UserDao userDao = new UserDaoImpl();
@@ -60,7 +63,7 @@ public class AdminUserServlet extends HttpServlet {
                 if (userId <= 0) {
                     req.getSession().setAttribute("error", "Invalid user ID.");
                 } else if (userId == currentUser.getId()) {
-                    req.getSession().setAttribute("error", "You cannot delete your own account.");
+                    req.getSession().setAttribute("error", "You cannot delete admin account.");
                 } else {
                     boolean deleted = userDao.deleteUser(userId);
                     req.getSession().setAttribute(

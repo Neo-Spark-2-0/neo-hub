@@ -12,6 +12,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * The type Verify email servlet.
+ */
 @WebServlet("/verify-email")
 public class VerifyEmailServlet extends HttpServlet {
     private final UserDao userDao = new UserDaoImpl();

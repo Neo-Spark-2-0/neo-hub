@@ -11,6 +11,9 @@ import java.util.List;
 import com.neospark.neohub.utils.DatabaseConnection;
 import com.neospark.neohub.model.Product;
 
+/**
+ * The type Product dao.
+ */
 public class ProductDaoImpl implements ProductDao {
 
     @Override
@@ -106,21 +109,6 @@ public class ProductDaoImpl implements ProductDao {
         return null;
     }
 
-    @Override
-    public List<Product> getAllProducts() {
-        String sql = "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id ORDER BY products.created_at DESC";
-        List<Product> products = new ArrayList<>();
-        try (Connection conn = DatabaseConnection.getConnection();
-            Statement statement = conn.createStatement();
-            ResultSet rs = statement.executeQuery(sql)) {
-            while (rs.next()) {
-                products.add(mapProduct(rs));
-            }
-        } catch (SQLException e) {
-            System.out.println("Error getting all products: " + e.getMessage());
-        }
-        return products;
-    }
 
     @Override
     public List<Product> getProductsByCategory(int categoryId) {
@@ -157,26 +145,6 @@ public class ProductDaoImpl implements ProductDao {
         return products;
     }
 
-
-    @Override
-    public List<Product> searchProducts(String keyword) {
-        String sql = "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.is_active = TRUE AND (products.name LIKE ? OR products.description LIKE ? OR products.brand LIKE ?) ORDER BY products.name ASC";
-        List<Product> products = new ArrayList<>();
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-            String searchTerm = "%" + keyword + "%";
-            ps.setString(1, searchTerm);
-            ps.setString(2, searchTerm);
-            ps.setString(3, searchTerm);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                products.add(mapProduct(rs));
-            }
-        } catch (SQLException e) {
-            System.out.println("Error searching products: " + e.getMessage());
-        }
-        return products;
-    }
 
 
     @Override
@@ -282,38 +250,9 @@ public class ProductDaoImpl implements ProductDao {
         }
     }
 
-    @Override
-    public boolean updateFeaturedStatus(int id, boolean isFeatured) {
-        String sql = "UPDATE products SET is_featured=? WHERE id=?";
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setBoolean(1, isFeatured);
-            ps.setInt(2, id);
-            int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
-        } catch (SQLException e) {
-            System.out.println("Error updating featured status: " + e.getMessage());
-            return false;
-        }
-    }
 
-    @Override
-    public boolean updateActiveStatus(int id, boolean isActive) {
-        String sql = "UPDATE products SET is_active=? WHERE id=?";
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setBoolean(1, isActive);
-            ps.setInt(2, id);
-            int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
-        } catch (SQLException e) {
-            System.out.println("Error updating active status: " + e.getMessage());
-            return false;
-        }
-    }
-
-    // needs review
 @Override
+
 //Note: set onlyActive true for user to see active products only, false for admin to see all products
 public List<Product> getProductsPaginated(int offset, int limit, String keyword, int categoryId, String sortBy, Double minPrice, Double maxPrice, boolean onlyActive) {
     StringBuilder sql = new StringBuilder(
@@ -365,56 +304,6 @@ public List<Product> getProductsPaginated(int offset, int limit, String keyword,
         return products;
     }
 
-    // needs review
-    @Override
-    public List<Product> getProductsByFilter(Integer categoryId, Double minPrice, Double maxPrice, String sortBy) {
-        StringBuilder sql = new StringBuilder(
-            "SELECT products.*, categories.name AS category_name FROM products LEFT JOIN categories ON products.category_id = categories.id WHERE products.is_active = TRUE"
-        );
- 
-        if (categoryId != null){
-            sql.append(" AND products.category_id = ?");
-        }
-        if (minPrice != null){
-            sql.append(" AND products.price >= ?");
-        }
-        if (maxPrice != null){
-            sql.append(" AND products.price <= ?");
-        }
-        if ("price_asc".equals(sortBy)){
-            sql.append(" ORDER BY products.price ASC");
-        } else if ("price_desc".equals(sortBy)){
-            sql.append(" ORDER BY products.price DESC");
-        } else if ("name_asc".equals(sortBy)){
-            sql.append(" ORDER BY products.name ASC");
-        } else {
-            sql.append(" ORDER BY products.created_at DESC");
-        }
-
-        List<Product> products = new ArrayList<>();
-        try (Connection connection = DatabaseConnection.getConnection();
-             PreparedStatement ps = connection.prepareStatement(sql.toString())) {
-            int index = 1;
-            if (categoryId != null){
-                ps.setInt(index++, categoryId);
-            }
-            if (minPrice != null){
-                ps.setDouble(index++, minPrice);
-            }
-            if (maxPrice != null){
-                ps.setDouble(index++, maxPrice);
-            }
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                products.add(mapProduct(rs));
-            }
-        } catch (SQLException e) {
-            System.out.println("Error filtering products: " + e.getMessage());
-        }
-        return products;
-    }
-
-    // needs review
     @Override
     public List<Object[]> getTopSellingProducts(int limit) {
         String sql = "SELECT products.name, SUM(order_items.quantity) AS total_sold FROM order_items JOIN products ON order_items.product_id = products.id GROUP BY products.id, products.name ORDER BY total_sold DESC LIMIT ?";
@@ -431,7 +320,6 @@ public List<Product> getProductsPaginated(int offset, int limit, String keyword,
         }
         return result;
     }
-    // needs review
     @Override
     public List<Object[]> getSalesByCategory() {
         String sql = "SELECT categories.name, SUM(order_items.quantity) AS total_sold FROM order_items JOIN products ON order_items.product_id = products.id JOIN categories ON products.category_id = categories.id GROUP BY categories.id, categories.name ORDER BY total_sold DESC";

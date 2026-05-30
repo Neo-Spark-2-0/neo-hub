@@ -32,20 +32,6 @@
                 </button>
             </div>
 
-            <!-- Flash Messages -->
-            <c:if test="${not empty success}">
-                <div class="mb-6 flex items-center gap-3 bg-success/10 border border-success/20 text-success px-5 py-4 rounded-2xl text-sm font-medium">
-                    <i class="fa-solid fa-circle-check"></i>
-                    ${success}
-                </div>
-            </c:if>
-            <c:if test="${not empty error}">
-                <div class="mb-6 flex items-center gap-3 bg-danger/10 border border-danger/20 text-danger px-5 py-4 rounded-2xl text-sm font-medium">
-                    <i class="fa-solid fa-circle-xmark"></i>
-                    ${error}
-                </div>
-            </c:if>
-
             <!-- Promo Table -->
             <div class="bg-primary rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="overflow-x-auto">
@@ -57,12 +43,14 @@
                                 <th class="px-6 py-4">Discount</th>
                                 <th class="px-6 py-4">Valid Until</th>
                                 <th class="px-6 py-4 text-center">Status</th>
-                                <th class="px-6 py-4 text-right">Actions</th>
+                                <th class="px-6 py-4 text-right">Edit</th>
+                                <th class="px-6 py-4 text-right">Delete</th>
+                                
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-secondary text-sm">
 
-                            <c:forEach var="p" items="${promoList}" varStatus="status">
+                            <c:forEach var="promo" items="${promoList}" varStatus="status">
                                 <tr class="hover:bg-secondary/30 transition-colors">
 
                                     <!-- Index -->
@@ -73,26 +61,27 @@
                                     <!-- Code -->
                                     <td class="px-6 py-4">
                                         <span class="bg-accent text-white px-3 py-1.5 rounded-lg font-mono text-xs font-bold tracking-widest">
-                                            ${p.code}
+                                            ${promo.code}
                                         </span>
                                     </td>
 
                                     <!-- Discount -->
                                     <td class="px-6 py-4">
                                         <span class="text-sm font-bold text-success">
-                                            <fmt:formatNumber value="${p.discountPercent}" pattern="#,##0.##"/>% OFF
+                                            <fmt:formatNumber value="${promo.discountPercent}" pattern="#,##0.##"/>% OFF
                                         </span>
                                     </td>
 
                                     <!-- Expiry Date -->
                                     <td class="px-6 py-4 text-sm text-gray-600">
                                         <%-- LocalDate doesn't work with fmt:formatDate, display directly --%>
-                                        ${p.expiryDate}
+                                        ${promo.expiryDate}
                                     </td>
                                     
+                                    <!-- Status -->
                                     <td class="px-6 py-4 text-center">
                                         <c:choose>
-                                            <c:when test="${p.active}">
+                                            <c:when test="${promo.active}">
                                                 <c:set var="toggleMsg"   value="Deactivate promo code" />
                                                 <c:set var="toggleLabel" value="Active" />
                                                 <c:set var="toggleClass" value="bg-success/10 text-success hover:bg-success hover:text-white" />
@@ -104,27 +93,54 @@
                                             </c:otherwise>
                                         </c:choose>
 
-                                        <form id="togglePromo-${p.id}" action="promos" method="POST">
+                                        <form id="togglePromo-${promo.id}" action="${pageContext.request.contextPath}/admin/promos" method="POST">
                                             <input type="hidden" name="action" value="toggleStatus">
-                                            <input type="hidden" name="id"     value="${p.id}">
+                                            <input type="hidden" name="id"     value="${promo.id}">
                                             <button type="button"
-                                                    data-msg="${toggleMsg} ${p.code}?"
-                                                    data-form="togglePromo-${p.id}"
-                                                    onclick="handleConfirm(this)"
-                                                    class="px-3 py-1 rounded-lg text-[10px] font-bold uppercase transition ${toggleClass}">
+                                                    data-form="togglePromo-${promo.id}"
+                                                    data-action="${promo.active ? 'Deactivate' : 'Activate'}"
+                                                    data-code="${promo.code}"
+                                                    data-active="${promo.active}"
+                                                    onclick="confirmPromoStatus(this)"
+                                                    title="${promo.active ? 'Click to deactivate' : 'Click to activate'}"
+                                                    class="inline-flex items-center gap-1 px-3 py-1 rounded-lg text-[10px] font-bold uppercase cursor-pointer transition ${toggleClass}">
+                                                <c:choose>
+                                                    <c:when test="${promo.active}">
+                                                        <i class="fa-solid fa-circle-check text-[10px]"></i>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <i class="fa-solid fa-ban text-[10px]"></i>
+                                                    </c:otherwise>
+                                                </c:choose>
                                                 ${toggleLabel}
+                                                <i class="fa-solid fa-chevron-down text-[8px] opacity-60"></i>
                                             </button>
                                         </form>
                                     </td>
 
-                                    <!-- Delete -->
-                                    <td class="px-6 py-4 text-right">
-                                        <form id="delPromo-${p.id}" action="promos" method="POST">
-                                            <input type="hidden" name="action" value="delete">
-                                            <input type="hidden" name="id"     value="${p.id}">
+                                    <!-- Edit --> 
+                                     <td class="px-6 py-4 text-right">
+                                        <div class="flex justify-end items-center gap-2">
+                                            
+                                            <%-- Edit button --%>
                                             <button type="button"
-                                                    data-msg="Permanently delete promo code ${p.code}?"
-                                                    data-form="delPromo-${p.id}"
+                                                    onclick="openEditModal('${promo.id}', '${promo.code}', '${promo.discountPercent}', '${promo.expiryDate}')"
+                                                    class="w-9 h-9 flex items-center justify-center bg-info/10 text-info rounded-xl hover:bg-info hover:text-white transition"
+                                                    title="Edit">
+                                                <i class="fa-solid fa-pen-to-square text-xs"></i>
+                                            </button>
+
+                                        </div>
+                                    </td>
+
+                                     <%-- Delete (existing) --%>
+                                    <td class="px-6 py-4 text-right">
+                                        <form id="delPromo-${promo.id}" action="${pageContext.request.contextPath}/admin/promos" method="POST">
+                                            <input type="hidden" name="action" value="delete">
+                                            <input type="hidden" name="id"     value="${promo.id}">
+                                            <button type="button"
+                                                    data-code="${promo.code}"
+                                                    data-form="delPromo-${promo.id}"
                                                     onclick="handleConfirm(this)"
                                                     class="w-9 h-9 flex items-center justify-center bg-danger/10 text-danger rounded-xl hover:bg-danger hover:text-white transition ml-auto"
                                                     title="Delete">
@@ -132,7 +148,6 @@
                                             </button>
                                         </form>
                                     </td>
-                                  
                                 </tr>
                             </c:forEach>
 
@@ -181,7 +196,7 @@
                 </div>
 
                 <!-- Modal Form -->
-                <form action="promos" method="POST" class="px-8 py-6 space-y-5">
+                <form action="${pageContext.request.contextPath}/admin/promos" method="POST" class="px-8 py-6 space-y-5">
                     <input type="hidden" name="action" value="insert">
 
                     <!-- Code -->
@@ -238,37 +253,156 @@
         </div>
     </div>
 
+
+    <!-- EDIT PROMO MODAL -->
+    <div id="editPromoModal"
+     tabindex="-1"
+     aria-hidden="true"
+     class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+
+    <div class="relative w-full max-w-md mx-4">
+        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
+
+            <div class="flex items-center justify-between px-8 py-6 border-b border-gray-100">
+                <div>
+                    <h3 class="text-lg font-bold text-accent">Edit Promo Code</h3>
+                    <p class="text-xs text-gray-400 mt-0.5">Update discount code details</p>
+                </div>
+                <button onclick="toggleModal('editPromoModal')"
+                        class="w-8 h-8 flex items-center justify-center rounded-xl bg-gray-100 hover:bg-gray-200 transition">
+                    <i class="fa-solid fa-xmark text-xs text-gray-500"></i>
+                </button>
+            </div>
+
+            <form action="${pageContext.request.contextPath}/admin/promos" method="POST" class="px-8 py-6 space-y-5">
+                <input type="hidden" name="action" value="update">
+                <input type="hidden" name="id" id="edit-id">
+
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest">
+                        Promo Code*
+                    </label>
+                    <input type="text" name="code" id="edit-code" required
+                           maxlength="20"
+                           style="text-transform: uppercase;"
+                           class="w-full bg-secondary border-none rounded-xl py-3 px-4 text-sm font-mono font-bold focus:ring-2 focus:ring-info tracking-widest">
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest">
+                        Discount Percentage* (1–100)
+                    </label>
+                    <div class="relative">
+                        <input type="number" name="discountPercent" id="edit-discount" required
+                               min="1" max="100" step="0.01"
+                               class="w-full bg-secondary border-none rounded-xl py-3 px-4 pr-10 text-sm font-bold focus:ring-2 focus:ring-info">
+                        <span class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold text-sm">%</span>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-[10px] font-bold text-gray-400 uppercase mb-2 tracking-widest">
+                        Expiry Date*
+                    </label>
+                    <input type="date" name="expiry" id="edit-expiry" required
+                           class="w-full bg-secondary border-none rounded-xl py-3 px-4 text-sm focus:ring-2 focus:ring-info">
+                </div>
+
+                <div class="flex gap-3 pt-2">
+                    <button type="button"
+                            onclick="toggleModal('editPromoModal')"
+                            class="flex-1 bg-gray-100 text-gray-500 py-3 rounded-xl text-sm font-bold hover:bg-gray-200 transition">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            class="flex-1 bg-accent text-white py-3 rounded-xl text-sm font-bold shadow-lg shadow-accent/20 hover:opacity-90 transition">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
     <!-- Flash toast + modal script -->
     <script>
-        function toggleModal(id) {
-            const modal = document.getElementById(id);
-            modal.classList.toggle('hidden');
-        }
+        <!-- Toggle visibility of modals -->
+    function toggleModal(id) {
+        const modal = document.getElementById(id);
+        modal.classList.toggle('hidden');
+    }
 
-        // Close modal on backdrop click
-        document.getElementById('addPromoModal').addEventListener('click', function(e) {
-            if (e.target === this) toggleModal('addPromoModal');
+    <!-- Handle confirmation for delete/toggle actions -->
+    function handleConfirm(btn) {
+        Swal.fire({
+            title: "Delete Promo?",
+            text: "Permanently delete promo code " + btn.dataset.code + "? This cannot be undone!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#ef4444",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: "Yes, delete it"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById(btn.dataset.form).submit();
+            }
         });
+    }
 
-        // Auto-uppercase promo code input
-        document.querySelector('input[name="code"]').addEventListener('input', function() {
-            this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    <!-- Handle confirmation for status toggle actions -->
+    function confirmPromoStatus(btn) {
+        const isActivating = btn.dataset.active === "false";
+        Swal.fire({
+            title: btn.dataset.action + " Promo?",
+            text: (isActivating ? "Activate" : "Deactivate") + " promo code " + btn.dataset.code + "?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: isActivating ? "#22c55e" : "#ef4444",
+            cancelButtonColor: "#6b7280",
+            confirmButtonText: "Yes, " + btn.dataset.action
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById(btn.dataset.form).submit();
+            }
         });
+    }
 
-        // Set minimum date to today for expiry input
-        window.addEventListener('DOMContentLoaded', function() {
-            const today = new Date().toISOString().split('T')[0];
-            document.querySelector('input[name="expiry"]').min = today;
+    <!-- Open edit modal and populate fields -->
+    function openEditModal(id, code, discount, expiry) {
+        document.getElementById('edit-id').value = id;
+        document.getElementById('edit-code').value = code;
+        document.getElementById('edit-discount').value = discount;
+        document.getElementById('edit-expiry').value = expiry;
+        toggleModal('editPromoModal');
+    }
 
-            // Show flash toasts
-            <c:if test="${not empty success}">
-                showToast("${success}", "success");
-            </c:if>
-            <c:if test="${not empty error}">
-                showToast("${error}", "error");
-            </c:if>
-        });
-    </script>
+    document.getElementById('addPromoModal').addEventListener('click', function(e) {
+        if (e.target === this) toggleModal('addPromoModal');
+    });
+
+    document.getElementById('editPromoModal').addEventListener('click', function(e) {
+        if (e.target === this) toggleModal('editPromoModal');
+    });
+
+    document.querySelector('#addPromoModal input[name="code"]').addEventListener('input', function() {
+        this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+    });
+
+    window.addEventListener('DOMContentLoaded', function() {
+        const today = new Date().toISOString().split('T')[0];
+        document.querySelector('#addPromoModal input[name="expiry"]').min = today;
+        document.querySelector('#editPromoModal input[name="expiry"]').min = today;
+
+
+        <!-- Show flash messages -->
+        <c:if test="${not empty success}">
+            showToast('<c:out value="${success}"/>', "success");
+        </c:if>
+        <c:if test="${not empty error}">
+            showToast('<c:out value="${error}"/>', "error");
+        </c:if>
+    });
+</script>
 
 </body>
 </html>

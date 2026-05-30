@@ -21,13 +21,13 @@
             <div class="max-w-4xl mx-auto">
                 
                 <div class="flex items-center gap-4 mb-8">
-                    <a href="products" class="w-10 h-10 flex items-center justify-center bg-white rounded-xl shadow-sm hover:bg-gray-50 transition">
+                    <a href="${pageContext.request.contextPath}/admin/products" class="w-10 h-10 flex items-center justify-center bg-white rounded-xl shadow-sm hover:bg-gray-50 transition">
                         <i class="fa-solid fa-arrow-left text-xs"></i>
                     </a>
                     <h2 class="text-2xl font-bold">Create New Product</h2>
                 </div>
 
-                <form action="products" method="POST" enctype="multipart/form-data" class="space-y-6">
+                <form action="${pageContext.request.contextPath}/admin/products" method="POST" enctype="multipart/form-data" class="space-y-6">
                     <input type="hidden" name="action" value="insert">
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

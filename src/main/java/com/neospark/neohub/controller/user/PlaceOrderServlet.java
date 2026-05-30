@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The type Place order servlet.
+ */
 @WebServlet("/place-order")
 public class PlaceOrderServlet extends HttpServlet {
 
@@ -162,8 +165,6 @@ public class PlaceOrderServlet extends HttpServlet {
             } catch (Exception e) {
                 System.err.println("Order confirmation email failed for order " + orderId + ": " + e.getMessage());
             }
-
-
             response.sendRedirect(request.getContextPath() + "/order-success?orderId=" + orderId);
         }
     }

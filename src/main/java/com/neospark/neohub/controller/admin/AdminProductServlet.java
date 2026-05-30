@@ -16,6 +16,9 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
+/**
+ * The type Admin product servlet.
+ */
 @WebServlet("/admin/products")
 @MultipartConfig(
     fileSizeThreshold = 1024 * 1024,          // 1 MB threshold before temp file
@@ -74,13 +77,6 @@ public class AdminProductServlet extends HttpServlet {
             case "edit":
                 try {
                     showEditForm(req, resp);
-                } catch (Exception e) {
-                    throw new ServletException(e);
-                }
-                break;
-            case "delete":
-                try {
-                    deleteProduct(req, resp);
                 } catch (Exception e) {
                     throw new ServletException(e);
                 }
@@ -153,7 +149,7 @@ public class AdminProductServlet extends HttpServlet {
 
         req.setAttribute("product", product);
         req.setAttribute("categories", categoryDao.getAllCategories());
-        req.getRequestDispatcher("/WEB-INF/views/admin/edit-products.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/views/admin/edit-product.jsp").forward(req, resp);
     }
 
     // POST
@@ -236,7 +232,7 @@ public class AdminProductServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/admin/products");
     }
 
-    // DELETE (MOVED TO POST!)
+    // DELETE 
     private void deleteProduct(HttpServletRequest req, HttpServletResponse resp)
             throws Exception {
 

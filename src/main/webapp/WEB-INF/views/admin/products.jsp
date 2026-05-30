@@ -98,59 +98,60 @@
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-secondary text-sm">
-                            <c:forEach var="p" items="${productList}">
+                            <c:forEach var="product" items="${productList}">
                                 <tr class="hover:bg-secondary/30 transition-colors">
                                     <td class="px-6 py-4">
                                         <div class="w-14 h-14 rounded-xl bg-secondary overflow-hidden border border-gray-100 shadow-inner">
                                             <c:choose>
-                                                <c:when test="${not empty p.image}">
-                                                    <img src="${pageContext.request.contextPath}/${p.image}" class="w-full h-full object-cover">
+                                                <c:when test="${not empty product.image}">
+                                                    <img src="${pageContext.request.contextPath}/uploads/${product.image}" class="w-full h-full object-cover">
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <div class="w-full h-full flex items-center justify-center text-[10px] text-gray-300 italic">No Img</div>
+                                                    <img src="${pageContext.request.contextPath}/static/images/product-fallback.jpg"
+                                                         alt="No image" class="w-full max-h-[400px] object-fit rounded-xl">
                                                 </c:otherwise>
                                             </c:choose>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4">
-                                        <div class="font-bold text-accent leading-tight">${p.name}</div>
+                                        <div class="font-bold text-accent leading-tight">${product.name}</div>
                                         <div class="flex items-center gap-2 mt-1">
-                                            <span class="text-[9px] font-bold bg-info/10 text-info px-1.5 py-0.5 rounded uppercase leading-none">${p.stockKeepingUnit}</span>
-                                            <span class="text-[10px] text-gray-400 leading-none">${p.brand}</span>
+                                            <span class="text-[9px] font-bold bg-info/10 text-info px-1.5 py-0.5 rounded uppercase leading-none">${product.stockKeepingUnit}</span>
+                                            <span class="text-[10px] text-gray-400 leading-none">${product.brand}</span>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4 font-bold">
                                         <c:choose>
-                                            <c:when test="${p.discountPrice > 0}">
-                                                <div class="text-success">Rs. ${p.discountPrice}</div>
-                                                <div class="text-[10px] text-gray-300 line-through font-normal">Rs. ${p.price}</div>
+                                            <c:when test="${product.discountPrice > 0}">
+                                                <div class="text-success">Rs. ${product.discountPrice}</div>
+                                                <div class="text-[10px] text-gray-300 line-through font-normal">Rs. ${product.price}</div>
                                             </c:when>
                                             <c:otherwise>
-                                                <span class="text-accent">Rs. ${p.price}</span>
+                                                <span class="text-accent">Rs. ${product.price}</span>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex flex-col gap-1">
-                                            <span class="text-xs font-bold ${p.stock < 10 ? 'text-danger' : 'text-accent'}">
-                                                ${p.stock} Units
+                                            <span class="text-xs font-bold ${product.stock < 10 ? 'text-danger' : 'text-accent'}">
+                                                ${product.stock} Units
                                             </span>
                                             <div class="w-16 h-1 bg-gray-100 rounded-full overflow-hidden">
-                                                <div class="h-full ${p.stock < 10 ? 'bg-danger' : 'bg-success'}" style="width: ${p.stock > 100 ? 100 : p.stock}%"></div>
+                                                <div class="h-full ${product.stock < 10 ? 'bg-danger' : 'bg-success'}" style="width: ${product.stock > 100 ? 100 : product.stock}%"></div>
                                             </div>
                                         </div>
                                     </td>
                                     <td class="px-6 py-4">
                                         <div class="flex items-center gap-1.5">
-                                            <c:if test="${p.active}">
+                                            <c:if test="${product.active}">
                                                 <span class="w-2 h-2 rounded-full bg-success animate-pulse"></span>
                                                 <span class="text-[10px] font-bold text-success uppercase">Active</span>
                                             </c:if>
-                                            <c:if test="${not p.active}">
+                                            <c:if test="${not product.active}">
                                                 <span class="w-2 h-2 rounded-full bg-gray-300"></span>
                                                 <span class="text-[10px] font-bold text-gray-400 uppercase">Hidden</span>
                                             </c:if>
-                                            <c:if test="${p.featured}">
+                                            <c:if test="${product.featured}">
                                                 <span class="ml-2 text-warning"><i class="fa-solid fa-star text-[10px]"></i></span>
                                             </c:if>
                                         </div>
@@ -158,18 +159,18 @@
                                     <td class="px-6 py-4 text-right">
                                         <div class="flex justify-end items-center gap-2">
                                             <%-- Edit Action --%>
-                                            <a href="${pageContext.request.contextPath}/admin/products?action=edit&id=${p.id}" 
+                                            <a href="${pageContext.request.contextPath}/admin/products?action=edit&id=${product.id}" 
                                                class="w-9 h-9 flex items-center justify-center bg-info/10 text-info rounded-xl hover:bg-info hover:text-white transition-all shadow-sm"
                                                title="Edit Product">
                                                 <i class="fa-solid fa-pen-to-square text-xs"></i>
                                             </a>
                                             
                                             <%-- Delete Action --%>
-                                            <form id="delete-form-${p.id}" action="${pageContext.request.contextPath}/admin/products" method="POST" class="inline">
+                                            <form id="delete-form-${product.id}" action="${pageContext.request.contextPath}/admin/products" method="POST" class="inline">
                                                 <input type="hidden" name="action" value="delete">
-                                                <input type="hidden" name="id" value="${p.id}">
+                                                <input type="hidden" name="id" value="${product.id}">
                                                 <button type="button" 
-                                                        onclick="confirmAdminAction('Warning: This will permanently remove the product and its image from the system. Continue?', 'delete-form-${p.id}')"
+                                                        onclick="confirmAdminAction('Warning: This will permanently remove the product and its image from the system. Continue?', 'delete-form-${product.id}')"
                                                         class="w-9 h-9 flex items-center justify-center bg-danger/10 text-danger rounded-xl hover:bg-danger hover:text-white transition-all shadow-sm"
                                                         title="Delete Product">
                                                     <i class="fa-solid fa-trash-can text-xs"></i>
@@ -215,10 +216,10 @@
         window.onload = function() {
             <%-- Read from session flash messages --%>
             <c:if test="${not empty success}">
-                showToast("${success}", "success");
+                showToast('<c:out value="${success}" />', "success");
             </c:if>
             <c:if test="${not empty error}">
-                showToast("${error}", "error");
+                showToast('<c:out value="${error}" />', "error");
             </c:if>
         };
     </script>

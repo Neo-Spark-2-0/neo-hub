@@ -16,6 +16,9 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * The type Home servlet.
+ */
 @WebServlet("/home")
 public class HomeServlet extends HttpServlet{
     private final ProductDao  productDao  = new ProductDaoImpl();

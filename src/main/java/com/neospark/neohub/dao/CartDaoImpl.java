@@ -7,7 +7,13 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * The type Cart dao.
+ */
 public class CartDaoImpl implements CartDao {
+// method to add to cart
+
 
     @Override
     public boolean addToCart(Cart cart) {
@@ -24,6 +30,7 @@ public class CartDaoImpl implements CartDao {
             return false;
         }
     }
+
 
     @Override
     public boolean updateQuantity(int userId, int productId, int quantity) {

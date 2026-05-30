@@ -13,6 +13,9 @@ import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 
+/**
+ * The type Email service.
+ */
 // Reference
 // https://www.geeksforgeeks.org/java/send-email-using-java-program/
 public class EmailService {
@@ -37,6 +40,14 @@ public class EmailService {
         return session;
     }
 
+    /**
+     * Send email boolean.
+     *
+     * @param toEmail  the to email
+     * @param subject  the subject
+     * @param htmlBody the html body
+     * @return the boolean
+     */
     public static boolean sendEmail(String toEmail, String subject, String htmlBody) {
         try{
             Message message = new MimeMessage(getSession());
@@ -53,6 +64,14 @@ public class EmailService {
         }
     }
 
+    /**
+     * Send verification email boolean.
+     *
+     * @param toEmail the to email
+     * @param name    the name
+     * @param token   the token
+     * @return the boolean
+     */
     public static boolean sendVerificationEmail(String toEmail, String name, String token) {
         String subject = "NEO-HUB - Verify Your Email";
         String link = "http://localhost:8080/neo-hub/verify-email?token=" + token;
@@ -60,6 +79,16 @@ public class EmailService {
         return sendEmail(toEmail, subject, body);
     }
 
+    /**
+     * Send order confirmation email boolean.
+     *
+     * @param toEmail    the to email
+     * @param name       the name
+     * @param orderId    the order id
+     * @param total      the total
+     * @param orderItems the order items
+     * @return the boolean
+     */
     public static boolean sendOrderConfirmationEmail(String toEmail, String name, String orderId, String total, List<OrderItem> orderItems) {
         String subject = "NEO-HUB - Order Confirmed #" + orderId;
         String body = EmailTemplate.orderConfirmationEmail(name, orderId, total, orderItems);

@@ -4,7 +4,7 @@
 <header class="bg-primary border-b border-secondary sticky top-0 z-30 h-16 flex items-center justify-between px-8">
     <div>
         <h1 class="text-sm font-bold text-accent uppercase tracking-widest">
-            <span class="text-gray-400 font-normal">Pages /</span> ${param.activePage}
+            <span class="text-gray-400 font-normal">Admin /</span> ${param.activePage}
         </h1>
     </div>
 
@@ -16,14 +16,9 @@
 
         <div class="relative group">
             <div class="w-10 h-10 rounded-full border-2 border-secondary overflow-hidden bg-secondary shadow-sm">
-                <c:choose>
-                    <c:when test="${not empty sessionScope.user.profileImage}">
-                        <img src="${pageContext.request.contextPath}/${sessionScope.user.profileImage}" class="w-full h-full object-cover">
-                    </c:when>
-                    <c:otherwise>
-                        <div class="w-full h-full flex items-center justify-center font-bold text-accent">AD</div>
-                    </c:otherwise>
-                </c:choose>
+                <c:if test="${not empty sessionScope.user.profileImage}">
+                    <div class="w-full h-full flex items-center justify-center font-bold text-accent">AD</div>
+                </c:if>
             </div>
         </div>
     </div>

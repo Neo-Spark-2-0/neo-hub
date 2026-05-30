@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
 
+/**
+ * The type Cart servlet.
+ */
 @WebServlet("/cart")
 public class CartServlet extends HttpServlet {
 
@@ -23,11 +26,14 @@ public class CartServlet extends HttpServlet {
             throws ServletException, IOException {
 
         User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
         List<Cart> cartItems = cartDao.getCartByUser(user.getId());
 
 
-// this block of code i ve add because if user added some product to cart and after that product got out of stock or deleted by admin then also the stock not updated in cart 
-
+// this block of code i ve add because if user added some product to cart and after that product got out of stock or deleted by admin then also the stock not updated in cart
         for (Cart item : cartItems) {
         Product product = productDao.getProductById(item.getProductId());
         if (product == null || !product.isActive()) {
@@ -63,6 +69,10 @@ public class CartServlet extends HttpServlet {
             throws ServletException, IOException {
 
         User user = (User) request.getSession().getAttribute("user");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
         String action = request.getParameter("action");
         boolean isHtmx = "true".equals(request.getHeader("HX-Request"));
 
