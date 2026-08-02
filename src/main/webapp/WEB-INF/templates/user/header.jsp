@@ -11,7 +11,6 @@
                  alt="NEO-HUB"
                  class="h-20 w-auto">
         </a>
-
         <!-- links  -->
         <nav class="hidden md:flex items-center gap-0.5 text-sm justify-center">
             <a href="${pageContext.request.contextPath}/"
