@@ -5,61 +5,96 @@
 <html lang="en">
 
 <jsp:include page="/WEB-INF/templates/common/head.jsp">
-    <jsp:param name="title" value="NEO-HUB | Checkout" />
+    <jsp:param name="title" value="Secure Checkout | NEO-HUB" />
+    <jsp:param name="metaDescription" value="Complete your order securely on NEO-HUB." />
 </jsp:include>
 
-<body class="font-poppins bg-secondary">
+<body class="font-poppins bg-slate-50 text-slate-900 antialiased selection:bg-brand-500 selection:text-white">
 <jsp:include page="/WEB-INF/templates/user/header.jsp" />
 
-<main class="w-[90vw] mx-auto py-10">
+<main class="w-[92vw] max-w-7xl mx-auto py-8 pb-28 space-y-8">
 
-    <div class="mb-6">
-        <h1 class="text-2xl md:text-3xl font-bold text-accent">Checkout</h1>
+    <!-- Progress Steps Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/80 pb-6">
+        <div>
+            <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-1">
+                <a href="${pageContext.request.contextPath}/cart" class="hover:text-slate-900 transition">Cart</a>
+                <i class="fa-solid fa-chevron-right text-[9px] text-slate-400"></i>
+                <span class="text-slate-900 font-bold">Checkout</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                Complete Your Order
+            </h1>
+        </div>
+
+        <!-- 3-step indicator -->
+        <div class="flex items-center gap-2 text-xs font-bold">
+            <span class="flex items-center gap-1.5 text-brand-600">
+                <span class="w-5 h-5 rounded-full bg-brand-100 text-brand-700 flex items-center justify-center text-[10px]">✓</span>
+                Cart
+            </span>
+            <span class="w-4 h-px bg-slate-300"></span>
+            <span class="flex items-center gap-1.5 text-slate-900">
+                <span class="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px]">2</span>
+                Payment
+            </span>
+            <span class="w-4 h-px bg-slate-300"></span>
+            <span class="flex items-center gap-1.5 text-slate-400">
+                <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-500 flex items-center justify-center text-[10px]">3</span>
+                Confirmed
+            </span>
+        </div>
     </div>
 
-    <div class="flex flex-col lg:flex-row gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-        <div class="flex-1 flex flex-col gap-5">
+        <!-- Left Column: Address, Promo, Payment -->
+        <div class="lg:col-span-8 flex flex-col gap-6">
 
-            <!-- address section -->
-            <div class="bg-primary border border-gray-200 rounded-2xl p-6">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-sm font-bold text-accent">Delivery Address</h3>
+            <!-- 1. Delivery Address Card -->
+            <div class="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-7 shadow-card space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                        <i class="fa-solid fa-location-dot text-brand-600"></i>
+                        1. Delivery Destination
+                    </h3>
                     <a href="${pageContext.request.contextPath}/profile"
-                       class="text-xs text-gray-400 hover:text-accent transition">
-                        <i class="fa-solid fa-pen-to-square mr-1"></i> Change
+                       class="text-xs font-bold text-brand-600 hover:text-brand-700 transition flex items-center gap-1">
+                        <i class="fa-solid fa-pen-to-square text-[10px]"></i> Change Address
                     </a>
                 </div>
 
                 <c:choose>
                     <c:when test="${not empty user.street || not empty user.city || not empty user.district || not empty user.province}">
-                        <div class="flex items-start gap-3">
-                            <div class="w-9 h-9 rounded-xl bg-accent/10 flex items-center justify-center  mt-0.5">
-                                <i class="fa-solid fa-location-dot text-accent text-sm"></i>
+                        <div class="flex items-start gap-4 p-4 rounded-2xl bg-slate-50 border border-slate-100">
+                            <div class="w-10 h-10 rounded-2xl bg-white border border-slate-200/80 text-slate-800 flex items-center justify-center flex-shrink-0 shadow-subtle text-sm">
+                                <i class="fa-solid fa-house-chimney"></i>
                             </div>
-                            <div>
-                                <p class="text-sm font-semibold text-accent">${user.fullName}</p>
-                                <p class="text-sm text-gray-500">${user.phone}</p>
-                                <p class="text-sm text-gray-500 mt-1">
+                            <div class="text-xs space-y-1">
+                                <div class="flex items-center gap-2">
+                                    <p class="font-extrabold text-slate-900 text-sm">${user.fullName}</p>
+                                    <span class="px-2 py-0.5 rounded-md bg-slate-200 text-slate-700 font-bold text-[10px]">Recipient</span>
+                                </div>
+                                <p class="text-slate-500 font-semibold"><i class="fa-solid fa-phone text-[10px] mr-1"></i> ${user.phone}</p>
+                                <p class="text-slate-600 leading-relaxed font-medium">
                                     <c:if test="${not empty user.street}">${user.street}, </c:if>
                                     <c:if test="${not empty user.city}">${user.city}, </c:if>
                                     <c:if test="${not empty user.district}">${user.district}, </c:if>
                                     <c:if test="${not empty user.province}">${user.province}</c:if>
-                                    <br>
-                                    Near:
-                                    <c:if test="${not empty user.landmark}">${user.landmark}</c:if>
+                                    <c:if test="${not empty user.landmark}">
+                                        <span class="text-slate-400 block mt-0.5 font-normal"><i class="fa-solid fa-map-pin text-[10px] mr-1"></i> Landmark: ${user.landmark}</span>
+                                    </c:if>
                                 </p>
                             </div>
                         </div>
                     </c:when>
                     <c:otherwise>
-                        <div class="flex items-center gap-3 text-yellow-600 bg-yellow-50 border border-yellow-200 rounded-xl p-4">
-                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        <div class="flex items-center gap-3.5 p-4 rounded-2xl bg-amber-50 border border-amber-200/80 text-amber-800 text-xs">
+                            <i class="fa-solid fa-triangle-exclamation text-base text-amber-600 flex-shrink-0"></i>
                             <div>
-                                <p class="text-sm font-semibold">No address saved</p>
-                                <p class="text-xs mt-0.5">
-                                    <a href="${pageContext.request.contextPath}/profile"
-                                       class="underline hover:text-yellow-800">Add your address</a> before placing the order.
+                                <p class="font-bold">No delivery address saved</p>
+                                <p class="mt-0.5">
+                                    Please <a href="${pageContext.request.contextPath}/profile" class="underline font-extrabold hover:text-amber-900">add your shipping address in your profile</a> to ensure swift dispatch.
                                 </p>
                             </div>
                         </div>
@@ -67,165 +102,172 @@
                 </c:choose>
             </div>
 
-            <!-- promo code section -->
-            <div class="bg-primary border border-gray-200 rounded-2xl p-6">
-                <h3 class="text-sm font-bold text-accent mb-4">Promo Code</h3>
-                <form action="${pageContext.request.contextPath}/checkout" method="post"
-                      class="flex gap-2">
-                    <input type="text"
-                           name="promoCode"
-                           value="${sessionScope.appliedPromoCode != null ? sessionScope.appliedPromoCode.code : ''}"
-                           placeholder="Enter promo code"
-                           class="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-accent uppercase"
-                           ${sessionScope.appliedPromoCode != null ? 'disabled' : ''}>
+            <!-- 2. Promo Code Card -->
+            <div class="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-7 shadow-card space-y-4">
+                <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-ticket text-brand-600"></i>
+                    2. Promo Code &amp; Coupons
+                </h3>
+
+                <form action="${pageContext.request.contextPath}/checkout" method="post" class="flex gap-2">
+                    <div class="relative flex-1">
+                        <i class="fa-solid fa-tag absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="text"
+                               name="promoCode"
+                               value="${sessionScope.appliedPromoCode != null ? sessionScope.appliedPromoCode.code : ''}"
+                               placeholder="ENTER PROMO CODE"
+                               class="w-full bg-slate-50 border border-slate-200 rounded-2xl pl-9 pr-4 py-2.5 text-xs font-bold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 uppercase tracking-wider transition ${sessionScope.appliedPromoCode != null ? 'opacity-60 cursor-not-allowed' : ''}"
+                               ${sessionScope.appliedPromoCode != null ? 'disabled' : ''}>
+                    </div>
+
                     <c:choose>
                         <c:when test="${sessionScope.appliedPromoCode != null}">
                             <a href="${pageContext.request.contextPath}/checkout?removePromo=true"
-                               class="px-4 py-2.5 rounded-xl border border-red-200 text-red-500 text-sm font-semibold hover:bg-red-50 transition whitespace-nowrap">
-                                Remove
+                               class="px-5 py-2.5 rounded-2xl border border-red-200 bg-red-50 text-danger text-xs font-bold hover:bg-red-100 transition whitespace-nowrap flex items-center gap-1.5">
+                                <i class="fa-solid fa-xmark"></i> Remove
                             </a>
                         </c:when>
                         <c:otherwise>
                             <button type="submit"
-                                    class="px-5 py-2.5 bg-accent text-white text-sm font-semibold rounded-xl hover:opacity-90 transition whitespace-nowrap">
-                                Apply
+                                    class="px-6 py-2.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-2xl transition whitespace-nowrap shadow-sm">
+                                Apply Code
                             </button>
                         </c:otherwise>
                     </c:choose>
                 </form>
+
                 <c:if test="${sessionScope.appliedPromoCode != null}">
-                    <p class="text-xs text-green-600 mt-2 font-medium">
-                        <i class="fa-solid fa-circle-check mr-1"></i>
-                        ${sessionScope.appliedPromoCode.discountPercent}% discount applied
-                    </p>
+                    <div class="p-3 rounded-2xl bg-brand-50 border border-brand-200 text-brand-800 text-xs font-bold flex items-center justify-between">
+                        <span class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-check text-brand-600"></i>
+                            Coupon "${sessionScope.appliedPromoCode.code}" applied!
+                        </span>
+                        <span class="px-2 py-0.5 rounded-md bg-brand-200 text-brand-900 text-[10px] font-black">
+                            ${sessionScope.appliedPromoCode.discountPercent}% OFF
+                        </span>
+                    </div>
                 </c:if>
             </div>
 
-            <!-- payment method section -->
-            <div class="bg-primary border border-gray-200 rounded-2xl p-6">
-                <h3 class="text-sm font-bold text-accent mb-4">Payment Method</h3>
+            <!-- 3. Payment Method Card -->
+            <div class="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-7 shadow-card space-y-5">
+                <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 pb-3">
+                    <i class="fa-solid fa-credit-card text-brand-600"></i>
+                    3. Choose Payment Method
+                </h3>
 
-                <form action="${pageContext.request.contextPath}/place-order"
-                      method="post"
-                      id="orderForm">
+                <form action="${pageContext.request.contextPath}/place-order" method="post" id="orderForm" class="space-y-4">
 
-                    <div class="flex flex-col gap-3">
-
-                        <!-- cash -->
-                        <label class="flex items-center gap-4 border border-gray-200 rounded-xl p-4 cursor-pointer hover:border-accent transition"
-                               id="codLabel">
-                            <input type="radio" name="paymentMethod" value="CashOnDelivery"
-                                   id="codRadio" checked
-                                   class="accent-accent">
-                            <div class="flex items-center gap-3 flex-1">
-                                <div class="w-9 h-9 rounded-xl bg-green-50 flex justify-center items-center">
-                                    <i class="fa-solid fa-money-bill text-green-600"></i>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        
+                        <!-- Cash on Delivery Option -->
+                        <label class="relative flex flex-col p-4 rounded-2xl border-2 border-slate-200 hover:border-slate-900 cursor-pointer transition-all bg-white group has-[:checked]:border-slate-900 has-[:checked]:bg-slate-50/70" id="codLabel">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="w-10 h-10 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center text-base border border-brand-100">
+                                    <i class="fa-solid fa-hand-holding-dollar"></i>
                                 </div>
-                                <div>
-                                    <p class="text-sm font-semibold text-accent">Cash on Delivery</p>
-                                    <p class="text-xs text-gray-400">Pay with cash upon delivery</p>
-                                </div>
+                                <input type="radio" name="paymentMethod" value="CashOnDelivery" id="codRadio" checked class="w-4 h-4 text-slate-900 focus:ring-slate-900">
                             </div>
+                            <p class="text-xs font-extrabold text-slate-900">Cash on Delivery</p>
+                            <p class="text-[11px] text-slate-500 font-medium mt-0.5">Pay in cash when order is delivered</p>
                         </label>
 
-                        <!-- khalti -->
-                        <label class="flex items-center gap-4 border border-gray-200 rounded-xl p-4 cursor-pointer hover:border-accent transition"
-                               id="khaltiLabel">
-                            <input type="radio" name="paymentMethod" value="KHALTI"
-                                   id="khaltiRadio"
-                                   class="accent-accent">
-                            <div class="flex items-center gap-3 flex-1">
-                            <div class="w-9 h-9 rounded-xl bg-red-50 flex items-center justify-center">
-                                <i class="fa-solid fa-paper-plane text-[#DC0019]"></i>
+                        <!-- Khalti Digital Wallet Option -->
+                        <label class="relative flex flex-col p-4 rounded-2xl border-2 border-slate-200 hover:border-purple-600 cursor-pointer transition-all bg-white group has-[:checked]:border-purple-600 has-[:checked]:bg-purple-50/40" id="khaltiLabel">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-base border border-purple-100">
+                                    <i class="fa-solid fa-wallet"></i>
                                 </div>
-                                <div>
-                                    <p class="text-sm font-semibold text-accent">Khalti Wallet</p>
-                                    <p class="text-xs text-gray-400">Fast &amp; secure digital payment</p>
-                                </div>
+                                <input type="radio" name="paymentMethod" value="KHALTI" id="khaltiRadio" class="w-4 h-4 text-purple-600 focus:ring-purple-600">
                             </div>
+                            <p class="text-xs font-extrabold text-slate-900">Khalti Digital Wallet</p>
+                            <p class="text-[11px] text-slate-500 font-medium mt-0.5">Instant online payment via Khalti</p>
                         </label>
+
                     </div>
 
+                    <!-- Place Order CTA -->
+                    <div class="pt-2">
+                        <button type="submit"
+                                id="placeOrderButton"
+                                class="w-full bg-slate-900 hover:bg-slate-800 text-white text-xs sm:text-sm font-bold py-4 rounded-2xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 active:scale-95">
+                            <i class="fa-solid fa-lock text-brand-400 text-xs"></i>
+                            <span id="btnText">Confirm &amp; Place Order - Rs. <fmt:formatNumber value="${total}" pattern="#,##0.00"/></span>
+                        </button>
 
-                    <!-- place order button -->
-                    <button type="submit"
-                            id="placeOrderButton"
-                            class="mt-5 w-full bg-accent text-white text-sm font-bold py-3.5 rounded-xl hover:opacity-90 transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-lock text-xs"></i>
-                        <span id="btnText">Place Order - Rs. <fmt:formatNumber value="${total}" pattern="#,##0.00"/></span>
-                    </button>
-
-                    <p class="text-center text-xs text-gray-400 mt-3">
-                        <i class="fa-solid fa-shield-halved mr-1"></i>
-                        Your payment information is secure and encrypted
-                    </p>
+                        <p class="text-center text-[11px] text-slate-400 mt-3 font-medium flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-shield-halved text-brand-600"></i>
+                            256-bit encrypted checkout. Your payment details are always protected.
+                        </p>
+                    </div>
 
                 </form>
             </div>
 
         </div>
 
+        <!-- Right Column: Order Summary -->
+        <div class="lg:col-span-4">
+            <div class="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-7 shadow-card space-y-6">
+                <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider pb-3 border-b border-slate-100">
+                    Order Summary
+                </h3>
 
-
-        <!-- summary order -->
-        <div class="w-full lg:w-80 ">
-            <div class="bg-primary border border-gray-200 rounded-2xl p-6">
-                <h3 class="text-sm font-bold text-accent mb-5">Order Summary</h3>
-
-                <!-- items -->
-                <div class="flex flex-col gap-4 mb-5">
+                <!-- Items list -->
+                <div class="flex flex-col gap-3.5 max-h-72 overflow-y-auto pr-1">
                     <c:forEach var="item" items="${cartItems}">
-                        <div class="flex items-center gap-3">
-                            <c:choose>
-                                <c:when test="${not empty item.productImage}">
-                                    <img src="${pageContext.request.contextPath}/uploads/${item.productImage}"
-                                    alt="${item.productName}"
-                                    class="w-12 h-12 rounded-xl object-cover border border-gray-100">
-                                </c:when>
-                                <c:otherwise>
-                                    <img src="${pageContext.request.contextPath}/static/images/product-fallback.jpg"
-                                    alt="${item.productName}"
-                                    class="w-12 h-12 rounded-xl object-cover border border-gray-100">
-                                </c:otherwise>
-                            </c:choose>
-                            <div class="flex-1 min-w-0">
-                                <p class="text-xs font-semibold text-accent truncate">${item.productName}</p>
-                                <p class="text-xs text-gray-400 mt-0.5">Qty: ${item.quantity}</p>
+                        <div class="flex items-center gap-3 text-xs">
+                            <div class="w-12 h-12 rounded-xl bg-slate-100 border border-slate-100 flex items-center justify-center overflow-hidden flex-shrink-0">
+                                <c:choose>
+                                    <c:when test="${not empty item.productImage}">
+                                        <img src="${pageContext.request.contextPath}/uploads/${item.productImage}"
+                                             alt="${item.productName}" class="w-full h-full object-cover">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img src="${pageContext.request.contextPath}/static/images/product-fallback.jpg"
+                                             alt="${item.productName}" class="w-full h-full object-cover">
+                                    </c:otherwise>
+                                </c:choose>
                             </div>
-                            <span class="text-xs font-bold text-accent ">
+                            <div class="flex-1 min-w-0">
+                                <p class="font-bold text-slate-900 truncate">${item.productName}</p>
+                                <p class="text-slate-400 text-[11px] font-semibold mt-0.5">Qty: ${item.quantity}</p>
+                            </div>
+                            <span class="font-bold text-slate-900 flex-shrink-0">
                                 Rs. <fmt:formatNumber value="${item.productDiscountPrice > 0 ? item.productDiscountPrice * item.quantity : item.productPrice * item.quantity}" pattern="#,##0"/>
                             </span>
                         </div>
                     </c:forEach>
                 </div>
 
-                <div class="border-t border-gray-100 pt-4 flex flex-col gap-3">
-                    <div class="flex justify-between text-sm">
-                        <span class="text-gray-500">Subtotal</span>
-                        <span class="font-medium text-accent">Rs. <fmt:formatNumber value="${subTotal}" pattern="#,##0.00"/></span>
+                <!-- Totals Breakdown -->
+                <div class="border-t border-slate-100 pt-4 space-y-3 text-xs font-medium text-slate-600">
+                    <div class="flex justify-between">
+                        <span>Subtotal</span>
+                        <span class="font-bold text-slate-900">Rs. <fmt:formatNumber value="${subTotal}" pattern="#,##0.00"/></span>
                     </div>
-                    <div class="flex justify-between text-sm">
-                        <span class="text-gray-500">Shipping</span>
-                        <span class="font-medium text-accent">Rs. <fmt:formatNumber value="${shippingCharge}" pattern="#,##0.00"/></span>
+                    <div class="flex justify-between">
+                        <span>Shipping Fee</span>
+                        <span class="font-bold text-slate-900">Rs. <fmt:formatNumber value="${shippingCharge}" pattern="#,##0.00"/></span>
                     </div>
                     <c:if test="${sessionScope.appliedPromoCode != null}">
-                        <div class="flex justify-between text-sm">
-                            <span class="text-green-600">Discount (${sessionScope.appliedPromoCode.discountPercent}%)</span>
-                            <span class="font-medium text-green-600">
-                                Rs. <fmt:formatNumber value="${subTotal * sessionScope.appliedPromoCode.discountPercent / 100}" pattern="#,##0.00"/>
+                        <div class="flex justify-between text-brand-700 font-bold">
+                            <span>Promo Discount (${sessionScope.appliedPromoCode.discountPercent}%)</span>
+                            <span>
+                                - Rs. <fmt:formatNumber value="${subTotal * sessionScope.appliedPromoCode.discountPercent / 100}" pattern="#,##0.00"/>
                             </span>
                         </div>
                     </c:if>
-                    <div class="flex justify-between text-base font-bold border-t border-gray-100 pt-3">
-                        <span class="text-accent">Total</span>
-                        <span class="text-accent">Rs. <fmt:formatNumber value="${total}" pattern="#,##0.00"/></span>
+                    <div class="flex justify-between text-sm font-extrabold text-slate-900 border-t border-slate-100 pt-3">
+                        <span>Grand Total</span>
+                        <span class="text-base text-slate-900">Rs. <fmt:formatNumber value="${total}" pattern="#,##0.00"/></span>
                     </div>
                 </div>
 
-                <!-- back -->
+                <!-- Back to Cart Link -->
                 <a href="${pageContext.request.contextPath}/cart"
-                   class="mt-5 w-full block text-center text-sm text-gray-400 hover:text-accent transition py-2 border border-gray-200 rounded-xl">
-                    <i class="fa-solid fa-arrow-left mr-1 text-xs"></i> Back to Cart
+                   class="w-full block text-center border border-slate-200 text-slate-700 py-2.5 rounded-2xl text-xs font-bold hover:bg-slate-50 transition">
+                    <i class="fa-solid fa-arrow-left mr-1 text-[10px]"></i> Modify Cart
                 </a>
             </div>
         </div>
@@ -235,22 +277,20 @@
 
 <jsp:include page="/WEB-INF/templates/user/footer.jsp" />
 
-
 <script>
-        <c:if test="${not empty promoError}">
-            showToast('<c:out value="${promoError}"/>', 'error');
-        </c:if>
+    <c:if test="${not empty promoError}">
+        showToast('<c:out value="${promoError}"/>', 'error');
+    </c:if>
 
-        <c:if test="${not empty promoSuccess}">
-            showToast('<c:out value="${promoSuccess}"/>', 'success');
-        </c:if>
+    <c:if test="${not empty promoSuccess}">
+        showToast('<c:out value="${promoSuccess}"/>', 'success');
+    </c:if>
 
-        
-        const params = new URLSearchParams(window.location.search);
-        if (params.has('error')) {
-            const messages = {
-                orderfailed: 'Failed to create order. Please try again.',
-            };
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('error')) {
+        const messages = {
+            orderfailed: 'Failed to create order. Please try again.'
+        };
         const error = params.get('error');
         showToast(messages[error] || 'An error occurred.', 'error');
         window.history.replaceState({}, document.title, window.location.pathname);
@@ -258,3 +298,4 @@
 </script>
 </body>
 </html>
+
