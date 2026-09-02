@@ -2,140 +2,160 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>Register - NEO-HUB</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Create your NEO-HUB account">
-    <meta name="keywords" content="NEO-HUB, registration, sign up, create account">
-    <meta name="author" content="NEO-HUB Team">
-    <link rel="icon" href="${pageContext.request.contextPath}/static/images/favicon.png" type="image/x-icon">
-    <jsp:include page="/WEB-INF/views/common/import.jsp" />
-</head>
-<body class="font-poppins bg-secondary min-h-screen flex items-center justify-center">
+<jsp:include page="/WEB-INF/templates/common/head.jsp">
+    <jsp:param name="title" value="Create Account | NEO-HUB" />
+    <jsp:param name="metaDescription" value="Create your NEO-HUB account to buy and build IoT projects." />
+    <jsp:param name="metaKeywords" value="NEO-HUB, registration, sign up, create account" />
+    <jsp:param name="metaAuthor" value="NEO-HUB Team" />
+</jsp:include>
 
+<body class="font-poppins bg-slate-900 min-h-screen flex items-center justify-center p-4 py-12 selection:bg-brand-500 selection:text-white relative overflow-hidden">
+    
+    <!-- Background glowing ambient orbs -->
+    <div class="absolute -top-40 -left-40 w-96 h-96 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-<div class="w-full max-w-md bg-primary rounded-2xl border border-gray-200 p-8 mx-4 my-8">
+    <div class="w-full max-w-lg bg-white rounded-3xl border border-slate-100 p-8 sm:p-10 shadow-2xl relative z-10 space-y-6">
+        
+        <!-- Brand Header -->
+        <div class="text-center space-y-2">
+            <a href="${pageContext.request.contextPath}/" class="inline-flex items-center gap-2.5 group mb-2">
+                <div class="w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-black text-sm tracking-widest shadow-md group-hover:scale-105 transition-transform">
+                    <span class="text-brand-400">N</span>H
+                </div>
+                <span class="text-xl font-black tracking-tight text-slate-900">NEO<span class="text-brand-600">HUB</span></span>
+            </a>
+            <h1 class="text-2xl font-extrabold text-slate-900 tracking-tight">Create your account</h1>
+            <p class="text-xs text-slate-500 font-medium">Join Nepal's premier electronics &amp; robotics makerspace</p>
+        </div>
 
-    <div class="mb-6">
-        <h1 class="text-2xl font-semibold text-accent">NEO-HUB</h1>
-        <p class="text-gray-400 text-sm mt-1">Create your account</p>
+        <!-- Form -->
+        <form action="${pageContext.request.contextPath}/register" method="post" class="space-y-4">
+            
+            <!-- Full Name -->
+            <div class="space-y-1.5">
+                <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Full Name</label>
+                <div class="relative">
+                    <i class="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                    <input type="text"
+                           name="fullName"
+                           placeholder="Ram Shrestha"
+                           value="<c:out value='${param.fullName}'/>"
+                           required
+                           class="w-full pl-9 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition" />
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Email -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Email Address</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-envelope absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="email"
+                               name="email"
+                               placeholder="ram@example.com"
+                               value="<c:out value='${param.email}'/>"
+                               required
+                               class="w-full pl-9 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition" />
+                    </div>
+                </div>
+
+                <!-- Phone -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Phone (Nepal)</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-phone absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="tel"
+                               name="phone"
+                               placeholder="98XXXXXXXX"
+                               value="<c:out value='${param.phone}'/>"
+                               required
+                               class="w-full pl-9 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- Password -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Password</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-lock absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="password"
+                               name="password"
+                               id="password"
+                               placeholder="••••••••"
+                               required
+                               class="w-full pl-9 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition" />
+                    </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Confirm Password</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-shield-check absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                        <input type="password"
+                               name="confirmPassword"
+                               id="confirmPassword"
+                               placeholder="••••••••"
+                               required
+                               class="w-full pl-9 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold text-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition" />
+                    </div>
+                </div>
+            </div>
+
+            <p id="matchWarning" class="text-danger text-xs font-bold flex items-center gap-1.5 hidden pt-1">
+                <i class="fa-solid fa-triangle-exclamation"></i> Passwords do not match.
+            </p>
+
+            <!-- Terms notice -->
+            <p class="text-[11px] text-slate-400 leading-relaxed font-medium pt-1">
+                By registering, you agree to our Terms of Service and Privacy Policy.
+            </p>
+
+            <!-- Submit Button -->
+            <button type="submit"
+                    class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm py-3.5 rounded-2xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 active:scale-95">
+                <span>Create NEO-HUB Account</span>
+                <i class="fa-solid fa-arrow-right text-brand-400 text-xs"></i>
+            </button>
+
+        </form>
+
+        <div class="pt-4 border-t border-slate-100 text-center text-xs text-slate-500 font-medium">
+            Already registered?
+            <a href="${pageContext.request.contextPath}/login" class="text-brand-600 hover:text-brand-700 font-bold ml-1 transition">
+                Sign in here →
+            </a>
+        </div>
+
     </div>
 
-    <form action="${pageContext.request.contextPath}/register" method="post" class="flex flex-col gap-4">
+    <script>
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const warning = document.getElementById('matchWarning');
 
-        <%-- Name --%>
-        <div>
-            <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Full name</label>
-            <input
-                type="text"
-                name="fullName"
-                placeholder="Ram Shrestha"
-                value="<c:out value='${param.fullName}'/>"
-                required
-                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 transition"
-            />
-        </div>
+        confirmPasswordInput.addEventListener('input', () => {
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            if (confirmPassword.length > 0 && password !== confirmPassword) {
+                warning.classList.remove('hidden');
+            } else {
+                warning.classList.add('hidden');
+            }
+        });
 
-        <%-- Email --%>
-        <div>
-            <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Email address</label>
-            <input
-                type="email"
-                name="email"
-                placeholder="ram@neohub.com"
-                value="<c:out value='${param.email}'/>"
-                required
-                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 transition"
-            />
-        </div>
+        <c:if test="${not empty error}">
+            showToast("<c:out value='${error}' />", "error");
+        </c:if>
 
-        <%-- Phone  number --%>
-        <div>
-            <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Phone</label>
-            <input
-                type="text"
-                name="phone"
-                placeholder="98XXXXXXXX"
-                value="<c:out value='${param.phone}'/>"
-                required
-                class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 transition"
-            />
-        </div>
-
-        <%-- Password --%>
-        <div>
-            <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Password</label>
-                <input
-                    type="password"
-                    name="password"
-                    id="password"
-                    placeholder="Eg: P@ssw0rd!"
-                    required
-                    class="w-full px-3 py-2 pr-10 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 transition"
-                />
-        </div>
-
-        <%-- Confirm Password --%>
-        <div>
-            <label class="block text-xs font-semibold uppercase text-gray-400 mb-1">Confirm password</label>
-                <input
-                    type="password"
-                    name="confirmPassword"
-                    id="confirmPassword"
-                    placeholder="Repeat your password"
-                    required
-                    class="w-full px-3 py-2 pr-10 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 transition"
-                />
-            <p id="matchWarning" class="text-red-500 text-xs mt-1 hidden">
-                Passwords do not match.
-            </p>
-        </div>
-
-        <%-- Submit button --%>
-        <button
-            type="submit"
-            class="w-full bg-gray-900 text-white text-sm font-medium py-3 rounded-lg hover:opacity-80 transition mt-2">
-            Create account
-        </button>
-
-    </form>
-
-    <div class="w-full h-[0.5px] bg-gray-200 my-5"></div>
-
-    <p class="text-center text-xs text-gray-500">
-        Already have an account?
-        <a href="${pageContext.request.contextPath}/login"
-           class="text-gray-800 font-medium hover:underline">
-            Sign in →
-        </a>
-    </p>
-
-</div>
-
-<script>
-    const passwordInput = document.getElementById('password');
-    const confirmPasswordInput = document.getElementById('confirmPassword');
-    const warning = document.getElementById('matchWarning');
-    confirmPasswordInput.addEventListener('input', ()=> {
-        const password = passwordInput.value;
-        const confirmPassword = confirmPasswordInput.value;
-        warning.classList.toggle('hidden', password === confirmPassword);
-    });
-
-
-
-    // errpr
-    <c:if test="${not empty error}">
-        showToast("<c:out value='${error}' />", "error");
-    </c:if>
-
-    // success
-    <c:if test="${not empty success}">
-        showToast("<c:out value='${success}' />", "success");
-    </c:if>
-
-
-</script>
-
+        <c:if test="${not empty success}">
+            showToast("<c:out value='${success}' />", "success");
+        </c:if>
+    </script>
 </body>
 </html>
+

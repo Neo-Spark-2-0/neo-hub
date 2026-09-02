@@ -2,65 +2,69 @@
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <title>NEO-HUB - Verify Email</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="NEO-HUB - Verify Email">
-    <meta name="keywords" content="NEO-HUB, Verify Email">
-    <meta name="author" content="NEO-HUB Team">
-    <jsp:include page="/WEB-INF/views/common/import.jsp" />
-</head>
-<body class="font-poppins bg-secondary min-h-screen flex items-center justify-center">
+<jsp:include page="/WEB-INF/templates/common/head.jsp">
+    <jsp:param name="title" value="Email Verification | NEO-HUB" />
+    <jsp:param name="metaDescription" value="NEO-HUB Email Verification Status" />
+</jsp:include>
 
-<div class="w-full max-w-md bg-primary rounded-2xl border border-gray-200 p-8 mx-4">
+<body class="font-poppins bg-slate-900 min-h-screen flex items-center justify-center p-4 selection:bg-brand-500 selection:text-white relative overflow-hidden">
+    
+    <div class="absolute -top-40 -left-40 w-96 h-96 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-40 -right-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-    <div class="mb-6">
-        <h1 class="text-2xl font-semibold text-accent">NEO-HUB</h1>
-        <p class="text-gray-400 text-sm mt-1">Email verification</p>
-    </div>
-
-    <div class="w-full h-[0.5px] bg-gray-200 mb-6"></div>
-
-    <c:choose>
-        <c:when test="${verifyStatus eq 'success'}">
-            <div class="bg-green-50 border border-green-200 rounded-xl p-5 flex flex-col gap-3">
-                <div class="flex items-center gap-2">
-                    <i class="fa fa-circle-check text-green-600 text-sm"></i>
-                    <p class="text-sm font-medium text-green-700">Verification successful</p>
-                </div>
-                <p class="text-xs text-green-600">${message}</p>
+    <div class="w-full max-w-md bg-white rounded-3xl border border-slate-100 p-8 sm:p-10 shadow-2xl relative z-10 text-center space-y-6">
+        
+        <a href="${pageContext.request.contextPath}/" class="inline-flex items-center gap-2.5 group mb-2">
+            <div class="w-10 h-10 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-black text-sm tracking-widest shadow-md group-hover:scale-105 transition-transform">
+                <span class="text-brand-400">N</span>H
             </div>
-            <a href="${pageContext.request.contextPath}/login"
-               class="mt-5 w-full block text-center bg-gray-900 text-white text-sm font-medium py-2.5 rounded-lg hover:opacity-80 transition">
-                Go to login
-            </a>
-        </c:when>
-        <c:otherwise>
-            <div class="bg-red-50 border border-red-200 rounded-xl p-5 flex flex-col gap-3">
-                <div class="flex items-center gap-2">
-                    <i class="fa fa-circle-exclamation text-red-500 text-sm"></i>
-                    <p class="text-sm font-medium text-red-600">Verification failed</p>
-                </div>
-                <p class="text-xs text-red-500">${message}</p>
-            </div>
-            <a href="${pageContext.request.contextPath}/register"
-               class="mt-5 w-full block text-center bg-gray-900 text-white text-sm font-medium py-2.5 rounded-lg hover:opacity-80 transition">
-                Back to register
-            </a>
-        </c:otherwise>
-    </c:choose>
-
-    <div class="w-full h-[0.5px] bg-gray-200 my-5"></div>
-
-    <p class="text-center text-xs text-gray-500">
-        Need help?
-        <a href="${pageContext.request.contextPath}/login"
-           class="text-gray-800 font-medium hover:underline">
-            Sign in →
+            <span class="text-xl font-black tracking-tight text-slate-900">NEO<span class="text-brand-600">HUB</span></span>
         </a>
-    </p>
 
-</div>
+        <c:choose>
+            <c:when test="${verifyStatus eq 'success'}">
+                <div class="w-16 h-16 rounded-3xl bg-brand-50 text-brand-600 border border-brand-200 flex items-center justify-center mx-auto text-2xl shadow-subtle">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+                <div class="space-y-1.5">
+                    <h1 class="text-xl font-extrabold text-slate-900">Email Verified Successfully!</h1>
+                    <p class="text-xs text-slate-500 font-medium">${message}</p>
+                </div>
+                <div>
+                    <a href="${pageContext.request.contextPath}/login"
+                       class="w-full inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm py-3.5 rounded-2xl transition shadow-md">
+                        <span>Proceed to Sign In</span>
+                        <i class="fa-solid fa-arrow-right text-brand-400 text-xs"></i>
+                    </a>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="w-16 h-16 rounded-3xl bg-red-50 text-danger border border-red-200 flex items-center justify-center mx-auto text-2xl shadow-subtle">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                </div>
+                <div class="space-y-1.5">
+                    <h1 class="text-xl font-extrabold text-slate-900">Verification Link Expired</h1>
+                    <p class="text-xs text-slate-500 font-medium">${message}</p>
+                </div>
+                <div>
+                    <a href="${pageContext.request.contextPath}/register"
+                       class="w-full inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm py-3.5 rounded-2xl transition shadow-md">
+                        <i class="fa-solid fa-arrow-left text-brand-400 text-xs"></i>
+                        <span>Return to Registration</span>
+                    </a>
+                </div>
+            </c:otherwise>
+        </c:choose>
+
+        <div class="pt-4 border-t border-slate-100 text-xs text-slate-500 font-medium">
+            Need help?
+            <a href="${pageContext.request.contextPath}/contact" class="text-brand-600 hover:text-brand-700 font-bold ml-1 transition">
+                Contact Support →
+            </a>
+        </div>
+
+    </div>
 
 </body>
 </html>
+
