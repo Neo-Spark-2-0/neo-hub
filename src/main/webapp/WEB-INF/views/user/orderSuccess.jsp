@@ -3,199 +3,131 @@
 <%@ taglib prefix="fmt" uri="jakarta.tags.fmt" %>
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <jsp:include page="/WEB-INF/templates/common/head.jsp">
-        <jsp:param name="title" value="Order Placed - NEO-HUB" />
-        <jsp:param name="metaDescription" value="Your order has been placed successfully!" />
-        <jsp:param name="metaKeywords" value="order success, NEO-HUB" />
-        <jsp:param name="metaAuthor" value="NEO-HUB Team" />
-    </jsp:include>
-</head>
-<body class="font-poppins bg-secondary">
+<jsp:include page="/WEB-INF/templates/common/head.jsp">
+    <jsp:param name="title" value="Order Confirmed! | NEO-HUB" />
+    <jsp:param name="metaDescription" value="Your NEO-HUB order has been placed successfully!" />
+    <jsp:param name="metaKeywords" value="order success, confirmed, NEO-HUB" />
+    <jsp:param name="metaAuthor" value="NEO-HUB Team" />
+</jsp:include>
+
+<body class="font-poppins bg-slate-50 text-slate-900 antialiased selection:bg-brand-500 selection:text-white">
     <jsp:include page="/WEB-INF/templates/user/header.jsp">
-        <jsp:param name="activePage" value="home" />
+        <jsp:param name="activePage" value="orders" />
     </jsp:include>
 
-    <main class="w-[90vw] mx-auto my-10 md:my-20">
-        <div class="max-w-[100%] lg:max-w-[60vw] mx-auto">
-            <div class="bg-white rounded-2xl border border-gray-200 p-8 text-center">
-
-                <!-- icon tick  -->
-                <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <i class="fa-solid fa-check text-green-600 text-3xl"></i>
-                </div>
-                
-                <h1 class="text-2xl md:text-3xl font-bold text-accent mb-2">Order Placed Successfully!</h1>
-                <p class="text-gray-500 mb-6">Thank you for your purchase. Your order has been received.</p>
-
-                <!--order id, delivery box -->
-                <div class="bg-gray-50 rounded-xl p-6 mb-6 text-left">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Order ID</p>
-                            <p class="text-lg font-bold text-accent">#${order.id}</p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Payment Method</p>
-                            <p class="text-lg font-semibold">
-                                <c:choose>
-                                    <c:when test="${order.paymentMethod == 'Khalti'}">
-                                        <span class="text-red-600"><i class="fa-solid fa-paper-plane text-[#DC0019]"></i>  Khalti Wallet</span>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span class="text-green-600"><i class="fa-solid fa-money-bill-wave mr-1"></i> Cash on Delivery</span>
-                                    </c:otherwise>
-                                </c:choose>
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Order Status</p>
-                            <p class="text-lg font-semibold">
-                                <c:choose>
-                                    <c:when test="${order.orderStatus == 'Confirmed'}">
-                                        <span class="text-green-600"><i class="fa-solid fa-circle-check mr-1"></i> Confirmed</span>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span class="text-blue-600">${order.orderStatus}</span>
-                                    </c:otherwise>
-                                </c:choose>
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">Delivery Address</p>
-                            <p class="text-sm text-gray-600">${order.userAddress}</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- ordered items -->
-                <div class="border-t border-gray-200 pt-6 mb-6">
-                    <h3 class="text-lg font-semibold text-accent mb-4 text-left">Order Items</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm">
-                            <thead class="bg-gray-50 border-b border-gray-200">
-                                <tr>
-                                    <th class="text-left py-3 px-4 font-semibold text-gray-600">Product</th>
-                                    <th class="text-center py-3 px-4 font-semibold text-gray-600">Quantity</th>
-                                    <th class="text-right py-3 px-4 font-semibold text-gray-600">Price</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach var="item" items="${order.orderItems}">
-                                    <tr class="border-b border-gray-100">
-                                        <td class="py-3 px-4 text-left font-medium text-accent">${item.productName}</td>
-                                        <td class="py-3 px-4 text-center">${item.quantity}</td>
-                                        <td class="py-3 px-4 text-right">Rs. <fmt:formatNumber value="${item.unitPrice * item.quantity}" pattern="#,##0"/></td>
-                                    </tr>
-                                </c:forEach>
-                            </tbody>
-                            <tfoot class="bg-gray-50">
-                                <tr class="border-t border-gray-200">
-                                    <td colspan="2" class="py-3 px-4 text-right font-bold text-accent">Total Paid:</td>
-                                    <td class="py-3 px-4 text-right font-bold text-accent">Rs. <fmt:formatNumber value="${order.totalAmount}" pattern="#,##0"/></td>
-                                </tr>
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-
-                <!-- buttons -->
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="${pageContext.request.contextPath}/order-history" 
-                       class="inline-flex items-center justify-center gap-2 bg-accent text-white px-6 py-3 rounded-xl font-semibold hover:opacity-90 transition">
-                        <i class="fa-solid fa-receipt"></i> View My Orders
-                    </a>
-                    <button class="inline-flex items-center justify-center gap-2 bg-gray-200 text-gray-600 px-6 py-3 rounded-xl font-semibold hover:bg-gray-300 transition" onclick="printInvoice()">
-                        <i class="fa-solid fa-download"></i> Download Invoice
-                    </button>
+    <main class="w-[92vw] max-w-4xl mx-auto py-12 pb-28 space-y-8">
+        
+        <!-- Celebration Card -->
+        <div class="bg-white rounded-3xl border border-slate-200/80 p-8 sm:p-12 text-center shadow-card space-y-8">
+            
+            <!-- Success Animated Ring -->
+            <div class="relative w-20 h-20 mx-auto">
+                <div class="absolute inset-0 rounded-full bg-brand-500/20 animate-ping"></div>
+                <div class="relative w-20 h-20 rounded-full bg-brand-50 text-brand-600 border border-brand-200 flex items-center justify-center text-3xl shadow-subtle">
+                    <i class="fa-solid fa-circle-check"></i>
                 </div>
             </div>
+
+            <div class="space-y-2">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 border border-brand-200 text-brand-700 text-xs font-bold">
+                    <i class="fa-solid fa-sparkles"></i> Order Confirmed
+                </div>
+                <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    Thank You for Your Order!
+                </h1>
+                <p class="text-xs sm:text-sm text-slate-500 font-medium max-w-md mx-auto">
+                    We've received your order and our hardware lab is already preparing your parcel.
+                </p>
+            </div>
+
+            <!-- Order Key Details Grid -->
+            <div class="bg-slate-50 rounded-2xl border border-slate-100 p-6 text-left grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 text-xs font-medium">
+                <div>
+                    <span class="text-slate-400 font-bold uppercase tracking-wider block text-[10px] mb-1">Order Ref</span>
+                    <span class="font-extrabold font-mono text-sm text-slate-900">#${order.id}</span>
+                </div>
+                <div>
+                    <span class="text-slate-400 font-bold uppercase tracking-wider block text-[10px] mb-1">Payment Channel</span>
+                    <c:choose>
+                        <c:when test="${order.paymentMethod == 'Khalti'}">
+                            <span class="font-bold text-purple-700 flex items-center gap-1">
+                                <i class="fa-solid fa-wallet text-purple-600"></i> Khalti
+                            </span>
+                        </c:when>
+                        <c:otherwise>
+                            <span class="font-bold text-emerald-700 flex items-center gap-1">
+                                <i class="fa-solid fa-hand-holding-dollar text-emerald-600"></i> COD
+                            </span>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+                <div>
+                    <span class="text-slate-400 font-bold uppercase tracking-wider block text-[10px] mb-1">Order Status</span>
+                    <span class="inline-flex items-center gap-1 font-bold text-brand-700">
+                        <i class="fa-solid fa-circle-check"></i> ${order.orderStatus}
+                    </span>
+                </div>
+                <div>
+                    <span class="text-slate-400 font-bold uppercase tracking-wider block text-[10px] mb-1">Total Paid</span>
+                    <span class="font-extrabold text-sm text-slate-900">Rs. <fmt:formatNumber value="${order.totalAmount}" pattern="#,##0"/></span>
+                </div>
+            </div>
+
+            <!-- Shipping Destination Preview -->
+            <div class="p-4 rounded-2xl bg-white border border-slate-200/80 text-left text-xs space-y-1">
+                <span class="text-slate-400 font-bold uppercase tracking-wider block text-[10px]">Shipping Destination:</span>
+                <p class="font-bold text-slate-800">${order.userFullName} &bull; ${order.userPhone}</p>
+                <p class="text-slate-500 font-medium">${order.userAddress}</p>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+                <a href="${pageContext.request.contextPath}/order-history?action=view&id=${order.id}"
+                   class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs sm:text-sm px-6 py-3.5 rounded-2xl transition shadow-md">
+                    <i class="fa-solid fa-receipt text-brand-400"></i>
+                    <span>Track Order Progress</span>
+                </a>
+                <button onclick="printInvoice()"
+                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs sm:text-sm px-6 py-3.5 rounded-2xl transition">
+                    <i class="fa-solid fa-print"></i>
+                    <span>Print Receipt</span>
+                </button>
+                <a href="${pageContext.request.contextPath}/products"
+                   class="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-slate-500 hover:text-slate-900 font-bold text-xs sm:text-sm px-4 py-3.5 transition">
+                    <span>Continue Browsing</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </a>
+            </div>
+
         </div>
+
     </main>
 
     <jsp:include page="/WEB-INF/templates/user/footer.jsp" />
+
     <script>
-        function printInvoice() {
+    function printInvoice() {
         const printWindow = window.open('', '_blank', 'width=800,height=600');
-        
         printWindow.document.write(`
             <!DOCTYPE html>
             <html>
             <head>
                 <title>Invoice - Order #${order.id}</title>
                 <style>
-                    * {
-                        margin: 0;
-                        padding: 0;
-                        box-sizing: border-box;
-                    }
-                    body {
-                        font-family: 'Poppins', sans-serif;
-                        padding: 40px;
-                        background: white;
-                    }
-                    .invoice-header {
-                        text-align: center;
-                        margin-bottom: 30px;
-                        padding-bottom: 20px;
-                        border-bottom: 2px solid #1D1D1F;
-                    }
-                    .invoice-header h1 {
-                        font-size: 28px;
-                        color: #1D1D1F;
-                        margin-bottom: 5px;
-                    }
-                    .invoice-header p {
-                        color: #666;
-                        font-size: 12px;
-                    }
-                    .order-details {
-                        margin-bottom: 30px;
-                    }
-                    .order-details table {
-                        width: 100%;
-                        border-collapse: collapse;
-                    }
-                    .order-details td {
-                        padding: 6px 0;
-                        font-size: 14px;
-                    }
-                    .order-details td:first-child {
-                        width: 120px;
-                        font-weight: 600;
-                        color: #555;
-                    }
-                    table.items {
-                        width: 100%;
-                        margin: 20px 0;
-                    }
-                    table.items th {
-                        background: #f5f5f5;
-                        padding: 10px;
-                        text-align: left;
-                        font-size: 13px;
-                        font-weight: 600;
-                        border-bottom: 1px solid #ddd;
-                    }
-                    table.items td {
-                        padding: 8px 10px;
-                        font-size: 13px;
-                        border-bottom: 1px solid #eee;
-                    }
-                    .total-row {
-                        text-align: right;
-                        font-weight: bold;
-                        font-size: 16px;
-                        margin-top: 20px;
-                        padding-top: 10px;
-                        border-top: 2px solid #1D1D1F;
-                    }
-                    .footer {
-                        text-align: center;
-                        margin-top: 40px;
-                        font-size: 11px;
-                        color: #aaa;
-                    }
+                    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+                    body { padding: 40px; background: white; color: #1e293b; }
+                    .invoice-header { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #0f172a; }
+                    .invoice-header h1 { font-size: 28px; font-weight: 800; color: #0f172a; margin-bottom: 5px; }
+                    .invoice-header p { color: #64748b; font-size: 12px; }
+                    .order-details { margin-bottom: 30px; }
+                    .order-details table { width: 100%; border-collapse: collapse; }
+                    .order-details td { padding: 6px 0; font-size: 13px; }
+                    .order-details td:first-child { width: 140px; font-weight: 700; color: #64748b; }
+                    table.items { width: 100%; margin: 20px 0; border-collapse: collapse; }
+                    table.items th { background: #f8fafc; padding: 10px; text-align: left; font-size: 12px; font-weight: 700; border-bottom: 1px solid #e2e8f0; }
+                    table.items td { padding: 8px 10px; font-size: 13px; border-bottom: 1px solid #f1f5f9; }
+                    .total-row { text-align: right; font-weight: 800; font-size: 16px; margin-top: 20px; padding-top: 10px; border-top: 2px solid #0f172a; }
+                    .footer { text-align: center; margin-top: 40px; font-size: 11px; color: #94a3b8; }
                 </style>
             </head>
             <body>
@@ -204,17 +136,15 @@
                     <p>IoT Equipment & Project Marketplace</p>
                     <p>Gandaki Province, Pokhara, Nepal | neohubnepal@gmail.com</p>
                 </div>
-
                 <div class="order-details">
                     <table>
                         <tr><td>Order ID</td><td><strong>#${order.id}</strong></td></tr>
                         <tr><td>Order Date</td><td><fmt:formatDate value="${order.createdAt}" pattern="dd MMM yyyy, hh:mm a"/></td></tr>
-                        <tr><td>Payment Method</td><td>${order.paymentMethod}</td></tr>
+                        <tr><td>Payment Channel</td><td>${order.paymentMethod}</td></tr>
                         <tr><td>Order Status</td><td>${order.orderStatus}</td></tr>
                         <tr><td>Delivery Address</td><td>${order.userAddress}</td></tr>
                     </table>
                 </div>
-
                 <table class="items">
                     <thead>
                         <tr><th>Product</th><th>Quantity</th><th>Unit Price</th><th>Total</th></tr>
@@ -230,33 +160,24 @@
                         </c:forEach>
                     </tbody>
                 </table>
-
                 <div class="total-row">
                     Total Paid: Rs. <fmt:formatNumber value="${order.totalAmount}" pattern="#,##0"/>
                 </div>
-
                 <div class="footer">
-                    <p>Thank you for shopping with NEO-HUB!</p>
-                    <p>For any queries, contact neohubnepal@gmail.com</p>
+                    <p>Thank you for building with NEO-HUB!</p>
                 </div>
             </body>
             </html>
         `);
-        
         printWindow.document.close();
         printWindow.addEventListener('load', function () {
             printWindow.focus();
-
-            // we are keeping this after print to close window after print and 
-            // we keep this inside load event because it should be proper loaded before close
-        printWindow.addEventListener('afterprint', function () {
-            printWindow.close();
+            printWindow.addEventListener('afterprint', function () {
+                printWindow.close();
+            });
+            printWindow.print();
         });
-
-        printWindow.print();
-        });
-        
     }
     </script>
 </body>
-</html>
+</html>
