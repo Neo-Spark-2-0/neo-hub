@@ -9,7 +9,7 @@
     <jsp:param name="title" value="User Management" />
 </jsp:include>
 
-<body class="bg-secondary font-poppins text-accent">
+<body class="bg-slate-50 font-poppins text-slate-900 antialiased">
     <jsp:include page="/WEB-INF/templates/admin/sidebar.jsp">
         <jsp:param name="activePage" value="users" />
     </jsp:include>
@@ -19,17 +19,16 @@
             <jsp:param name="activePage" value="Users" />
         </jsp:include>
 
-        <main class="p-6 md:p-10 flex-1">
-            <div class="flex justify-between items-center mb-8">
-                <div>
-                    <h2 class="text-2xl font-bold">System Users</h2>
-                    <p class="text-xs text-gray-500 font-medium">Manage permissions and account statuses</p>
-                </div>
+        <main class="p-6 md:p-10 flex-1 space-y-6">
+            <div>
+                <h2 class="text-2xl font-black text-slate-900">Customers &amp; Admins</h2>
+                <p class="text-xs text-slate-400 font-medium mt-1">Manage user permissions and account statuses.</p>
             </div>
 
-            <div class="bg-primary rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="bg-white rounded-3xl shadow-sm border border-slate-200/80 overflow-hidden">
+                <div class="overflow-x-auto">
                 <table class="w-full text-left">
-                    <thead class="bg-secondary text-[10px] uppercase font-bold text-gray-400 tracking-wider">
+                    <thead class="bg-slate-50 text-[10px] uppercase font-extrabold text-slate-400 tracking-wider">
                         <tr>
                             <th class="px-6 py-4">User</th>
                             <th class="px-6 py-4">Contact</th>
@@ -39,18 +38,18 @@
                             <th class="px-6 py-4 text-right">Actions</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-secondary text-sm">
+                    <tbody class="divide-y divide-slate-100 text-xs font-medium">
                         <c:forEach var="user" items="${userList}">
-                            <tr class="hover:bg-secondary/30 transition-colors">
+                            <tr class="hover:bg-slate-50/60 transition-colors">
                                 <td class="px-6 py-4">
                                     <div class="flex items-center gap-3">
-                                        <div class="w-10 h-10 rounded-full bg-secondary overflow-hidden border border-gray-100">
+                                        <div class="w-10 h-10 rounded-xl bg-slate-100 overflow-hidden border border-slate-200">
                                             <c:choose>
                                                 <c:when test="${not empty user.profileImage}">
                                                 <img src="${pageContext.request.contextPath}/uploads/${user.profileImage}" alt="Photo" class="w-full h-full object-cover"/>
                                                 </c:when>
                                                 <c:otherwise>
-                                                <span class="text-base font-semibold text-blue-500 w-full h-full flex items-center justify-center">
+                                                <span class="text-sm font-extrabold text-slate-500 w-full h-full flex items-center justify-center">
                                                 <c:set var="parts" value="${fn:split(user.fullName, ' ')}" />
                                                     ${fn:substring(parts[0], 0, 1)}
                                                     <c:if test="${fn:length(parts) > 1}">
@@ -61,14 +60,15 @@
                                             </c:choose>
                                         </div>
                                         <div>
-                                            <div class="font-bold text-accent">${user.fullName}</div>
-                                            <div class="text-[11px] text-gray-400">${user.email}</div>
+                                            <div class="font-extrabold text-slate-900">${user.fullName}</div>
+                                            <div class="text-[10px] text-slate-400">${user.email}</div>
                                         </div>
                                     </div>
                                 </td>
-                                <td class="px-6 py-4 text-gray-600">${user.phone}</td>
+                                <td class="px-6 py-4 text-slate-600">${user.phone}</td>
                                 <td class="px-6 py-4 text-center">
-                                    <span class="px-2 py-1 rounded-lg text-[10px] font-bold uppercase ${user.role eq 'ADMIN' ? 'bg-accent text-white' : 'bg-gray-100 text-gray-500'}">
+                                    <span class="px-2.5 py-1 rounded-xl text-[10px] font-extrabold uppercase
+                                        ${user.role eq 'ADMIN' ? 'bg-purple-50 text-purple-600 border border-purple-100' : 'bg-slate-100 text-slate-500 border border-slate-200'}">
                                         ${user.role}
                                     </span>
                                 </td>
@@ -77,10 +77,10 @@
                                 <td class="px-6 py-4 text-center">
                                     <c:choose>
                                         <c:when test="${user.emailVerified}">
-                                            <i class="fa-solid fa-circle-check text-success" title="Verified"></i>
+                                            <i class="fa-solid fa-circle-check text-emerald-500" title="Verified"></i>
                                         </c:when>
                                         <c:otherwise>
-                                            <i class="fa-solid fa-circle-xmark text-gray-300" title="Unverified"></i>
+                                            <i class="fa-solid fa-circle-xmark text-slate-300" title="Unverified"></i>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
@@ -94,7 +94,8 @@
                                         <button type="button"
                                             onclick="confirmAdminAction('${user.active ? 'Ban' : 'Activate'}', '${user.fullName}', 'statusForm-${user.id}')"
                                             title="${user.active ? 'Click to ban user' : 'Click to activate user'}"
-                                            class="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold uppercase cursor-pointer transition hover:opacity-80 ${user.active ? 'bg-success/10 text-success hover:bg-success/20' : 'bg-danger/10 text-danger hover:bg-danger/20'}">
+                                            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-xl text-[10px] font-extrabold uppercase cursor-pointer transition
+                                                ${user.active ? 'bg-emerald-50 text-emerald-600 border border-emerald-100 hover:bg-emerald-100' : 'bg-red-50 text-red-600 border border-red-100 hover:bg-red-100'}">
                                             <c:choose>
                                                 <c:when test="${user.active}">
                                                     <i class="fa-solid fa-circle-check text-[10px]"></i> Active
@@ -103,7 +104,6 @@
                                                     <i class="fa-solid fa-ban text-[10px]"></i> Banned
                                                 </c:otherwise>
                                             </c:choose>
-                                            <i class="fa-solid fa-chevron-down text-[8px] opacity-60"></i>
                                         </button>
                                     </form>
                                 </td>
@@ -114,11 +114,10 @@
                                         <form id="deleteForm-${user.id}" action="${pageContext.request.contextPath}/admin/users" method="POST">
                                             <input type="hidden" name="action" value="delete">
                                             <input type="hidden" name="userId" value="${user.id}">
-                                            <%-- FIX: pass the correct unique formId into confirmDelete --%>
                                             <button type="button"
                                                 onclick="confirmDelete('${user.fullName}', 'deleteForm-${user.id}')"
-                                                class="text-danger hover:bg-danger/10 p-2 rounded-lg transition">
-                                                <i class="fa-solid fa-trash-can"></i>
+                                                class="w-8 h-8 flex items-center justify-center bg-red-50 text-red-600 border border-red-100 rounded-xl hover:bg-red-500 hover:text-white transition">
+                                                <i class="fa-solid fa-trash-can text-xs"></i>
                                             </button>
                                         </form>
                                     </c:if>
@@ -127,6 +126,7 @@
                         </c:forEach>
                     </tbody>
                 </table>
+                </div>
             </div>
         </main>
         <jsp:include page="/WEB-INF/templates/admin/footer.jsp" />
